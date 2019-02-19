@@ -59,15 +59,8 @@ cost_vrec <- stack(sapply(1:nrow(df_zones), function(i) {
 ### (2) Carbon ###
 
 ## damage - graph ##
-source("codes/new_damage_model.R")
-ggplot(CIpred, aes(x=RatioExt)) + 
-  geom_point(aes(y=RatioDam, colour=Forest, size=PlotSurface)) + 
-  geom_line(aes(y=med), lwd=1.2) + 
-  geom_ribbon(aes(ymin=inf_err, ymax=sup_err), alpha=0.1) +
-  theme_bw() + theme(legend.position = "none") +
-  labs(x="Proportion of carbon extracted", y="Proportion of carbon damaged")
-ggsave("graphs/damModel.pdf", height=5, width=6)
 
+source("codes/new_damage_model.R")
 source("codes/params_carbon_recov.R")
 source("codes/functions_carbon.R")
 
@@ -270,7 +263,7 @@ if (solveProblemsParallel){
 } else {load("outputs/scenariOptim.Rdata")}
 
 ### pixel area
-scenariOptim = merge(scenariOptim, data.table(coordinates(grd),area=grd$area*grd$pHarv, areaAR=grd$area*grd$pHarvAR), by=c("long","lat"))
+scenariOptim = merge(scenariOptim, data.table(coordinates(grd),area = grd$area*grd$pHarv, areaAR=grd$area*grd$pHarvAR), by=c("long","lat"))
 scenariOptim$area[grep("sharing",scenariOptim$scenario)] <- scenariOptim$areaAR[grep("sharing",scenariOptim$scenario)]
 scenariOptim = merge(scenariOptim, df_zones, by="zone")
 scenariOptim = subset(scenariOptim, area>0)
@@ -382,3 +375,50 @@ ggplot(demandFinal, aes(x=demand, y= value, colour=scenario))+
   scale_color_manual(values= col_scenarios)+ 
   labs(x=expression("Timber production (M"*m^3*yr^{-1}*")"), y="",colour="Strategies") 
 ggsave("graphs/increasingDemand.pdf", height=6, width=8)
+
+
+
+##### Supplementary graphs #####
+
+### damage - explanation diagram ###
+pdf("LaTeX/graphs/schemaDam.pdf", height=2, width=3)
+par(mar=c(0,0,0,0), oma=c(0,0,0,0))
+plot(c(0,1), c(0,1.1), col="white", bty="n",yaxt="n",xaxt="n",xlab="",ylab="")
+rect(xleft = 0,ybottom = 0,xright = 1,ytop = 1,lwd=2)
+rect(xleft = 0, ybottom = 0.8, xright = 1, ytop = 1, density = 5)
+rect(xleft = 0,ybottom = 0.2,xright = 0.6,ytop = 0.8, col="grey")
+segments(x0=0.1, y0=1,y1=1.08)
+text(x=0.5,y=0.9, "Cext")
+text(x=0.3,y=0.5, "Cdam")
+text(x=0.1,y=1.1, "C0")
+text(x=0.8,y=.4, "Cmin")
+dev.off()
+
+## damage - graph ##
+ggplot(CIpred, aes(x=RatioExt)) + 
+  geom_point(aes(y=RatioDam, colour=Forest, size=PlotSurface)) + 
+  geom_line(aes(y=med), lwd=1.2) + 
+  geom_ribbon(aes(ymin=inf_err, ymax=sup_err), alpha=0.1) +
+  theme_bw() + theme(legend.position = "none") +
+  labs(x="Proportion of carbon extracted", y="Proportion of carbon damaged")
+ggsave("graphs/damModel.pdf", height=5, width=6)
+
+
+## WDext 
+pdf("graphs/map_WDext.pdf", height=4, width=5)
+plot(raster(grd, "WDext"), col=rev(heat.colors(20))[-c(1,2)])
+dev.off()
+
+
+## maps with changing demand 
+scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
+ggplot(subset(scenariOptim, demand != 35)) +
+  geom_point(aes(x=long,y=lat,colour=zname, size=area/1e3)) +
+  theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
+  scale_colour_manual(name = "Zone",values = colour_palette) +
+  labs(size = "Area available for logging (1000 km2)", x="", y="") +
+  theme(legend.position = "top", text = element_text(size=50),
+        axis.ticks=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank()) +
+  guides(colour=FALSE)
+ggsave("graphs/mapsChangeDemand.pdf", height=40, width=40)
