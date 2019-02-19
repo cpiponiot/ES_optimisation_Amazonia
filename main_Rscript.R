@@ -6,6 +6,7 @@ library(data.table)
 library(rstan)
 library(ggpubr)
 library(parallel)
+library(ggtern)
 
 solveProblems <- FALSE
 solveProblemsParallel <- FALSE
@@ -409,6 +410,43 @@ pdf("graphs/map_WDext.pdf", height=4, width=5)
 plot(raster(grd, "WDext"), col=rev(heat.colors(20))[-c(1,2)])
 dev.off()
 
+### ternary plots - cost analysis
+
+limsPlots = range(costsTot[,grep("_st",colnames(costsTot)),with=F]) +c(-10,0)
+paletteTern = colorRampPalette(c("blue","yellow", "orange", "red"))(100)
+
+ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Ccost_st)) + 
+  stat_interpolate_tern(geom="polygon", method=lm, colour="black", formula = value~x+y,
+                        n=100,aes(fill=..level..),expand=1)  +
+  # geom_point(cex=10) +
+  theme(legend.position = "none") + 
+  scale_fill_gradientn(colours = paletteTern, limits=limsPlots) +
+  labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="Carbon cost (%)") +
+  geom_point(data = costsTot[which_balanced], size = 5)
+ggsave("graphs/carbonLoss.pdf", height=4, width=4.5)
+
+ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Bcost_st)) + 
+  stat_interpolate_tern(geom="polygon", method=lm,n=100, aes(fill=..level..),expand=1, colour="black")  +
+  # geom_point(cex=10) + 
+  theme(legend.position = "none") + 
+  scale_fill_gradientn(colours = paletteTern, limits=limsPlots) + 
+  labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="Diversity cost (%)") +
+  geom_point(data = costsTot[which_balanced], size = 5)
+ggsave("graphs/biodivLoss.pdf",  height=4, width=4.5)
+
+g <- ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Vcost_st)) + 
+  stat_interpolate_tern(geom="polygon", method=lm,n=100,
+                        aes(fill=..level..), colour="black",expand=1)  +
+  # geom_point(cex=10) + 
+  scale_fill_gradientn(colours = paletteTern, limits=limsPlots) + 
+  labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="ES \nloss (%)") +
+  geom_point(data = costsTot[which_balanced], size = 5)
+g + theme(legend.position = "none")
+ggsave("LaTeX/graphs/timberLoss.pdf",  height=4, width=4.5)
+
+as_ggplot(get_legend(g + guides(colour = guide_colourbar(barheight = 15))))
+ggsave("LaTeX/graphs/legendESloss.pdf", height=4, width=1.5)
+
 
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
@@ -422,3 +460,4 @@ ggplot(subset(scenariOptim, demand != 35)) +
         axis.text.y=element_blank()) +
   guides(colour=FALSE)
 ggsave("graphs/mapsChangeDemand.pdf", height=40, width=40)
+
