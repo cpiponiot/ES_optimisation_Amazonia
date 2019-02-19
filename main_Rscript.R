@@ -279,18 +279,17 @@ scenariOptim = scenariOptim[,.(Cemi = raster::extract(cost_carbon[[zone]], cbind
                                timbLoss = raster::extract(cost_vrec[[zone]], cbind(long,lat)), 
                                biodLoss = raster::extract(cost_diversity[[zone]], cbind(long,lat)), 
                                vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)), 
-                               long=long, lat=lat, demand = demand, scenario=scenario),.(zone)]
+                               long=long, lat=lat, demand = demand, scenario=scenario, area = area),.(zone)]
+
 # get initial volume per pixel
 scenariOptim = merge(scenariOptim, Mvcom0, by=c("long","lat"))
 
 scenariOptim = merge(scenariOptim, df_zones, by="zone")
 scenariOptim = merge(scenariOptim, 
-                     data.table(coordinates(grd), area=grd$area, 
-                                pHarv = grd$pHarv, pHarvAR = grd$pHarvAR, 
+                     data.table(coordinates(grd), areaTot=grd$area*grd$pHarvAR, ## total area (accessible & not)
+                                areaLogging = grd$area*grd$pHarv,  ## available area
                                 acs0=grd$acs, Rich0 = grd$mammals+grd$amphi), 
                      by=c("long","lat"))
-scenariOptim$areaTot = scenariOptim$area*scenariOptim$pHarvAR  ## total area (accessible & not)
-scenariOptim$areaLogging = scenariOptim$area*scenariOptim$pHarv  ## available area
 scenariOptim$areaLogging[grep("build", scenariOptim$scenario)] = scenariOptim$areaTot[grep("build", scenariOptim$scenario)]
 scenariOptim$areaLogging[scenariOptim$zname=="NL"] <- 0
 
@@ -323,28 +322,43 @@ colour_palette <- c("LS"= colours[1], "LM"=colours[2], "LL"=colours[3],
 
 g1 <- ggplot(subset(scenariOptim, demand == 35)) +
   geom_point(aes(x=long,y=lat,colour=zname, size=area/1e3)) +
-  theme_bw() + coord_fixed() + facet_wrap( ~ scenario, nrow = 2) +
+  theme_bw() + coord_fixed() + facet_wrap( ~ scenario, nrow = 3) +
   scale_colour_manual(name = "Zone", values = colour_palette) +
   labs(size = expression("Area available for logging ("*1000*" k"*m^2*")"), 
        x="",y="") +
-  theme(legend.position = "top", text = element_text(size=40),
+  theme(text = element_text(size=40),
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
         axis.text.y=element_blank(), 
         strip.text = element_text(colour = 'black'), 
-        strip.background = element_blank()) +
+        strip.background = element_blank(), 
+        plot.title = element_text(hjust = 0.5, size = 40)) +
   guides(colour=FALSE)
 
-zone_legend <- ggplot(df_zones[-10],aes(x=vext,y=as.factor(trot),fill=zname,label=zname)) + geom_raster() + scale_fill_manual(values = colour_palette)+geom_text(size=15) + labs(x ="Extracted volume", y = "Cutting cycle (yrs)") + theme(legend.position="none", aspect.ratio=1, panel.background = element_blank(), text = element_text(size=30))
+source("codes/splitFacet.R")
+new_plots <- splitFacet(g1 + theme(legend.position = "none"))
 
-ggarrange(g1, zone_legend, ncol=2, widths=c(6,1))
-ggsave("graphs/mapsScenarios.pdf", height=12, width=30)
+legend_size <- as_ggplot(get_legend(g1 + theme(legend.position = "bottom")))
+
+zone_legend <- ggplot(df_zones[-10],aes(x=vext,y=as.factor(trot),fill=zname,label=zname)) + 
+  geom_raster() + scale_fill_manual(values = colour_palette)+geom_text(size=15) + 
+  labs(x ="Extracted volume", y = "Cutting cycle (yrs)") + 
+  theme(legend.position="none", aspect.ratio=1, 
+        panel.background = element_blank(), plot.margin = margin(3, 3, 3, 3, "cm"),
+        text = element_text(size=30)) 
+
+g_all <- ggarrange(new_plots[[1]], new_plots[[2]], new_plots[[3]],
+          new_plots[[4]], new_plots[[5]], new_plots[[6]],
+          new_plots[[7]], new_plots[[8]], zone_legend, 
+          ncol=3, nrow = 3)
+ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
+ggsave("graphs/mapsScenarios.pdf", height=20, width=20)
 
 
 ### associated ES costs 
 
 col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B", "#D33B44", "#8B008B")
 
-levels(scenFinal$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
+levels(scenCost$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
 ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) + 
   geom_histogram(stat="identity") + 
   facet_grid(~ES) + scale_fill_manual(values= col_scenarios) +
@@ -352,6 +366,7 @@ ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         legend.background = element_rect(fill="white",colour="white"), 
         panel.background = element_rect(fill="white", colour = "black"),
+        strip.background = element_blank(),
         panel.grid = element_blank())
 ggsave("graphs/costsScenario.pdf", height=4,width=7)
 
@@ -442,10 +457,10 @@ g <- ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Vcost_st)) +
   labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="ES \nloss (%)") +
   geom_point(data = costsTot[which_balanced], size = 5)
 g + theme(legend.position = "none")
-ggsave("LaTeX/graphs/timberLoss.pdf",  height=4, width=4.5)
+ggsave("graphs/timberLoss.pdf",  height=4, width=4.5)
 
 as_ggplot(get_legend(g + guides(colour = guide_colourbar(barheight = 15))))
-ggsave("LaTeX/graphs/legendESloss.pdf", height=4, width=1.5)
+ggsave("graphs/legendESloss.pdf", height=4, width=1.5)
 
 
 ## maps with changing demand 
