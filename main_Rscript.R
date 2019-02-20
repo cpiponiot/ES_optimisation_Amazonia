@@ -403,7 +403,7 @@ ggsave("graphs/increasingDemand.pdf", height=6, width=8)
 ##### Supplementary graphs #####
 
 ### damage - explanation diagram ###
-pdf("LaTeX/graphs/schemaDam.pdf", height=2, width=3)
+pdf("graphs/schemaDam.pdf", height=2, width=3)
 par(mar=c(0,0,0,0), oma=c(0,0,0,0))
 plot(c(0,1), c(0,1.1), col="white", bty="n",yaxt="n",xaxt="n",xlab="",ylab="")
 rect(xleft = 0,ybottom = 0,xright = 1,ytop = 1,lwd=2)
