@@ -14,10 +14,7 @@ covar <- do.call(cbind, sapply(1:5, function(i) (DTinput[,c("loss", "acs", "prec
 
 ## Survivors parameters ##
 load("data/stan_Crecov_surv.Rdata")
-SurvC <- data.table(t(as.matrix(surv, pars=c("alpha","beta1","beta2", names(surv)[grep("lambda",names(surv))]))[which.max(rstan::extract(surv)$lp__),]))
-colnames(SurvC) <- c("aSg","bSg","bSm", 
-                     paste(rep("l",12), c(rep(c("Sg","Sm"), each=5),c("Sg","Sm")), 
-                           c(rep(c("acs","dacs","prec","seas","bkd"),2),rep("loss",2)), sep="_"))
+SurvC <- SurvC[which.max(SurvC$lp__), -"lp__"]
 
 DTinput$bSg <- SurvC$bSg + covar %*% t(SurvC[,sapply(colnames(covar), function(i) grep(paste("Sg",i,sep="_"), colnames(SurvC))),with=F]) 
 DTinput$bSg[DTinput$bSg < 0] <- min(DTinput$bSg[DTinput$bSg>0])
@@ -26,11 +23,8 @@ DTinput$bSm <- SurvC$bSm + covar %*% t(SurvC[,sapply(colnames(covar), function(i
 DTinput$bSm[DTinput$bSm < 0] <- min(DTinput$bSm[DTinput$bSm>0])
 
 ## Recruits parameters ## 
-load("data/stan_Crecov_newc.Rdata")
-RecrC <- data.table(t(as.matrix(newc, pars=c("alpha1","alpha2","beta1","beta2","beta3","eta", names(newc)[grep("lambda",names(newc))]))[which.max(rstan::extract(newc)$lp__),]))
-colnames(RecrC) <- c("aRr","aRg","bRr","bRg","bRm","eta", 
-                     paste(rep("l",18), c(rep(c("Rr","Rg","Rm"), each=5),c("Rr","Rg","Rm")), 
-                           c(rep(c("acs","dacs","prec","seas","bkd"),3),rep("loss",3)), sep="_"))
+load("data/stan_Crecov_recr.Rdata")
+RecrC <- RecrC[which.max(RecrC$lp__), -"lp__"]
 
 ## [!] negative beta values... -> recalibrate the model with a log-normal distribution? 
 DTinput$bRr <- RecrC$bRr + covar %*% t(RecrC[,sapply(colnames(covar), function(i) grep(paste("Rr",i,sep="_"), colnames(RecrC))),with=F]) 

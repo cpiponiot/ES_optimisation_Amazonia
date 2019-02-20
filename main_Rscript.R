@@ -349,9 +349,9 @@ zone_legend <- ggplot(df_zones[-10],aes(x=vext,y=as.factor(trot),fill=zname,labe
         axis.title.x = element_text(margin = margin(t = 15, r = 0, b = 0, l = 0))) 
 
 g_all <- ggarrange(new_plots[[1]], new_plots[[2]], new_plots[[3]],
-          new_plots[[4]], new_plots[[5]], new_plots[[6]],
-          new_plots[[7]], new_plots[[8]], zone_legend, 
-          ncol=3, nrow = 3)
+                   new_plots[[4]], new_plots[[5]], new_plots[[6]],
+                   new_plots[[7]], new_plots[[8]], zone_legend, 
+                   ncol=3, nrow = 3)
 ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
 ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 
@@ -361,7 +361,7 @@ ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B", "#D33B44", "#8B008B")
 
 levels(scenCost$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
-ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) + 
+g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) + 
   geom_histogram(stat="identity") + 
   facet_grid(~ES) + scale_fill_manual(values= col_scenarios) +
   labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
@@ -370,6 +370,7 @@ ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) +
         panel.background = element_rect(fill="white", colour = "black"),
         strip.background = element_blank(),
         panel.grid = element_blank())
+g2
 ggsave("graphs/costsScenario.pdf", height=4,width=7)
 
 
@@ -382,16 +383,19 @@ levels(demandFinal$variable) <- c("(a) Total area logged (Mha)",
                                   "(e) Carbon retained (%)", 
                                   "(f) Biodiversity retained (%)" ) 
 
-ggplot(demandFinal, aes(x=demand, y= value, colour=scenario))+ 
+legend_strategies <- as_ggplot(get_legend(g2))
+
+g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario))+ 
   geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,100), each=3))),
              aes(yintercept = h), lty=2) + 
-  geom_line() + scale_colour_brewer(palette = "Set1") +
+  geom_line(lwd=0.8) + scale_colour_brewer(palette = "Set1") +
   facet_wrap( ~ variable ,  nrow=3, scale="free_y", dir = "v") + 
   theme(panel.background = element_rect(fill="white", colour = "black"),
         panel.grid = element_blank(), strip.background = element_blank(), 
-        legend.key = element_blank()) + 
+        legend.position = "none") + 
   scale_color_manual(values= col_scenarios)+ 
-  labs(x=expression("Timber production (M"*m^3*yr^{-1}*")"), y="",colour="Strategies") 
+  labs(x=expression("Timber production (M"*m^3*yr^{-1}*")"), y="",colour="Strategy") 
+ggarrange(g3, legend_strategies, ncol = 2, widths = c(4,1))
 ggsave("graphs/increasingDemand.pdf", height=6, width=8)
 
 
