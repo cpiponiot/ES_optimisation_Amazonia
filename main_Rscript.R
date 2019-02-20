@@ -326,12 +326,12 @@ g1 <- ggplot(subset(scenariOptim, demand == 35)) +
   scale_colour_manual(name = "Zone", values = colour_palette) +
   labs(size = expression("Area available for logging ("*1000*" k"*m^2*")"), 
        x="",y="") +
-  theme(text = element_text(size=40),
+  theme(text = element_text(size = 30), 
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
         axis.text.y=element_blank(), 
         strip.text = element_text(colour = 'black'), 
         strip.background = element_blank(), 
-        plot.title = element_text(hjust = 0.5, size = 40)) +
+        plot.title = element_text(hjust = 0.5, size = 35)) +
   guides(colour=FALSE)
 
 source("codes/splitFacet.R")
@@ -343,15 +343,17 @@ zone_legend <- ggplot(df_zones[-10],aes(x=vext,y=as.factor(trot),fill=zname,labe
   geom_raster() + scale_fill_manual(values = colour_palette)+geom_text(size=15) + 
   labs(x ="Extracted volume", y = "Cutting cycle (yrs)") + 
   theme(legend.position="none", aspect.ratio=1, 
-        panel.background = element_blank(), plot.margin = margin(3, 3, 3, 3, "cm"),
-        text = element_text(size=30)) 
+        panel.background = element_blank(), plot.margin = margin(2, 2, 2, 2, "cm"),
+        text = element_text(size=25), 
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 15, r = 0, b = 0, l = 0))) 
 
 g_all <- ggarrange(new_plots[[1]], new_plots[[2]], new_plots[[3]],
           new_plots[[4]], new_plots[[5]], new_plots[[6]],
           new_plots[[7]], new_plots[[8]], zone_legend, 
           ncol=3, nrow = 3)
 ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
-ggsave("graphs/mapsScenarios.pdf", height=20, width=20)
+ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 
 
 ### associated ES costs 
