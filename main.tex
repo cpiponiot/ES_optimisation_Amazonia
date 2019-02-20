@@ -34,7 +34,7 @@ To avoid predatory logging practices that have depleted Amazonian forests of the
 
 Because most of the forest cover remains after logging operations, selectively logged forests still harbour most of their initial carbon stocks, biodiversity, and other environmental features \cite{Putz2012}. It has frequently been argued that integrating selectively logged forests into tropical forest conservation schemes is of primary importance \cite{Edwards2014a}. Even though the value of production forests in providing Ecosystem Services (ES) is increasingly recognised, trade-offs between ES have rarely been investigated at large scale. Most conservation programs and payments for ES indeed focus on one particular feature (e.g. carbon in REDD+ programs \cite{Laing2016}), failing to account for forests multi-functionality and complexity \cite{VanderPlas2017}. Few studies have addressed multi-criteria decision-making in the context of tropical forests. For instance, a study in a logging concession in Suriname found that trade-offs between carbon stock conservation and timber recovery are mediated by logging intensity \cite{Roopsind2018}. Even though such studies provide useful insight for forest managers, they remain limited in scale, while most conservation-related policies apply at larger scales \cite{Hein2006b}. 
 
-At the regional scale, natural production forests are managed to meet demands for high quality timber, while maintaining high levels of ES. To achieve such objectives, forest managers can choose between a continuum of 2 land use strategies: land sharing, which implies the use of less-damaging low-intensity logging on a large share of the landscape, or land sparing, which combines high-intensity logging with the preservation of most of the landscape \cite{Green2005}. In the context of Bornean tropical forests, land sparing logging has been shown to increase species richness \cite{Edwards2014}. Similarly, a recent study found that the conservation value of East Kalimantan Indonesian forests was maximised towards the sparing end of the sharing/sparing continuum \cite{Runting2108}.
+At the regional scale, natural production forests are managed to meet demands for high quality timber, while maintaining high levels of ES. To achieve such objectives, forest managers can choose between a continuum of 2 land use strategies: land sharing, which implies the use of less-damaging low-intensity logging on a large share of the landscape, or land sparing, which combines high-intensity logging with the preservation of most of the landscape \cite{Green2005}. In the context of Bornean tropical forests, land sparing logging has been shown to increase species richness \cite{Edwards2014}. Similarly, a recent study found that the conservation value of East Kalimantan Indonesian forests was maximised towards the sparing end of the sharing/sparing continuum \cite{Runting2018}.
 
 Here we aim at optimising ES provision in Amazonian production forests in a spatially-explicit framework. We analyse the effect of different logging intensities (no logging or 10-20-30 m$^3$ha$^{-1}$) and cutting cycle duration (15-30-65 years) on the provision of three ES: timber recovery, carbon storage, and biodiversity conservation. Our main research questions are: (i) what are the best management choices for future production forests, (ii) what are the consequences of these management choices on ES provision, and (iii) how does the projected demand for high-quality timber affects forest management and associated ES provision? 
 
@@ -51,19 +51,6 @@ Even though Amazonia has already been deeply impacted by human activities and ro
 
 Timber production through selective logging is the dominant forest use in the region, in terms of extent and generated income \cite{Blaser2011}. About 15\% of Amazonian forests is designated for timber production \cite{FAO2011}. If selectively logged forests still retain most of their original levels of carbon and diversity \cite{Putz2012}, forest recovery and resilience post-logging largely depend on implementation of logging in the field, the logging intensity and the cutting cycle length, \textit{i.e.} the time left to the forest to recover \cite{Rutishauser2015,Piponiot2018}. In Amazonia, logging intensities vary between 5-30~m$^3$ of timber extracted per ha, with an estimated average around 20~m$^3$ha$^{-1}$ in the Brazilian Amazon \cite{Asner2005}. Official minimum cutting cycle length varies from one country to another, ranging from 20 years (e.g. Peru, Bolivia \cite{Fredericksen2003,Blaser2011}) up to 65 years (French Guiana). 
 
-\subsection{optimisation framework}
-
-In this paper we use a methodology adapted from the optimisation software \textit{Marxan with Zones} \cite{Watts2009}, using the package \textit{prioritzr} \cite{Hanson2018} developed in R programming language \cite{RCoreTeam2017}. 
-The goal of this optimisation is to find the best spatial configuration of different land uses in a landscape. In this study, Amazonia was divided into a systematic grid of 556 1$^{\circ}$ planning units, which corresponds to the coarsest resolution of input maps (see paragraph "Costs"). The spatial optimisation seeks the most efficient strategy that minimises a cost function under pre-defined objectives. In clear, we seek the optimal strategy to sustain current and future timber demand and minimise biodiversity and carbon losses across all planning units.
-
-\subsubsection{Definition of planning units, objectives and costs }
-\label{sec:defPU}
-
-\paragraph{Planning units}
-
-The total area of a planning unit (PU) ranged from XX to YY ha. In each PU, we considered only areas suitable for logging, referred to as 'potential production forests'(PPF). PPF were extracted from XX-resolution maps, as PUs (i) having at least 90\% of forest cover according to Hansen et al.\cite{Hansen2013}, (ii) being accessible i.e. within 25 km of a road or track \cite{OSM2018,Asner2006}, and (iii) not being under a full protection status \cite{WDPA2016} (except category VI of the International Union for the Conservation of Nature (IUCN), which corresponds to a "sustainable use" and was considered as being available for logging purpose).
-Based on data from forest concessions in French Guiana and Brazil, 42\% of those areas was considered as unsuitable for logging (slopes, areas around rivers and streams, etc) \cite{Piponiotc}. 
-
 \begin{figure}
     \centering
     \includegraphics[width=0.8\linewidth]{graphs/harv_areas.pdf}
@@ -71,23 +58,28 @@ Based on data from forest concessions in French Guiana and Brazil, 42\% of those
     \label{fig:pharv}
 \end{figure}
 
-\paragraph{Management objectives}
+\subsection{Optimisation framework}
 
-To answer these questions, we first optimise each ES (timber, carbon and biodiversity) separately with a timber production target of 35~Mm$^3$yr$^{-1}$ (equivalent to the current timber production in Amazonia \cite{Lentini2005}).
-Here, we offer to test how current and future timber production affects biodiversity and carbon stocks.  To do so, we set an average timber production of 35~Mm$^3$yr$^{-1}$, corresponding to the actual timber production in Amazonian natural forests \cite{Lentini2005}, to answer current and future demand for tropical timber in South America. 
+The goal of the optimisation is to find the best spatial configuration of different land uses in a landscape. In this study, Amazonia was divided into a systematic grid of 556 1$^{\circ}$ cells, which correspond to the coarsest resolution of input maps (see paragraph "Costs"). 
 
-We defined a second objective to conserve biodiversity, that consists in conserving most intact forest landscapes (IFL) within PUs. IFL are irreplaceable for biodiversity conservation \cite{Gibson2011}, especially for species that are highly sensitive to forest degradation. Because Amazonian forests have high levels of endemism and all regions are not equivalent in terms of species composition, we defined the biodiversity conservation objective as follow: in each of the 6 ecoregions (ter Steege et al. \cite{TerSteege2013}), namely the Guiana Shield, eastern Amazon, southeastern Amazon, central Amazon, southwestern Amazon, and northwestern Amazon, 80\% of IFLs (according to Potapov et al. \cite{Potapov2017}) shall remain unlogged. Those include forests in protected areas, inaccessible forests ($>$ 25 km from a road or track), or forests inside planning units that have been allocated to the "No Logging" type. 
+The spatial optimisation seeks the most efficient spatial configuration of logging rules (cutting cycles and logging intensities) that minimises a cost function under pre-defined objectives. An annual timber production target is first set (Figure~\ref{fig:basicDiagram}): the optimal solution must include enough logged cells to produce the desired amount of timber. Then a management strategy is defined (see Table~\ref{tab:strategies} for a complete strategy description). The strategy includes (i) the weight of each ES (timber recovery, carbon storage and biodiversity conservation) in the cost function that will be minimised, (ii) the area of permanent production forests (PPF) in each grid cell, and (iii) some additional constraints: sustainable timber yields (STY), minimum cutting cycle length and intact forest landscape (IFL) conservation. 
+
+The optimal spatial configuration for one given strategy is then found using a methodology adapted from the optimisation software \textit{Marxan with Zones} \cite{Watts2009}, using the package \textit{prioritzr} \cite{Hanson2018} developed in R programming language \cite{RCoreTeam2017}. 
 
 \begin{figure}
     \centering
     \includegraphics[width = 0.4\linewidth]{graphs/diagramSpatOptim}
-    \caption{Diagram of spatial optimisation steps. PPF: Permanent Production Forests, i.e. all forests that are accessible and where logging is allowed. STY: Sustainable Timber Yields contraint (i.e. the volume of timber extracted in all production forests must be recovered at the end of the first cutting cycle). The 8 strategies tested in this study are summarised in Table~\ref{tab:strategies}. The resulting logging configuration and associated ES costs with a 35~Mm$^3$yr$^{-1}$ are presented in Figures~\ref{fig:uniqueCost} and \ref{fig:scenESProv}, respectively. The effects of changing the timber production target are presented in Figure~\ref{fig:incDemand}.}
+    \caption{Diagram of spatial optimisation steps. PPF: Permanent Production Forests, i.e. all forests that are accessible and where logging is allowed. STY: Sustainable Timber Yields constraint (i.e. the volume of timber extracted in all production forests must be recovered at the end of the first cutting cycle). The 8 strategies tested in this study are summarised in Table~\ref{tab:strategies}. The resulting logging configuration and associated ES costs with a 35~Mm$^3$yr$^{-1}$ are presented in Figures~\ref{fig:uniqueCost} and \ref{fig:scenESProv}, respectively. The effects of changing the timber production target are presented in Figure~\ref{fig:incDemand}.}
     \label{fig:basicDiagram}
 \end{figure}
 
-\paragraph{Costs}
+\subsubsection{ES prioritisation}
+\label{sec:defPU}
 
 In our optimisation framework, logging costs are estimated as the loss of each ES (i.e. carbon emissions, biodiversity loss, and timber stocks decrease) caused by logging operations estimated in each planning unit.
+
+Biodiversity loss is approximated through the loss of two vertebrate taxa: mammals and amphibians. In the case of carbon and timber, ES losses are partially offset by forest recovery before the next cutting cycle (see section~\ref{sec:ESestimation}). 
+
 To reflect the range of practices currently in use in the region, logging could take one of the following feature: a logging intensity of 10 (Low), 20 (Medium) or 30 (High) m$^3$ha$^{−1}$, and a cutting cycle length of 15 (Short), 30 (Medium) or 65 (Long) years, or no Logging. Medium intensity and cutting cycle length correspond to current median logging practices in Amazonia. 
 
 The total cost of allocating logging type $z$ to planning unit $p$ is estimated as: 
@@ -104,7 +96,26 @@ ES losses are standardised by their respective sample mean $\overline{Cemi}$, $\
 $\alpha_C$, $\alpha_B$ and $\alpha_T$ are the respective weight given to carbon, biodiversity and timber costs in the optimisation. They are bounded between 0 and 1 and $\alpha_C+\alpha_B+\alpha_T = 1$. 
 A constant $K$ was added to avoid negative costs (when volume or carbon recovery exceed volume or carbon losses). $K$ is set to the minimum cost value across all planning units and all logging types. 
 
-Biodiversity loss is approximated through the loss of two vertebrate taxa: mammals and amphibians. In the case of carbon and timber, ES losses are partially offset by forest recovery before the next cutting cycle (see section~\ref{sec:ESestimation}). 
+xx explain briefly balanced costs $\rightarrow$ supplementary material
+
+\subsubsection{Permanent Production Forest area}
+
+The total area of a planning unit (PU) ranged from XX to YY ha. In each PU, we considered only areas suitable for logging, referred to as 'potential production forests'(PPF). PPF were extracted from XX-resolution maps, as PUs (i) having at least 90\% of forest cover according to Hansen et al.\cite{Hansen2013}, (ii) being accessible i.e. within 25 km of a road or track \cite{OSM2018,Asner2006}, and (iii) not being under a full protection status \cite{WDPA2016} (except category VI of the International Union for the Conservation of Nature (IUCN), which corresponds to a "sustainable use" and was considered as being available for logging purpose).
+Based on data from forest concessions in French Guiana and Brazil, 42\% of those areas was considered as unsuitable for logging (slopes, areas around rivers and streams, etc) \cite{Piponiotc}. 
+
+\subsubsection{Additional constraints}
+
+\paragraph{Sustainable timber yields}
+
+an optional sustainable timber yields (STY) constraint: when this constraint is added, the sum of timber stocks over all grid cells must have recovered its initial value after the first cutting cycle. 
+
+\paragraph{Minimum cutting cycle length}
+
+
+\paragraph{IFL conservation}
+
+Finally, an additional constraint  to conserve biodiversity is added to all strategies: it consists in conserving most intact forest landscapes (IFL) within PUs. IFL are irreplaceable for biodiversity conservation \cite{Gibson2011}, especially for species that are highly sensitive to forest degradation. Because Amazonian forests have high levels of endemism and all regions are not equivalent in terms of species composition, we defined the biodiversity conservation objective as follow: in each of the 6 ecoregions (ter Steege et al. \cite{TerSteege2013}), namely the Guiana Shield, eastern Amazon, southeastern Amazon, central Amazon, southwestern Amazon, and northwestern Amazon, 80\% of IFLs (according to Potapov et al. \cite{Potapov2017}) shall remain unlogged. Those include forests in protected areas, inaccessible forests ($>$ 25 km from a road or track), or forests inside planning units that have been allocated to the "No Logging" type. 
+
 
 \paragraph{Integration of logging costs at regional scale}
 
@@ -145,85 +156,6 @@ In the "Carbon" strategy, the total cost is proportional to carbon emissions ($\
     \label{tab:strategies}
 \end{table}
 
-\subsection{Quantifying the effect of logging on ESs}
-\label{sec:ESestimation}
-
-\subsubsection{Timber production and recovery}
-
-From a previously developed volume recovery model calibrated at the Amazonian scale \cite{Piponiotc}, we extracted: (i) the total volume $vtot_p$ (m$^3$ha$^{-1}$) in PU $p$, (ii) the proportion of potentially commercial timber $\omega 0_p$ and (iii) the potential timber recovery $vrec_{p,z}$ at the end of a cutting cycle $trot_z$ and after a logging intensity $vext_z$ ($z$ being the logging type). All parameters were set to their maximum likelihood value.
-
-The mean annual timber production over the first cutting cycle in PU $p$ in logging type $z$ is equal to: 
-\begin{equation}
-\label{eq:prod}
-    Prod_{p,z}  =  \frac{min\big(vext_z, (vtot_p\cdot \omega 0_p) \big) \cdot area_p}{trot_z}
-\end{equation}
-
-where $vext_z$ is the extracted volume in logging type $z$, $vtot_p\cdot \omega 0_p$ is the potential timber volume (the actual extracted volume cannot exceed the potential timber volume), $area_p$ is the area available for logging and $trot_z$ is the cutting cycle length.
-
-The mean annual timber recovery over the first cutting cycle in PU $p$ in logging type $z$ is equal to: 
-
-\begin{equation}
-\label{eq:rec}
-    Rec_{p,z} = \frac{vrec_{p,z}\cdot area_p}{trot_{p,z}}
-\end{equation}
-
-\subsubsection{Carbon emissions}
-
-The effect of logging on carbon emissions is here quantified as the mean difference to the initial carbon stock over the cutting cycle. It was assessed as the difference of two terms: (i) the initial carbon loss caused by logging, (ii) minus the carbon storage from forest regrowth, averaged over the cutting cycle. 
-
-The initial carbon loss caused by logging is threefold: (i) from extracted logs; (ii) from road building (deforestation), (iii) from incidental damage during logging operations \cite{Piponiot2016}. 
-
-The carbon emissions from extracted logs in PU $p$ under logging type $z$ was assessed as: 
-
-\begin{equation}
-\label{eq:cext}
-    Cext_{p,z} = Prod_{p,z} \cdot WDext_p \cdot  area_p
-\end{equation}
-
-with $Prod_{p,z}$ the actual logging intensity (in m$^3$ha$^{-1}$), $area_p$ is the area available for logging (ha) in PU $p$ and $WDext_p$ is the mean wood density of commercial trees in PU $p$ (see supplementary material~\ref{supmat:wdext} for wood density estimation). 
-
-The carbon emissions from road building were estimated as follow: 
-
-\begin{equation}
-\label{eq:croad}
-    Cdefor_{p,z} = Pdefor \cdot acs_p \cdot area_p
-\end{equation}
-
-where $Pdefor = 4.7 $\% is the estimated proportion of a logged area that is deforested for infrastructure (roads, logging decks and main skid trails) according to Piponiot et al. \cite{Piponiot2016} and $acs_p$ is the mean aboveground carbon density (MgC.ha$^{-1}$) in planning unit $p$, extracted from a global carbon map \cite{Avitabile2016}. 
-
-Carbon losses from damaged trees were assessed as follows: 
-
-\begin{equation}
-\label{eq:cdam}
-    Cdam_{p,z} = \frac{acs_p  - Prod_{p,z} \cdot WDext_p } {1 + \left(\frac{acs_p}{Prod_{p,z} \cdot WDext_p}  -1 \right)^\theta} \cdot area_p
-\end{equation}
-
-with $\theta$ a parameter of the model: the model justification and calibration are presented in the supplementary material~\ref{supmat:cdam}. 
-
-Post-logging carbon recovery $Crec_{p,z}$ was assessed with the methodology developed by Piponiot et al. \cite{Piponiot2016a}.  
-All parameters were set to their maximum likelihood value. 
-
-For each PU $p$ and each logging type $z$, the mean annual carbon emissions from PU $p$ under logging type $z$ are thus calculated as: 
-
-\begin{equation}
-\label{eq:cemi}
-    Cemi_{p,z} = Cext_{p,z} + Cdefor_{p,z} + Cdam_{p,z} -  \sum_{t=1}^{trot_z} \frac{Crec_{t,p,z}}{trot_z} 
-\end{equation}
-
-
-\subsubsection{Biodiversity}
-
-We chose to model the effect of logging on amphibians and mammals richness because they are key animals in forest ecosystems: amphibians are good indicators of global ecosystem health \cite{Welsh1998,Collins2003} and mammals ensure many ecosystem functions, among which pollination \cite{Fleming2009} and seed dispersal \cite{Wright2000,Muscarella2007}. We used global maps of mammals and amphibians richness derived from IUCN species range maps \cite{Jenkins2013,MapBiodiv}, which can fairly represent patterns of conservation priority \cite{Marechaux2017}.
-
-The impact of logging on mammals and amphibians was assessed with the equation: 
-
-\begin{equation}
-\label{eq:rloss}
-Rloss_{p,z} = \left(Rm_{p} \cdot \beta m + Ra_{p} \cdot \beta a  \right)  \cdot vext_z \cdot area_p 
-\end{equation}
-
-where $Rloss_{p,z}$ is the loss of vertebrate richness (mammals and amphibians) in PU $p$ and logging type $z$, $Rm_{p}$ and $Ra_p$ are the pre-logging richness of mammals and amphibians respectively \cite{Jenkins2013}, $\beta m = 1.44$ and $\beta a = 1.53$  are the estimated slopes of post-logging species loss in the Neotropics for mammals and amphibians respectively, according to Burivalova et al.  \cite{Burivalova2014}. $vext_z$ is the logging intensity in logging type $z$.
-We hypothesize that amphibians and mammals richness do not recover after logging (no effect of cutting cycle length). 
 
 
 \section{Results}
@@ -337,6 +269,87 @@ This study shows that large-scale trade-offs exist between maintaining timber st
 \clearpage
 
 \section{Supplementary material}
+
+
+\subsection{Quantifying the effect of logging on ESs}
+\label{sec:ESestimation}
+
+\subsubsection{Timber production and recovery}
+
+From a previously developed volume recovery model calibrated at the Amazonian scale \cite{Piponiotc}, we extracted: (i) the total volume $vtot_p$ (m$^3$ha$^{-1}$) in PU $p$, (ii) the proportion of potentially commercial timber $\omega 0_p$ and (iii) the potential timber recovery $vrec_{p,z}$ at the end of a cutting cycle $trot_z$ and after a logging intensity $vext_z$ ($z$ being the logging type). All parameters were set to their maximum likelihood value.
+
+The mean annual timber production over the first cutting cycle in PU $p$ in logging type $z$ is equal to: 
+\begin{equation}
+\label{eq:prod}
+    Prod_{p,z}  =  \frac{min\big(vext_z, (vtot_p\cdot \omega 0_p) \big) \cdot area_p}{trot_z}
+\end{equation}
+
+where $vext_z$ is the extracted volume in logging type $z$, $vtot_p\cdot \omega 0_p$ is the potential timber volume (the actual extracted volume cannot exceed the potential timber volume), $area_p$ is the area available for logging and $trot_z$ is the cutting cycle length.
+
+The mean annual timber recovery over the first cutting cycle in PU $p$ in logging type $z$ is equal to: 
+
+\begin{equation}
+\label{eq:rec}
+    Rec_{p,z} = \frac{vrec_{p,z}\cdot area_p}{trot_{p,z}}
+\end{equation}
+
+\subsubsection{Carbon emissions}
+
+The effect of logging on carbon emissions is here quantified as the mean difference to the initial carbon stock over the cutting cycle. It was assessed as the difference of two terms: (i) the initial carbon loss caused by logging, (ii) minus the carbon storage from forest regrowth, averaged over the cutting cycle. 
+
+The initial carbon loss caused by logging is threefold: (i) from extracted logs; (ii) from road building (deforestation), (iii) from incidental damage during logging operations \cite{Piponiot2016}. 
+
+The carbon emissions from extracted logs in PU $p$ under logging type $z$ was assessed as: 
+
+\begin{equation}
+\label{eq:cext}
+    Cext_{p,z} = Prod_{p,z} \cdot WDext_p \cdot  area_p
+\end{equation}
+
+with $Prod_{p,z}$ the actual logging intensity (in m$^3$ha$^{-1}$), $area_p$ is the area available for logging (ha) in PU $p$ and $WDext_p$ is the mean wood density of commercial trees in PU $p$ (see supplementary material~\ref{supmat:wdext} for wood density estimation). 
+
+The carbon emissions from road building were estimated as follow: 
+
+\begin{equation}
+\label{eq:croad}
+    Cdefor_{p,z} = Pdefor \cdot acs_p \cdot area_p
+\end{equation}
+
+where $Pdefor = 4.7 $\% is the estimated proportion of a logged area that is deforested for infrastructure (roads, logging decks and main skid trails) according to Piponiot et al. \cite{Piponiot2016} and $acs_p$ is the mean aboveground carbon density (MgC.ha$^{-1}$) in planning unit $p$, extracted from a global carbon map \cite{Avitabile2016}. 
+
+Carbon losses from damaged trees were assessed as follows: 
+
+\begin{equation}
+\label{eq:cdam}
+    Cdam_{p,z} = \frac{acs_p  - Prod_{p,z} \cdot WDext_p } {1 + \left(\frac{acs_p}{Prod_{p,z} \cdot WDext_p}  -1 \right)^\theta} \cdot area_p
+\end{equation}
+
+with $\theta$ a parameter of the model: the model justification and calibration are presented in the supplementary material~\ref{supmat:cdam}. 
+
+Post-logging carbon recovery $Crec_{p,z}$ was assessed with the methodology developed by Piponiot et al. \cite{Piponiot2016a}.  
+All parameters were set to their maximum likelihood value. 
+
+For each PU $p$ and each logging type $z$, the mean annual carbon emissions from PU $p$ under logging type $z$ are thus calculated as: 
+
+\begin{equation}
+\label{eq:cemi}
+    Cemi_{p,z} = Cext_{p,z} + Cdefor_{p,z} + Cdam_{p,z} -  \sum_{t=1}^{trot_z} \frac{Crec_{t,p,z}}{trot_z} 
+\end{equation}
+
+
+\subsubsection{Biodiversity}
+
+We chose to model the effect of logging on amphibians and mammals richness because they are key animals in forest ecosystems: amphibians are good indicators of global ecosystem health \cite{Welsh1998,Collins2003} and mammals ensure many ecosystem functions, among which pollination \cite{Fleming2009} and seed dispersal \cite{Wright2000,Muscarella2007}. We used global maps of mammals and amphibians richness derived from IUCN species range maps \cite{Jenkins2013,MapBiodiv}, which can fairly represent patterns of conservation priority \cite{Marechaux2017}.
+
+The impact of logging on mammals and amphibians was assessed with the equation: 
+
+\begin{equation}
+\label{eq:rloss}
+Rloss_{p,z} = \left(Rm_{p} \cdot \beta m + Ra_{p} \cdot \beta a  \right)  \cdot vext_z \cdot area_p 
+\end{equation}
+
+where $Rloss_{p,z}$ is the loss of vertebrate richness (mammals and amphibians) in PU $p$ and logging type $z$, $Rm_{p}$ and $Ra_p$ are the pre-logging richness of mammals and amphibians respectively \cite{Jenkins2013}, $\beta m = 1.44$ and $\beta a = 1.53$  are the estimated slopes of post-logging species loss in the Neotropics for mammals and amphibians respectively, according to Burivalova et al.  \cite{Burivalova2014}. $vext_z$ is the logging intensity in logging type $z$.
+We hypothesize that amphibians and mammals richness do not recover after logging (no effect of cutting cycle length). 
 
 \subsection{Carbon damage model}
 \label{supmat:cdam}
