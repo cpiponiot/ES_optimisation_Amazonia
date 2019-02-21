@@ -176,40 +176,20 @@ if (solveProblemsParallel){
   
 } else {load("outputs/changeCost.Rdata")}
 
-costs_analysis <- merge(changeCost, data.frame(grd)[,c("long","lat","area","pHarv")], by=c("long","lat"))
+changeCost <- merge(changeCost, data.frame(grd)[,c("long","lat","area","pHarv")], by=c("long","lat"))
+changeCost[, areaLogging := area * pHarv]
 
-costs_analysis = costs_analysis[,.(carbon = raster::extract(costMaps$carbon[[zone]], 
-                                                            cbind(long,lat)),
-                                   biodiversity = raster::extract(costMaps$biodiversity[[zone]],
-                                                                  cbind(long,lat)),
-                                   timber = raster::extract(costMaps$timber[[zone]], 
-                                                            cbind(long,lat)),
-                                   long=long,lat=lat, alphaC,alphaB,alphaV, 
-                                   area = area, pHarv=pHarv),.(zone)]
+costs_analysis <- changeCost[,.(timber = rel_ES_costs(zone, long, lat, areaLogging, "timber"), 
+                                carbon = rel_ES_costs(zone, long, lat, areaLogging, "carbon"), 
+                                biodiversity = rel_ES_costs(zone, long, lat, areaLogging, "biodiversity")),
+                             .(alphaV, alphaC, alphaB)]
 
-## for now: fix later timber maps ##
-for (i in which(is.na(costs_analysis$timber))) {
-  costs_analysis$timber[i] <- raster::extract(costMaps$timber[[costs_analysis$zone[i]]], costs_analysis[i, c("long","lat")]+cbind(1,1))
-} 
-
-costsTot = costs_analysis[,.(Ccost = sum(carbon*area*pHarv), 
-                             Vcost = sum(timber*area*pHarv), 
-                             Bcost = sum(biodiversity*area*pHarv)),.(alphaC,alphaB,alphaV)]
-costsTot$Ccost_st = costsTot$Ccost/costsTot[alphaC==1]$Ccost*100
-costsTot$Bcost_st = costsTot$Bcost/costsTot[alphaB==1]$Bcost*100
-costsTot$Vcost_st = costsTot$Vcost/costsTot[alphaV==1]$Vcost*100
-costsTot$Ccost_st[costsTot$Ccost_st<100] <- 100 ## fix that
-
-d1 = abs(costsTot$Ccost_st - costsTot$Bcost_st)
-d2 = abs(costsTot$Ccost_st - costsTot$Vcost_st)
-d3 = abs(costsTot$Vcost_st - costsTot$Bcost_st)
-which_balanced = which.min((d1+d2+d3)/3)
+costsTot = melt(costs_analysis, id.vars = c("alphaV", "alphaC", "alphaB"), variable.name = "ES", value.name = "loss")
 
 
 ### (2) Scenario comparision ###
 
-coeffs_balanced <- unlist(costsTot[which_balanced, c("alphaV","alphaC","alphaB")])
-source("codes/createTargetsCostsFeatures.R")
+# source("codes/createTargetsCostsFeatures.R")
 
 if (solveProblemsParallel){
   
@@ -328,7 +308,9 @@ g1 <- ggplot(subset(scenariOptim, demand == 35)) +
        x="",y="") +
   theme(text = element_text(size = 30), 
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
-        axis.text.y=element_blank(), 
+        axis.text.y=element_blank(),
+        panel.background = element_rect(fill="white", colour = "black"), 
+        panel.grid = element_blank(),
         strip.text = element_text(colour = 'black'), 
         strip.background = element_blank(), 
         plot.title = element_text(hjust = 0.5, size = 35)) +
@@ -343,7 +325,8 @@ zone_legend <- ggplot(df_zones[-10],aes(x=vext,y=as.factor(trot),fill=zname,labe
   geom_raster() + scale_fill_manual(values = colour_palette)+geom_text(size=15) + 
   labs(x ="Extracted volume", y = "Cutting cycle (yrs)") + 
   theme(legend.position="none", aspect.ratio=1, 
-        panel.background = element_blank(), plot.margin = margin(2, 2, 2, 2, "cm"),
+        panel.background = element_blank(), 
+        plot.margin = margin(2, 2, 2, 2, "cm"),
         text = element_text(size=25), 
         axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)),
         axis.title.x = element_text(margin = margin(t = 15, r = 0, b = 0, l = 0))) 
@@ -371,7 +354,7 @@ g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) +
         strip.background = element_blank(),
         panel.grid = element_blank())
 g2
-ggsave("graphs/costsScenario.pdf", height=4,width=7)
+ggsave("graphs/costsScenario.pdf", height=4, width=7)
 
 
 ### ES = f(timber demand, scenario) ###
@@ -433,41 +416,19 @@ dev.off()
 
 ### ternary plots - cost analysis
 
-limsPlots = range(costsTot[,grep("_st",colnames(costsTot)),with=F]) +c(-10,0)
-paletteTern = colorRampPalette(c("blue","yellow", "orange", "red"))(100)
+paletteTern = colorRampPalette(c("red","orange", "yellow", "blue"))(100)
 
-ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Ccost_st)) + 
+costsTot$loss_rel = costsTot$loss - 100
+levels(costsTot$ES) <- c("(a) Timber","(b) Carbon","(c) Biodiversity")
+
+ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss_rel)) + 
   stat_interpolate_tern(geom="polygon", method=lm, colour="black", formula = value~x+y,
                         n=100,aes(fill=..level..),expand=1)  +
-  # geom_point(cex=10) +
-  theme(legend.position = "none") + 
-  scale_fill_gradientn(colours = paletteTern, limits=limsPlots) +
-  labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="Carbon cost (%)") +
-  geom_point(data = costsTot[which_balanced], size = 5)
-ggsave("graphs/carbonLoss.pdf", height=4, width=4.5)
-
-ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Bcost_st)) + 
-  stat_interpolate_tern(geom="polygon", method=lm,n=100, aes(fill=..level..),expand=1, colour="black")  +
-  # geom_point(cex=10) + 
-  theme(legend.position = "none") + 
-  scale_fill_gradientn(colours = paletteTern, limits=limsPlots) + 
-  labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="Diversity cost (%)") +
-  geom_point(data = costsTot[which_balanced], size = 5)
-ggsave("graphs/biodivLoss.pdf",  height=4, width=4.5)
-
-g <- ggtern(data=costsTot,aes(x=alphaC,y=alphaB,z=alphaV, value=Vcost_st)) + 
-  stat_interpolate_tern(geom="polygon", method=lm,n=100,
-                        aes(fill=..level..), colour="black",expand=1)  +
-  # geom_point(cex=10) + 
-  scale_fill_gradientn(colours = paletteTern, limits=limsPlots) + 
-  labs(x="Carbon\nweight", y="Biodiversity\nweight", z="Timber\nweight", fill="ES \nloss (%)") +
-  geom_point(data = costsTot[which_balanced], size = 5)
-g + theme(legend.position = "none")
-ggsave("graphs/timberLoss.pdf",  height=4, width=4.5)
-
-as_ggplot(get_legend(g + guides(colour = guide_colourbar(barheight = 15))))
-ggsave("graphs/legendESloss.pdf", height=4, width=1.5)
-
+  facet_wrap( ~ ES) + scale_fill_gradientn(colours = paletteTern) +
+  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="Final ES\nvalue (%)") +
+  theme(strip.background = element_blank(), legend.position = "bottom",
+        strip.text = element_text(hjust = 0, size = 15))
+ggsave("graphs/changingESweights.pdf", height=4, width=10)
 
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
