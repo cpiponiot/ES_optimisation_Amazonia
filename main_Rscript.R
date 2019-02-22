@@ -136,11 +136,11 @@ areaIFL = tapply(grd$pIFL*grd$area,grd$region,sum)
 source("codes/solve_problem.R")
 source("codes/createTargetsCostsFeatures.R")
 
-cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
-cost_comb = subset(cost_comb, alphaC +alphaB <= 1)
-cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
-
 if (solveProblemsParallel){
+  
+  cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
+  cost_comb = subset(cost_comb, alphaC +alphaB <= 1)
+  cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
   
   # Calculate the number of cores
   no_cores <- detectCores() - 1
@@ -178,6 +178,8 @@ if (solveProblemsParallel){
 
 changeCost <- merge(changeCost, data.frame(grd)[,c("long","lat","area","pHarv")], by=c("long","lat"))
 changeCost[, areaLogging := area * pHarv]
+
+source("codes/rel_ES_costs.R")
 
 costs_analysis <- changeCost[,.(timber = rel_ES_costs(zone, long, lat, areaLogging, "timber"), 
                                 carbon = rel_ES_costs(zone, long, lat, areaLogging, "carbon"), 
@@ -425,7 +427,7 @@ ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss_rel)) +
   stat_interpolate_tern(geom="polygon", method=lm, colour="black", formula = value~x+y,
                         n=100,aes(fill=..level..),expand=1)  +
   facet_wrap( ~ ES) + scale_fill_gradientn(colours = paletteTern) +
-  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="Final ES\nvalue (%)") +
+  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="ES\nvariation (%)") +
   theme(strip.background = element_blank(), legend.position = "bottom",
         strip.text = element_text(hjust = 0, size = 15))
 ggsave("graphs/changingESweights.pdf", height=4, width=10)
