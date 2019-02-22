@@ -80,15 +80,12 @@ The optimal spatial configuration for one given strategy is then found using a m
 \end{figure}
 
 \subsubsection{ES prioritisation}
+
 \label{sec:defPPF}
 
 In our optimisation framework, spatially-explicit logging costs are estimated as the loss of each ES (i.e. carbon emissions, biodiversity loss, and timber stocks decrease) caused by logging operations and are calculated in each grid cell.
 
 To reflect the range of practices currently in use in the region, logging could take one of the following feature: a logging intensity of 10 (Low), 20 (Medium) or 30 (High) m$^3$ha$^{−1}$, and a cutting cycle length of 15 (Short), 30 (Medium) or 65 (Long) years, or no Logging. Medium intensity and cutting cycle length correspond to current median logging practices in Amazonia. 
-
-Timber costs are estimated as the difference between pre-logging and post-recovery (i.e. at the end of the cutting cycle) timber stocks, using Amazonian-wide estimations of timber recovery rates \cite{Piponiotc}. 
-Carbon costs are estimated as the total carbon emissions caused by logging operations (log extraction, road opening and incidental damage) minus the carbon recovered after logging \cite{Piponiot2016a}, integrated over the cutting cycle period. 
-Biodiversity loss is approximated through the loss of two vertebrate taxa: mammals and amphibians \cite{Jenkins2013}. A detailed description of ES cost is provided in the supplementary material~\ref{sec:ESestimation}). 
 
 The total cost of allocating logging type $z$ to grid cell $p$ is estimated as: 
 
@@ -98,18 +95,22 @@ The total cost of allocating logging type $z$ to grid cell $p$ is estimated as:
 \end{split}
 \end{equation}
 
-where $Cemi_{p,z}$ and $Rloss_{p,z}$ are carbon emissions and vertebrates species loss at the end of the first cutting cycle in a grid cell $p$ when allocated to logging type $z$ (see equations~\ref{eq:cemi} and \ref{eq:rloss}). $Prod_{p,z}$ is the timber extracted and $Rec_{p,z}$ the timber recovered at the end of the cutting cycle: $Prod_{p,z} - Rec_{p,z}$ is thus the net timber loss (see equation~\ref{eq:rec}). 
+where $\alpha_T$, $\alpha_C$ and $\alpha_B$ are the relative weights of timber, carbon and biodiversity respectively. 
+$Prod_{p,z}$ is the timber extracted in a grid cell $p$ when allocated to logging type $z$ and $Rec_{p,z}$ is the timber recovered at the end of the cutting cycle \cite{Piponiotc}: $Prod_{p,z} - Rec_{p,z}$ is thus the net timber loss.
+$Cemi_{p,z}$ are the total carbon emissions caused by logging operations (log extraction, road opening and incidental damage) minus the carbon recovered after logging \cite{Piponiot2016a}, integrated over the first cutting cycle period.
+$Rloss_{p,z}$ are vertebrates species loss (mammals and amphibians \cite{Jenkins2013}) at the end of the first cutting cycle in a grid cell $p$ when allocated to logging type $z$. 
 ES losses are standardised by their respective sample mean $\overline{Cemi}$, $\overline{Rloss}$, and $\overline{Prod-Rec}$. 
-$\alpha_C$, $\alpha_B$ and $\alpha_T$ are the respective weight given to carbon, biodiversity and timber costs in the optimisation. They are bounded between 0 and 1 and $\alpha_C+\alpha_B+\alpha_T = 1$. 
 A constant $K$ was added to avoid negative costs (when volume or carbon recovery exceed volume or carbon losses). $K$ is set to the minimum cost value across all grid cells and all logging types. 
-In ES prioritisation, when a unique ES (timber, carbon or biodiversity) is prioritised, its weight is set to 1 and the other 2 are set to 0. 
 
-To find a balanced combination of ES weights, we ran 66 simulations with all combinations of weights from 0 to 1, with 0.1 steps (Figure~\ref{fig:changeCosts}). The balanced weight was the one that minimised the distance between the 3 ES loss (as a \% of the initial value). See supplementary material XXX and Figure~\ref{fig:changeCosts} for a more detailed description. 
+When a unique ES (timber, carbon or biodiversity) is prioritised in a given strategy, its weight is set to 1 and the other 2 are set to 0. When ES prioritisation is balanced, $\alpha_T = \alpha_C = \alpha_B$.
+
+To analyse the effect of ES prioritisation on final ES costs, we ran 66 simulations with all combinations of weights from 0 to 1, with 0.1 steps. Results are analysed in the Supplementary material (Figure~\ref{fig:changeCosts}).  
 
 \subsubsection{Permanent Production Forest area}
 
-The total area of a grid cell ranged from XX to YY ha. In each grid cell, we considered only areas suitable for logging, referred to as "potential production forests" (PPF). PPF were extracted from XX-resolution maps, as grid cells (i) having at least 90\% of forest cover according to Hansen et al.\cite{Hansen2013}, (ii) being accessible i.e. within 25 km of a road or track \cite{OSM2018,Asner2006}, and (iii) not being under a full protection status \cite{WDPA2016} (except category VI of the International Union for the Conservation of Nature (IUCN), which corresponds to a "sustainable use" and was considered as being available for logging purpose).
-Based on data from forest concessions in French Guiana and Brazil, 42\% of those areas was considered as unsuitable for logging (slopes, areas around rivers and streams, etc) \cite{Piponiotc}. 
+The total area of a grid cell ranged from 6811 to 7139 ha. In each grid cell, we considered only areas suitable for logging, referred to as "potential production forests" (PPF). The area of all unprotected PPF was estimated as areas (i) having at least 90\% of forest cover \cite{Hansen2013}, and (ii) not being under a full protection status \cite{WDPA2016}. To estimate the currently accessible PPF area, the areas that are at more than 25~km from any road or motorable track were removed \cite{OSM2018}. Additional information is provided in the Supplementary material. 
+
+The total areas of PPF ("all unprotected" and "currently available") were then calculated for each grid cell. Because part of a production forest area is considered as unsuitable for logging (slopes, areas around rivers and streams, etc) (ref? xx ), the total area of PPF was multiplied by a coefficient $\pi ~ \mathcal{N}(0.58 \text{, } xx) $ calibrated with data from French Guiana concessions \cite{Piponiotc}. 
 
 \subsubsection{Additional constraints}
 
@@ -118,6 +119,8 @@ Based on data from forest concessions in French Guiana and Brazil, 42\% of those
 an optional sustainable timber yields (STY) constraint: when this constraint is added, the sum of timber stocks over all grid cells must have recovered its initial value after the first cutting cycle. 
 
 \paragraph{Minimum cutting cycle length}
+
+Only 30-years cutting cycle are allowed. 
 
 
 \paragraph{IFL conservation}
@@ -139,18 +142,18 @@ In the "Carbon" strategy, the total cost is proportional to carbon emissions ($\
 
 \begin{table*}
     \centering
-    \begin{tabularx}{\textwidth}{p{2cm} p{3cm} p{2cm} p{2cm} p{0.8cm}}
+    \begin{tabularx}{\textwidth}{p{2cm} p{4.5cm} p{2cm} p{3.5cm} p{0.8cm} p{1cm}}
     \toprule
-         Acronym & Strategy & ES prioritisation & PPF area &  STY \\
+         Acronym & Strategy & ES prioritisation & PPF area &  STY & Min. cycle \\
          \midrule
-         Timber & Long-term timber production & Timber  & Currently accessible& No \\
-         Carbon & Climate change mitigation &  Carbon & Currently accessible & No \\
-         Biodiversity & Biodiversity conservation &  Biodiversity & Currently accessible & No \\
-         Balanced & Multi-functionality & Balanced & Currently accessible & No \\
-         Current & Only 30-yr cutting cycles & Balanced & Currently accessible & No \\
-         STY & Sustained timber yields & Balanced & Currently accessible & Yes \\
-         Road building & Building roads to previously inaccessible areas & Balanced & All unprotected & No \\
-         STY + Road building & Sustained timber yields with road building & Balanced & All unprotected & Yes \\
+         Timber & Long-term timber production & Timber  & Currently accessible & No & No\\
+         Carbon & Climate change mitigation &  Carbon & Currently accessible & No & No\\
+         Biodiversity & Biodiversity conservation &  Biodiversity & Currently accessible & No & No\\
+         Balanced & Multi-functionality & Balanced & Currently accessible & No & No \\
+         Current & Only 30-yr cutting cycles & Balanced & Currently accessible & No & Yes \\
+         STY & Sustained timber yields & Balanced & Currently accessible & Yes & No \\
+         Road building & Building roads to previously inaccessible areas & Balanced & All unprotected & No & No \\
+         STY + Road building & Sustained timber yields with road building & Balanced & All unprotected & Yes & No \\
          \bottomrule
     \end{tabularx}
     \caption{Strategies tested in this study. PPF (potential production forest) areas are areas that can be logged in a given strategy: "Currently accessible" are areas that have $>$~90\% forest cover, are not protected and are within 25~km of an existing road or track (Figure~\ref{fig:pharv}); "All unprotected" are all areas with $>$~90\% forest cover outside protected areas. ES costs are the costs in terms of ecosystem services that are minimised in a given strategy. STY (Sustained Timber Yields) target }
@@ -402,6 +405,11 @@ with $\theta$ the slope of the relationship, and $\sigma_D$ the standard deviati
     \label{fig:damModel}
 \end{figure}
 
+\subsection{Mapping permanent forest areas}
+
+xxxx
+
+
 \subsection{Wood density estimation}
 \label{supmat:wdext}
 
@@ -410,46 +418,30 @@ We used 2646 1-ha forest inventory plots spanned over the Brazilian Amazon from 
 In every plot we estimated the mean wood density of all commercial stems (as defined in a previous study \cite{Piponiotc}) with the R package BIOMASS \cite{Rejou-Mechain2017}.
 Values were then interpolated with the R package \textit{automap} \cite{gstat} on a 1$^{\circ}$ resolution grid (Supplementary figure~\ref{sfig:wdext}).
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=0.7\linewidth]{graphs/map_WDext.pdf}
     \caption{Map of predicted wood density from interpolation of RadamBrasil data}
     \label{sfig:wdext}
-\end{figure}
+\end{figure*}
 
 \subsection{Finding a balanced ES cost}
 
 
-\begin{figure}
+\begin{figure*}
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{graphs/biodivLoss.pdf}
-       \caption{Biodiversity cost.}
-        \label{fig:costBiod}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{graphs/carbonLoss.pdf}
-        \caption{Carbon cost.}
-        \label{fig:costCarb}
-    \end{subfigure}
-    \\
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{graphs/timberLoss.pdf}
-        \caption{Timber cost.}
-        \label{fig:costTimb}
-    \end{subfigure} 
-    \includegraphics[width=0.2\textwidth]{graphs/legendESloss.pdf}
-    \caption{ES costs depending on the weight given to each ES in the optimisation process. Each ES loss is expressed as a proportion (\%) of the ES loss when only this ES is optimised (weight = 100\%). For example a carbon cost of 150\% means that carbon emissions are 50\% higher than when only carbon emissions are minimised (i.e. "optimal" carbon emissions). } \label{fig:changeCosts}
-
-\end{figure}
+    \includegraphics[width=\textwidth]{graphs/changingESweights.pdf}
+    \caption{ES variation depending on the weight given to each ES in the optimisation process. Each ES variation is expressed as a proportion (\%) of the initial value for the corresponding ES. For example a carbon variation of 5\% means that total carbon emissions associated to logging correspond to 5\% of initial carbon stocks.} 
+    \label{fig:changeCosts}
+\end{figure*}
 
 \subsection{Increasing timber demand - maps} 
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/mapsChangeDemand.pdf}
     \caption{Results of spatial optimisation with varying demand for timber (from 10 to 50 Mm$^3$/yr), and under different scenarios. }
     \label{fig:mapsStrategy}
-\end{figure}
+\end{figure*}
 
 \end{document}
