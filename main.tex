@@ -64,6 +64,7 @@ Timber production through selective logging is the dominant forest use in the re
     \label{fig:pharv}
 \end{figure}
 
+
 \subsection{Optimisation framework}
 
 The goal of the optimisation is to find the best spatial configuration of different land uses in a landscape. In this study, Amazonia was divided into a systematic grid of 556 1$^{\circ}$ cells, which correspond to the coarsest resolution of input maps (see paragraph "Costs"). 
@@ -79,7 +80,33 @@ The optimal spatial configuration for one given strategy is then found using a m
     \label{fig:basicDiagram}
 \end{figure}
 
-\subsubsection{ES prioritisation}
+\subsection{Strategy description}
+
+Different strategies to supply future timber demand in the region (Table~\ref{tab:strategies}) are tested: (i) \textit{Timber}: only timber recovery is optimised in order to ensure long-term timber production, (ii) \textit{Carbon}: only carbon is optimised as a climate change mitigation strategy, (iii) \textit{Balanced}: all 3 ES costs are balanced in the optimisation, as a multifunctionality strategy, (iv) \textit{Current}: all 3 ES costs are balanced under medium (30-yr) cutting cycles, (v) \textit{Sustained}: sustained timber yields (STY), i.e. the volume of timber extracted must be recovered at the end of the first cutting cycle, (vi) \textit{Road building}: all areas, except currently-protected areas, are made available for logging, and (vii) \textit{STY - Road building}: all areas, except currently-protected areas, are made available for STY logging. Both strategies involving the expansion of new roads mirror a land-sharing strategy. For the Timber strategy, total timber harvested can vary between 10-80~Mm$^3$yr$^{-1}$ (Figure~\ref{fig:incDemand}), but 80\% of IFL is maintained. Such an intensification of timber production in current production forests rather reflects a land-sparing approach.
+
+In scenarios (i-v), the area suitable for logging is the same as defined previously (\textit{Currently accessible} in Table~\ref{tab:strategies}). In the "Road building" scenarios (v-vi), we hypothesise that additional roads will be built: the new area suitable for logging (\textit{All unprotected} in Table~\ref{tab:strategies}) corresponds to the total area with forest cover $>$~90\% outside protected areas (independently of their current distance to a road), minus the 42\% corresponding to slopes and areas near rivers (see section~\ref{sec:defPPF}). 
+
+\begin{table*}
+    \centering
+    \begin{tabularx}{\textwidth}{p{2cm} p{4.5cm} p{2cm} p{3.5cm} p{0.8cm} p{1cm}}
+    \toprule
+         Acronym & Strategy & ES prioritisation & PPF area &  STY & Min. cycle \\
+         \midrule
+         Timber & Long-term timber production & Timber  & Currently accessible & No & No\\
+         Carbon & Climate change mitigation &  Carbon & Currently accessible & No & No\\
+         Biodiversity & Biodiversity conservation &  Biodiversity & Currently accessible & No & No\\
+         Balanced & Multi-functionality & Balanced & Currently accessible & No & No \\
+         Current & Only 30-yr cutting cycles & Balanced & Currently accessible & No & Yes \\
+         STY & Sustained timber yields & Balanced & Currently accessible & Yes & No \\
+         Road building & Building roads to previously inaccessible areas & Balanced & All unprotected & No & No \\
+         STY + Road building & Sustained timber yields with road building & Balanced & All unprotected & Yes & No \\
+         \bottomrule
+    \end{tabularx}
+    \caption{Strategies tested in this study. PPF (potential production forest) areas are areas that can be logged in a given strategy: "Currently accessible" are areas that have $>$~90\% forest cover, are not protected and are within 25~km of an existing road or track (Figure~\ref{fig:pharv}); "All unprotected" are all areas with $>$~90\% forest cover outside protected areas. ES costs are the costs in terms of ecosystem services that are minimised in a given strategy. STY (Sustained Timber Yields) target }
+    \label{tab:strategies}
+\end{table*}
+
+\subsection{ES prioritisation}
 
 \label{sec:defPPF}
 
@@ -106,59 +133,30 @@ When a unique ES (timber, carbon or biodiversity) is prioritised in a given stra
 
 To analyse the effect of ES prioritisation on final ES costs, we ran 66 simulations with all combinations of weights from 0 to 1, with 0.1 steps. Results are analysed in the Supplementary material (Figure~\ref{fig:changeCosts}).  
 
-\subsubsection{Permanent Production Forest area}
+\subsection{Permanent Production Forest area}
 
 The total area of a grid cell ranged from 6811 to 7139 ha. In each grid cell, we considered only areas suitable for logging, referred to as "potential production forests" (PPF). The area of all unprotected PPF was estimated as areas (i) having at least 90\% of forest cover \cite{Hansen2013}, and (ii) not being under a full protection status \cite{WDPA2016}. To estimate the currently accessible PPF area, the areas that are at more than 25~km from any road or motorable track were removed \cite{OSM2018}. Additional information is provided in the Supplementary material. 
 
-The total areas of PPF ("all unprotected" and "currently available") were then calculated for each grid cell. Because part of a production forest area is considered as unsuitable for logging (slopes, areas around rivers and streams, etc) (ref? xx ), the total area of PPF was multiplied by a coefficient $\pi ~ \mathcal{N}(0.58 \text{, } xx) $ calibrated with data from French Guiana concessions \cite{Piponiotc}. 
+The total areas of PPF ("all unprotected" and "currently available") were then calculated for each grid cell. Because part of a production forest area is considered as unsuitable for logging (slopes, areas around rivers and streams, etc) \cite{Verissimo2006}, the total area of PPF was multiplied by a coefficient $\pi \sim \mathcal{B}eta (8.2, \text{, } 5.9 ) $ calibrated with data from French Guiana concessions \cite{Piponiotc}. 
 
-\subsubsection{Additional constraints}
+\subsection{Additional constraints}
 
-\paragraph{Sustainable timber yields}
+\subsubsection{Sustainable timber yields}
 
-an optional sustainable timber yields (STY) constraint: when this constraint is added, the sum of timber stocks over all grid cells must have recovered its initial value after the first cutting cycle. 
+An optional sustainable timber yields (STY) constraint was added to the "STY" and "STY + Road-building" strategies. In these strategies, timber recovery over all grid cells must be greater or equal to harvested timber volumes: 
 
-\paragraph{Minimum cutting cycle length}
+\begin{equation}
+    \sum_{p}\sum_{z} (Prod_{p,z} - Rec_{p,z}) \geq 0 
+\end{equation}
+where $Prod_{p,z}$ and $Rec_{p,z}$ area respectively the harvested and recovered timber in grid cell $p$ allocated to logging type $z$.
 
-Only 30-years cutting cycle are allowed. 
+\subsubsection{Minimum cutting cycle length}
 
+In the "Current" strategy, grid cells can be allocated to only 4 logging types: 30-year cutting cycles with 10-, 20- or 30-m$^3$ha$^{-1}$ logging intensities, or no logging. 
 
-\paragraph{IFL conservation}
+\subsubsection{IFL conservation}
 
 Finally, an additional constraint  to conserve biodiversity is added to all strategies: it consists in conserving most intact forest landscapes (IFL) within grid cells. IFL are irreplaceable for biodiversity conservation \cite{Gibson2011}, especially for species that are highly sensitive to forest degradation. Because Amazonian forests have high levels of endemism and all regions are not equivalent in terms of species composition, we defined the biodiversity conservation objective as follow: in each of the 6 ecoregions (ter Steege et al. \cite{TerSteege2013}), namely the Guiana Shield, eastern Amazon, southeastern Amazon, central Amazon, southwestern Amazon, and northwestern Amazon, 80\% of IFLs (according to Potapov et al. \cite{Potapov2017}) shall remain unlogged. Those include forests in protected areas, inaccessible forests ($>$ 25 km from a road or track), or forests inside grid cells that have been allocated to the "No Logging" type. 
-
-
-
-\subsubsection{Evaluating different strategies for future timber provision}
-\label{sec:strategies}
-
-In a second step we tested different strategies to supply future timber demand in the region (Table~\ref{tab:strategies}): (i) \textit{Timber}: only timber recovery is optimised in order to ensure long-term timber production, (ii) \textit{Carbon}: only carbon is optimised as a climate change mitigation strategy, (iii) \textit{Balanced}: all 3 ES costs are balanced in the optimisation, as a multifunctionality strategy, (iv) \textit{Current}: all 3 ES costs are balanced under medium (30-yr) cutting cycles, (v) \textit{Sustained}: sustained timber yields (STY), i.e. the volume of timber extracted must be recovered at the end of the first cutting cycle, (vi) \textit{Road building}: all areas, except currently-protected areas, are made available for logging, and (vii) \textit{STY - Road building}: all areas, except currently-protected areas, are made available for STY logging. Both strategies involving the expansion of new roads mirror a land-sharing strategy. For the Timber strategy, total timber harvested can vary between 10-80~Mm$^3$yr$^{-1}$ (Figure~\ref{fig:incDemand}), but 80\% of IFL is maintained. Such an intensification of timber production in current production forests rather reflects a land-sparing approach.
-
-In scenarios (i-v), the area suitable for logging is the same as defined previously (\textit{Currently accessible} in Table~\ref{tab:strategies}). In the "Road building" scenarios (v-vi), we hypothesize that additional roads will be built: the new area suitable for logging (\textit{All unprotected} in Table~\ref{tab:strategies}) corresponds to the total area with forest cover $>$~90\% outside protected areas (independently of their current distance to a road), minus the 42\% corresponding to slopes and areas near rivers (see section~\ref{sec:defPPF}). 
-
-\paragraph{Costs}
-
-In the "Carbon" strategy, the total cost is proportional to carbon emissions ($\alpha_C=1$ and $\alpha_B=\alpha_T=0$). In the "Timber" strategy, the total cost is proportional to timber stocks loss ($\alpha_T=1$ and $\alpha_B=\alpha_C=0$). In all other strategies costs are balanced between all 3 ESs ($\alpha_C=\alpha_B=\alpha_T=\frac{1}{3}$).
-
-\begin{table*}
-    \centering
-    \begin{tabularx}{\textwidth}{p{2cm} p{4.5cm} p{2cm} p{3.5cm} p{0.8cm} p{1cm}}
-    \toprule
-         Acronym & Strategy & ES prioritisation & PPF area &  STY & Min. cycle \\
-         \midrule
-         Timber & Long-term timber production & Timber  & Currently accessible & No & No\\
-         Carbon & Climate change mitigation &  Carbon & Currently accessible & No & No\\
-         Biodiversity & Biodiversity conservation &  Biodiversity & Currently accessible & No & No\\
-         Balanced & Multi-functionality & Balanced & Currently accessible & No & No \\
-         Current & Only 30-yr cutting cycles & Balanced & Currently accessible & No & Yes \\
-         STY & Sustained timber yields & Balanced & Currently accessible & Yes & No \\
-         Road building & Building roads to previously inaccessible areas & Balanced & All unprotected & No & No \\
-         STY + Road building & Sustained timber yields with road building & Balanced & All unprotected & Yes & No \\
-         \bottomrule
-    \end{tabularx}
-    \caption{Strategies tested in this study. PPF (potential production forest) areas are areas that can be logged in a given strategy: "Currently accessible" are areas that have $>$~90\% forest cover, are not protected and are within 25~km of an existing road or track (Figure~\ref{fig:pharv}); "All unprotected" are all areas with $>$~90\% forest cover outside protected areas. ES costs are the costs in terms of ecosystem services that are minimised in a given strategy. STY (Sustained Timber Yields) target }
-    \label{tab:strategies}
-\end{table*}
 
 \section{Results}
 
@@ -431,7 +429,7 @@ Values were then interpolated with the R package \textit{automap} \cite{gstat} o
 \begin{figure*}
     \centering
     \includegraphics[width=\textwidth]{graphs/changingESweights.pdf}
-    \caption{ES variation depending on the weight given to each ES in the optimisation process. Each ES variation is expressed as a proportion (\%) of the initial value for the corresponding ES. For example a carbon variation of 5\% means that total carbon emissions associated to logging correspond to 5\% of initial carbon stocks.} 
+    \caption{ES variation depending on the weight given to each ES in the optimisation process. $\alpha_T$, $\alpha_C$ and $\alpha_B$ are the weights given to timber, carbon and biodiversity, respectively. Each ES variation is expressed as a proportion (\%) of the initial value for the corresponding ES. For example a carbon variation of -2\% means that total carbon emissions associated to logging correspond to 2\% of initial carbon stocks.} 
     \label{fig:changeCosts}
 \end{figure*}
 
