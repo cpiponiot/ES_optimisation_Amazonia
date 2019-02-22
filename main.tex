@@ -1,13 +1,16 @@
 \documentclass{article}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
-\usepackage{lineno}
+\usepackage[switch]{lineno} 
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{url}
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+\usepackage{lineno}
+\linenumbers
 
 \title{Is there an optimal management strategy for Amazonian production forests?}
 \author{Camille Piponiot, Ervan Rutishauser, Plinio Sist,\\ TmFO author list, Bruno Hérault}
@@ -21,9 +24,12 @@
 
 Tropical forests harbour most terrestrial carbon and diversity on Earth. Despite increased attention in national and international policies, they are still being deforested or degraded at high rates. 
 In Amazonia, the largest tropical forest on Earth, a sixth of the remaining natural forests is dedicated to timber production. Conciliating timber production with the provision of other ecosystem services (ES) remains a major challenge for forest managers and policy-makers. This study applies a spatial optimisation of logging in Amazonian production forests to analyse potential trade-offs between three ecosystem services, namely timber production, carbon storage and biodiversity conservation.  
-Results fail to find any agreement between sustainable timber production and conservation of carbon stocks and biodiversity on the long run. Logging regulations currently applied in the region result in sub-optimal ES-use efficiency. Long-term timber provision would require adoption of a land-sharing strategy at regional scale (i.e. extensive logging with low intensities), whereas retention of carbon and diversity would be favoured in opting for a land-sparing strategy (i.e. intensive logging concentrated in the outer fringes of the Amazon region). Depending on management goals and societal demands, either choices are likely to have deep implications for the future of Amazonian forests. Overall, our results highlight the need for a regional cooperation among Amazonian countries to enhance coherent and trans-boundary forest management.
+Results fail to find any agreement between sustainable timber production and conservation of carbon stocks and biodiversity on the long run. Logging regulations currently applied in the region result in sub-optimal ES-use efficiency. Long-term timber provision would require adoption of a land-sharing strategy at regional scale (i.e. extensive logging with low intensities), whereas retention of carbon and diversity would be favoured in opting for a land-sparing strategy (i.e. intensive logging concentrated in the outer fringes of the Amazon region). Depending on management goals and societal demands, either choices are likely to have deep implications for the future of Amazonian forests. Overall, our results highlight the need for reevaluation of current logging regulations and for regional cooperation among Amazonian countries to enhance coherent and trans-boundary forest management.
+
+\twocolumn
 
 \section{Introduction}
+
 
 Tropical forests are of inestimable value for humanity. In addition to mitigating climate changes by storing about 30\% of the terrestrial carbon \cite{Pan2013}, tropical forests also harbour half of the world biodiversity \cite{Pimm2014}, play a crucial role in regulating hydrological cycles \cite{Fisher2009a}, and furnish a wide range of timber and non-timber goods. Tropical forests are also the first source of new agricultural land, being converted at a higher-than-ever speed (2101 km$^2$ per year between 2000-2012 \cite{Hansen2013}); and the remaining forests are being increasingly degraded by human activities \cite{Potapov2017}. 
 
@@ -38,7 +44,7 @@ At the regional scale, natural production forests are managed to meet demands fo
 
 Here we aim at optimising ES provision in Amazonian production forests in a spatially-explicit framework. We analyse the effect of different logging intensities (no logging or 10-20-30 m$^3$ha$^{-1}$) and cutting cycle duration (15-30-65 years) on the provision of three ES: timber recovery, carbon storage, and biodiversity conservation. Our main research questions are: (i) what are the best management choices for future production forests, (ii) what are the consequences of these management choices on ES provision, and (iii) how does the projected demand for high-quality timber affects forest management and associated ES provision? 
 
-To answer these questions, we explore 8 management strategies (described in Table~\ref{tab:strategies}) and optimise ES with a timber production target of 35~Mm$^3$yr$^{-1}$, equivalent to the current timber production in Amazonia \cite{Lentini2005}. Strategies differ in terms of (i) ES prioritisation, (ii) total forest area allocated to production, and (iii) whether total timber stocks must be recovered (i.e. sustainable timber yields) or not. We compare the optimal spatial configuration of logging and resulting ES costs associated to each strategy. 
+To answer these questions, we explore 8 management strategies (described in Table~\ref{tab:strategies}) and optimise ES with a timber production target of 35~Mm$^3$yr$^{-1}$, equivalent to the current timber production in Amazonia \cite{Lentini2005}. Strategies differ in terms of (i) ES prioritisation, (ii) total forest area allocated to production, (iii) whether total timber stocks must be recovered (i.e. sustainable timber yields) or not, and (iv) the application of a 30-year minimum cutting cycle. We compare the optimal spatial configuration of logging and resulting ES costs associated to each strategy. 
 Finally, we analyse the consequences of changing the total timber production target depending on the management strategy.
 
 \section{Materials and methods}
@@ -53,7 +59,7 @@ Timber production through selective logging is the dominant forest use in the re
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{graphs/harv_areas.pdf}
+    \includegraphics[width=\linewidth]{graphs/harv_areas.pdf}
     \caption{Availability of Amazonian forests for logging (forest cover $>$~90\%). Orange areas are protected areas (except category VI of the IUCN), and are not included in our analysis. Dark green areas are forests that are $>$ 25 km away from any road or track; light green areas are forests that are close ($\leq$ 25 km) to a road or track.}
     \label{fig:pharv}
 \end{figure}
@@ -68,7 +74,7 @@ The optimal spatial configuration for one given strategy is then found using a m
 
 \begin{figure}
     \centering
-    \includegraphics[width = 0.4\linewidth]{graphs/diagramSpatOptim}
+    \includegraphics[width = 0.6\linewidth]{graphs/diagramSpatOptim}
     \caption{Diagram of spatial optimisation steps. PPF: Permanent Production Forests, i.e. all forests that are accessible and where logging is allowed. STY: Sustainable Timber Yields constraint (i.e. the volume of timber extracted in all production forests must be recovered at the end of the first cutting cycle). The 8 strategies tested in this study are summarised in Table~\ref{tab:strategies}. The resulting logging configuration and associated ES costs with a 35~Mm$^3$yr$^{-1}$ are presented in Figures~\ref{fig:uniqueCost} and \ref{fig:scenESProv}, respectively. The effects of changing the timber production target are presented in Figure~\ref{fig:incDemand}.}
     \label{fig:basicDiagram}
 \end{figure}
@@ -80,23 +86,22 @@ In our optimisation framework, spatially-explicit logging costs are estimated as
 
 To reflect the range of practices currently in use in the region, logging could take one of the following feature: a logging intensity of 10 (Low), 20 (Medium) or 30 (High) m$^3$ha$^{−1}$, and a cutting cycle length of 15 (Short), 30 (Medium) or 65 (Long) years, or no Logging. Medium intensity and cutting cycle length correspond to current median logging practices in Amazonia. 
 
-Timber costs are estimated as the difference between pre-logging and post-recovery (i.e. at the end of the cutting cycle) timber stocks. 
-Carbon costs are estimated as total carbon emissions due to logging (extracted logs, road opening and incidental damage) minus the carbon recovered after logging, integrated over the cutting cycle period. 
-Biodiversity loss is approximated through the loss of two vertebrate taxa: mammals and amphibians. A detailed description of ES cost is provided in the supplementary material~\ref{sec:ESestimation}). 
+Timber costs are estimated as the difference between pre-logging and post-recovery (i.e. at the end of the cutting cycle) timber stocks, using Amazonian-wide estimations of timber recovery rates \cite{Piponiotc}. 
+Carbon costs are estimated as the total carbon emissions caused by logging operations (log extraction, road opening and incidental damage) minus the carbon recovered after logging \cite{Piponiot2016a}, integrated over the cutting cycle period. 
+Biodiversity loss is approximated through the loss of two vertebrate taxa: mammals and amphibians \cite{Jenkins2013}. A detailed description of ES cost is provided in the supplementary material~\ref{sec:ESestimation}). 
 
 The total cost of allocating logging type $z$ to grid cell $p$ is estimated as: 
 
 \begin{equation}
 \begin{split}
     Cost_{p,z} = \alpha _T \cdot \frac{Prod_{p,z} - Rec_{p,z}}{\overline{Prod - Rec}} + \alpha _C \cdot \frac{Cemi_{p,z}}{\overline{Cemi} } \\ + \alpha _B \cdot \frac{Rloss_{p,z}}{\overline{Rloss}} - K
-    \end{split}
+\end{split}
 \end{equation}
 
 where $Cemi_{p,z}$ and $Rloss_{p,z}$ are carbon emissions and vertebrates species loss at the end of the first cutting cycle in a grid cell $p$ when allocated to logging type $z$ (see equations~\ref{eq:cemi} and \ref{eq:rloss}). $Prod_{p,z}$ is the timber extracted and $Rec_{p,z}$ the timber recovered at the end of the cutting cycle: $Prod_{p,z} - Rec_{p,z}$ is thus the net timber loss (see equation~\ref{eq:rec}). 
 ES losses are standardised by their respective sample mean $\overline{Cemi}$, $\overline{Rloss}$, and $\overline{Prod-Rec}$. 
 $\alpha_C$, $\alpha_B$ and $\alpha_T$ are the respective weight given to carbon, biodiversity and timber costs in the optimisation. They are bounded between 0 and 1 and $\alpha_C+\alpha_B+\alpha_T = 1$. 
 A constant $K$ was added to avoid negative costs (when volume or carbon recovery exceed volume or carbon losses). $K$ is set to the minimum cost value across all grid cells and all logging types. 
-
 In ES prioritisation, when a unique ES (timber, carbon or biodiversity) is prioritised, its weight is set to 1 and the other 2 are set to 0. 
 
 To find a balanced combination of ES weights, we ran 66 simulations with all combinations of weights from 0 to 1, with 0.1 steps (Figure~\ref{fig:changeCosts}). The balanced weight was the one that minimised the distance between the 3 ES loss (as a \% of the initial value). See supplementary material XXX and Figure~\ref{fig:changeCosts} for a more detailed description. 
@@ -132,7 +137,7 @@ In scenarios (i-v), the area suitable for logging is the same as defined previou
 
 In the "Carbon" strategy, the total cost is proportional to carbon emissions ($\alpha_C=1$ and $\alpha_B=\alpha_T=0$). In the "Timber" strategy, the total cost is proportional to timber stocks loss ($\alpha_T=1$ and $\alpha_B=\alpha_C=0$). In all other strategies costs are balanced between all 3 ESs ($\alpha_C=\alpha_B=\alpha_T=\frac{1}{3}$).
 
-\begin{table}
+\begin{table*}
     \centering
     \begin{tabularx}{\textwidth}{p{2cm} p{3cm} p{2cm} p{2cm} p{0.8cm}}
     \toprule
@@ -150,7 +155,7 @@ In the "Carbon" strategy, the total cost is proportional to carbon emissions ($\
     \end{tabularx}
     \caption{Strategies tested in this study. PPF (potential production forest) areas are areas that can be logged in a given strategy: "Currently accessible" are areas that have $>$~90\% forest cover, are not protected and are within 25~km of an existing road or track (Figure~\ref{fig:pharv}); "All unprotected" are all areas with $>$~90\% forest cover outside protected areas. ES costs are the costs in terms of ecosystem services that are minimised in a given strategy. STY (Sustained Timber Yields) target }
     \label{tab:strategies}
-\end{table}
+\end{table*}
 
 \section{Results}
 
@@ -160,13 +165,14 @@ In the "Carbon" strategy, the total cost is proportional to carbon emissions ($\
 
 maximising carbon and biodiversity retention results in preserving 80\% of available forests, and logging 20\% of available forests under the highest intensity (30~m$^3$ha$^{-1}$) and shortest cutting cycle (15 yr) allowed (Figure~\ref{fig:uniqueCost}d-e). Logged grid cells are distributed in the most external areas of Amazonia: in southeastern Amazonia for both carbon and biodiversity, in northern Amazonia for carbon and in the southwestern border of Amazonia for biodiversity (Figure~\ref{fig:uniqueCost}a-b). By contrast, minimising timber loss results in a different pattern: only 5\% of the available area is not logged, 14\% is logged under high-intensity short-cycle logging, and 81\% of the available area is logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging (Figure~\ref{fig:uniqueCost}f). Low-intensity logging is distributed in almost every region of Amazonia, except in the northeast where high-intensity logging prevails (Figure~\ref{fig:uniqueCost}c). 
 
-\begin{figure}
+\begin{figure*}
     \centering
-    \includegraphics[width=\linewidth]{graphs/mapsScenarios.pdf}
+    \includegraphics[width=0.8\linewidth]{graphs/mapsScenarios.pdf}
     \caption{Results of spatial optimisation with the 8 strategies defined in Table~\ref{tab:strategies}. Production target is set to 35~Mm$^3$yr$^{-1}$. Green areas are not logged. The size of each dot is proportional to the PPF area (total area available for logging). Logging type colour (blue - purple - red) represent the logging intensity (Light: 10, Medium: 20 and High: 30~m$^3$ha$^{-1}$). The logging type transparency represents the cutting cycle length (Short: 15, Medium: 30, Long: 65 years): light colours correspond to longer cycles.}
     \label{fig:uniqueCost}
     
-\end{figure}
+\end{figure*}
+
 
 \paragraph{ES values}
 
@@ -192,20 +198,20 @@ The timber-optimising strategy has a different behaviour when the production tar
 The third group of strategies (sustainable production) retain, by definition, 100\% of timber stocks (Figure~\ref{fig:incDemand}d). Producing more than 50~Mm$^3$yr$^{-1}$ was impossible with the STY strategy. Even when increasing the total area available ("STY + Road building"), the total production could go no further than 70~Mm$^3$yr$^{-1}$. 
 The mean logging intensity and cutting cycle length stay constant with these two strategies: 16~m$^3$ha$^{-1}$ and 50~yr respectively (Figure~\ref{fig:incDemand}b-c). The total area logged increases almost twice faster when the production target increases than for the first group of strategies (Figure~\ref{fig:incDemand}a). As a consequence, the carbon and biodiversity retained also decrease faster (Figure~\ref{fig:incDemand}e-f). 
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/costsScenario}
     \caption{Impact of the 8 logging strategies (described in Table~\ref{tab:strategies}) on ES provision (\% of the initial ES value). The timber production target is set to 35~Mm$^3$. (a) Variation of timber stocks; (b) variation of carbon stocks; (c) variation of biodiversity.}
     \label{fig:scenESProv}
-\end{figure}
+\end{figure*}
 
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/increasingDemand.pdf}
     \caption{Characterisation of different strategies for timber production, depending on the value of timber demand. (a) Total area logged (Mkm$^2$). (b) Mean logging intensity in logged areas (m$^3$ha$^{-1}$). (c) Mean cutting cycle length (yr). (d) Proportion of initial timber stocks that remain at the end of the cutting cycle (\%). (e) Proportion of initial carbon stocks that remain at the end of the cutting cycle (\%). (f) Proportion of initial mammals and amphibians richness that remain at the end of the cutting cycle (\%). The 8 strategies' characteristics are summarised in Table~\ref{tab:strategies}. "STY" and "STY + Road building" strategies could not sustainably provide more than 50 and 70 Mm$^3$ of annual timber production respectively. In plots (d-f), values are calculated over all areas outside of protected areas. Additional maps with distribution of logging types (intensity, cutting cycle) are provided in the supplementary materials (Figure~\ref{fig:mapsStrategy}).}
     \label{fig:incDemand}
-\end{figure}
+\end{figure*}
 
 \section{Discussion}
 
