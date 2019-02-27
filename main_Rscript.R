@@ -8,8 +8,8 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- FALSE
-solveProblemsParallel <- FALSE
+solveProblems <- TRUE
+solveProblemsParallel <- TRUE
 
 #### study region & maps ####
 
@@ -208,7 +208,7 @@ if (solveProblemsParallel){
   
   clusterExport(cl, varlist = c("costMaps","featureMaps","areaIFL","targetsList","solve_problem","grd"))
   
-  scenariOptim <- parSapply(cl, c(35, seq(10,80,10)*1e6), function(TD){
+  scenariOptim <- parSapply(cl, c(35e6, seq(10,80,10)*1e6), function(TD){
     
     for (y in 1:length(targetsList)) 
       targetsList[[y]]$target[1] <- TD
@@ -246,49 +246,40 @@ if (solveProblemsParallel){
 } else {load("outputs/scenariOptim.Rdata")}
 
 ### pixel area
-scenariOptim = merge(scenariOptim, data.table(coordinates(grd),area = grd$area*grd$pHarv, areaAR=grd$area*grd$pHarvAR), by=c("long","lat"))
-scenariOptim$area[grep("sharing",scenariOptim$scenario)] <- scenariOptim$areaAR[grep("sharing",scenariOptim$scenario)]
+scenariOptim = merge(scenariOptim, data.table(coordinates(grd), 
+                                              areaLogging = grd$area*grd$pHarv, 
+                                              areaAR = grd$area*grd$pHarvAR), by=c("long","lat"))
+scenariOptim$areaLogging[grep("sharing",scenariOptim$scenario)] <- scenariOptim$areaAR[grep("sharing",scenariOptim$scenario)]
 scenariOptim = merge(scenariOptim, df_zones, by="zone")
-scenariOptim = subset(scenariOptim, area>0)
+scenariOptim = subset(scenariOptim, areaLogging > 0)
 
 ### scenarios names
 scenariOptim$scenario <- as.factor(scenariOptim$scenario)
 levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","Current","Road building","STY + Road building","STY","Timber") 
 scenariOptim$scenario <- factor(scenariOptim$scenario, levels = c("Timber","Carbon","Biodiversity","Balanced","Current","STY","Road building","STY + Road building") )
 
-### ES costs 
-scenariOptim = scenariOptim[,.(Cemi = raster::extract(cost_carbon[[zone]], cbind(long,lat)), 
-                               timbLoss = raster::extract(cost_vrec[[zone]], cbind(long,lat)), 
-                               biodLoss = raster::extract(cost_diversity[[zone]], cbind(long,lat)), 
-                               vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)), 
-                               long=long, lat=lat, demand = demand, scenario=scenario, area = area),.(zone)]
+## get vextreal 
+scenariOptim = merge(scenariOptim, scenariOptim[,.(vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)),
+                                                   long=long, lat=lat, demand = demand, scenario=scenario), .(zone)], 
+                     by = c("long","lat","demand","scenario","zone"))
 
-# get initial volume per pixel
-scenariOptim = merge(scenariOptim, Mvcom0, by=c("long","lat"))
-
-scenariOptim = merge(scenariOptim, df_zones, by="zone")
-scenariOptim = merge(scenariOptim, 
-                     data.table(coordinates(grd), areaTot=grd$area*grd$pHarvAR, ## total area (accessible & not)
-                                areaLogging = grd$area*grd$pHarv,  ## available area
-                                acs0=grd$acs, Rich0 = grd$mammals+grd$amphi), 
-                     by=c("long","lat"))
-scenariOptim$areaLogging[grep("build", scenariOptim$scenario)] = scenariOptim$areaTot[grep("build", scenariOptim$scenario)]
-scenariOptim$areaLogging[scenariOptim$zname=="NL"] <- 0
-
-scenCost = scenariOptim[demand == 35,.(timber=(1-sum(timbLoss*areaLogging)/sum(Vcom0*areaTot))*100,
-                                       carbon=(1-sum(Cemi*areaLogging)/sum(acs0*areaTot))*100,
-                                       biodiv=(1-sum(biodLoss*areaLogging)/sum(Rich0*areaTot))*100),
-                        .(scenario)]
-scenCost = melt(scenCost, id.vars = c("scenario"), variable.name = "ES", value.name = "loss")
-
-demandFinal = scenariOptim[,.(areaTot = sum(areaLogging)*1e-4,
-                              logIntens = weighted.mean(x = vextReal*trot, w = areaLogging),
-                              cutCycle = weighted.mean(x = trot, w = areaLogging),
-                              TtimbLoss=(1-sum(timbLoss*areaLogging)/sum(Vcom0*areaTot))*100,
-                              TcarbLoss=(1-sum(Cemi*areaLogging)/sum(acs0*areaTot))*100,
-                              TdivLoss=(1-sum(biodLoss*areaLogging)/sum(Rich0*areaTot))*100),
-                           .(demand,scenario)]
+## get costs
+demandFinal <- scenariOptim[,.(areaTot = sum(areaLogging)*1e-4,
+                               logIntens = weighted.mean(x = vextReal*trot, w = areaLogging),
+                               cutCycle = weighted.mean(x = trot, w = areaLogging),
+                               timber = rel_ES_costs(zone, long, lat, areaLogging, "timber"), 
+                               carbon = rel_ES_costs(zone, long, lat, areaLogging, "carbon"), 
+                               biodiv = rel_ES_costs(zone, long, lat, areaLogging, "biodiversity")),
+                            .(demand, scenario)]
 demandFinal = melt(demandFinal, id.vars = c("demand","scenario") )
+
+# ### ES costs 
+# scenariOptim = scenariOptim[,.(Cemi = raster::extract(cost_carbon[[zone]], cbind(long,lat)), 
+#                                timbLoss = raster::extract(cost_vrec[[zone]], cbind(long,lat)), 
+#                                biodLoss = raster::extract(cost_diversity[[zone]], cbind(long,lat)), 
+#                                vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)), 
+#                                long=long, lat=lat, demand = demand, scenario=scenario, area = area),.(zone)]
+
 
 #### (3) Graphs ####
 
@@ -340,15 +331,28 @@ g_all <- ggarrange(new_plots[[1]], new_plots[[2]], new_plots[[3]],
 ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
 ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 
+## proportion of area per zone per strategy ##
+dfAreaZone = scenariOptim[demand == 35, .(area = sum(area)), .(zname, scenario)]
+dfAreaZone = merge(dfAreaZone, dfAreaZone[,.(areaTot = sum(area)), .(scenario)], by = "scenario")
+dfAreaZone[, pArea := area/areaTot*100]
+
+ggplot(dfAreaZone, aes(zname, weight = pArea, fill = zname)) + geom_bar() + facet_wrap( ~ scenario, ncol = 4) + 
+  scale_fill_manual(name = "Zone", values = colour_palette) +
+  geom_text(aes(label=round(pArea, digits = 1), y = pArea), vjust=-0.2)
+ggsave("graphs/proportionAreaZone.pdf", height = 6, width = 12)
+
 
 ### associated ES costs 
 
 col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B", "#D33B44", "#8B008B")
 
+scenCost = subset(demandFinal, demand == 35 & variable %in% c("timber", "carbon", "biodiv"))
+scenCost$ES = factor(scenCost$variable)
 levels(scenCost$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
-g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=loss-100)) + 
+
+g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value-100)) + 
   geom_histogram(stat="identity") + 
-  facet_grid(~ES) + scale_fill_manual(values= col_scenarios) +
+  facet_grid(~ ES) + scale_fill_manual(values= col_scenarios) +
   labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         legend.background = element_rect(fill="white",colour="white"), 
