@@ -121,7 +121,7 @@ VcAR = sum(values(cost_vrec[[-10]]*harvAR  - min(values(cost_vrec*harvAR), na.rm
 BtotAR = BcAR/(CcAR+BcAR+VcAR)*muAR; CtotAR = CcAR/(CcAR+BcAR+VcAR)*muAR; VtotAR = VcAR/(CcAR+BcAR+VcAR)*muAR
 
 if (!exists("coeffs_balanced")) 
-  coeffs_balanced = rep(1,3)
+  coeffs_balanced = c(2,1,1)
 
 puV <- (cost_vrec*harv  - min(values(cost_vrec*harv), na.rm=TRUE))/Vtot
 puC <- cost_carbon/Ctot * harv 

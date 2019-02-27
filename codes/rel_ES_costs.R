@@ -26,11 +26,11 @@ rel_ES_costs <- function(zone, long, lat, areaLogging, cost) {
   df = df[,.(cost_cell = raster::extract(maps_zones[[zone]], cbind(long,lat)), 
              long, lat, areaLogging), .(zone)]
   
-  df$areaTot = raster::extract(raster(grd, "area"), df[,c("long","lat")])
+  df$areaTot = raster::extract(raster(grd, "areaForest"), df[,c("long","lat")])
   
   # get initial volume per pixel
   df = merge(df, initial_values, by=c("long","lat"))
   
-  return(df[,(1 - sum(cost_cell*areaLogging)/sum(val0*areaTot))*100])
+  return(df[,(-sum(cost_cell*areaLogging)/sum(val0*areaTot))*100])
   
 }
