@@ -9,7 +9,6 @@ library(parallel)
 library(ggtern)
 
 solveProblems <- TRUE
-solveProblemsParallel <- TRUE
 
 #### study region & maps ####
 
@@ -98,6 +97,7 @@ names(cost_carbon) <- df_zones$zname
 richLoss = read.csv("data/Burivalova2014DataNeotropics.csv")
 # fit log-log model (vext>0 and pRich > 0 but not always < 1)
 # and intercept must be 1 
+
 if (solveProblems) {
   y = 1-richLoss$pRichLoss; N = nrow(richLoss)
   x = richLoss$vext; Groups = as.numeric(richLoss$taxo); K = nlevels(richLoss$taxo)
@@ -136,7 +136,7 @@ areaIFL = tapply(grd$pIFL*grd$area,grd$region,sum)
 source("codes/solve_problem.R")
 source("codes/createTargetsCostsFeatures.R")
 
-if (solveProblemsParallel){
+if (solveProblems){
   
   cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
   cost_comb = subset(cost_comb, alphaC +alphaB <= 1)
@@ -193,7 +193,7 @@ costsTot = melt(costs_analysis, id.vars = c("alphaV", "alphaC", "alphaB"), varia
 
 # source("codes/createTargetsCostsFeatures.R")
 
-if (solveProblemsParallel){
+if (solveProblems){
   
   library(parallel)
   
@@ -264,14 +264,16 @@ scenariOptim = merge(scenariOptim, scenariOptim[,.(vextReal = raster::extract(fe
                      by = c("long","lat","demand","scenario","zone"))
 
 ## get costs
-demandFinal <- scenariOptim[,.(areaTot = sum(areaLogging)*1e-4,
-                               logIntens = weighted.mean(x = vextReal*trot, w = areaLogging),
-                               cutCycle = weighted.mean(x = trot, w = areaLogging),
-                               timber = rel_ES_costs(zone, long, lat, areaLogging, "timber"), 
-                               carbon = rel_ES_costs(zone, long, lat, areaLogging, "carbon"), 
-                               biodiv = rel_ES_costs(zone, long, lat, areaLogging, "biodiversity")),
+scenariOptim$areaLogged = scenariOptim$areaLogging
+scenariOptim$areaLogged[scenariOptim$zname=="NL"] <- 0
+demandFinal <- scenariOptim[,.(areaTot = sum(areaLogged)*1e-4,
+                               logIntens = weighted.mean(x = vextReal*trot, w = areaLogged),
+                               cutCycle = weighted.mean(x = trot, w = areaLogged),
+                               timber = rel_ES_costs(zone, long, lat, areaLogged, "timber"), 
+                               carbon = rel_ES_costs(zone, long, lat, areaLogged, "carbon"), 
+                               biodiv = rel_ES_costs(zone, long, lat, areaLogged, "biodiversity")),
                             .(demand, scenario)]
-demandFinal = melt(demandFinal, id.vars = c("demand","scenario") )
+demandFinal = melt(demandFinal, id.vars = c("demand","scenario"))
 
 # ### ES costs 
 # scenariOptim = scenariOptim[,.(Cemi = raster::extract(cost_carbon[[zone]], cbind(long,lat)), 
@@ -294,7 +296,7 @@ colour_palette <- c("LS"= colours[1], "LM"=colours[2], "LL"=colours[3],
                     "HS"=colours[7], "HM"=colours[8], "HL"=colours[9], "NL"=colours[10])
 
 g1 <- ggplot(subset(scenariOptim, demand == 35)) +
-  geom_point(aes(x=long,y=lat,colour=zname, size=area/1e3)) +
+  geom_point(aes(x=long,y=lat,colour=zname, size=areaLogging/1e3)) +
   theme_bw() + coord_fixed() + facet_wrap( ~ scenario, nrow = 3) +
   scale_colour_manual(name = "Zone", values = colour_palette) +
   labs(size = expression("Area available for logging ("*1000*" k"*m^2*")"), 
@@ -332,7 +334,7 @@ ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
 ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 
 ## proportion of area per zone per strategy ##
-dfAreaZone = scenariOptim[demand == 35, .(area = sum(area)), .(zname, scenario)]
+dfAreaZone = scenariOptim[demand == 35, .(area = sum(areaLogging)), .(zname, scenario)]
 dfAreaZone = merge(dfAreaZone, dfAreaZone[,.(areaTot = sum(area)), .(scenario)], by = "scenario")
 dfAreaZone[, pArea := area/areaTot*100]
 
@@ -350,7 +352,7 @@ scenCost = subset(demandFinal, demand == 35 & variable %in% c("timber", "carbon"
 scenCost$ES = factor(scenCost$variable)
 levels(scenCost$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
 
-g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value-100)) + 
+g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
   geom_histogram(stat="identity") + 
   facet_grid(~ ES) + scale_fill_manual(values= col_scenarios) +
   labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
@@ -368,21 +370,21 @@ ggsave("graphs/costsScenario.pdf", height=4, width=7)
 levels(demandFinal$variable) <- c("(a) Total area logged (Mha)",
                                   "(b) Mean logging intensity (m3/ha)", 
                                   "(c) Mean cutting cycle length (yr)",
-                                  "(d) Timber retained (%)",
-                                  "(e) Carbon retained (%)", 
-                                  "(f) Biodiversity retained (%)" ) 
+                                  "(d) Timber variation (%)",
+                                  "(e) Carbon variation (%)", 
+                                  "(f) Biodiversity variation (%)" ) 
 
 legend_strategies <- as_ggplot(get_legend(g2))
 
 g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario))+ 
-  geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,100), each=3))),
+  geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,0), each=3))),
              aes(yintercept = h), lty=2) + 
   geom_line(lwd=0.8) + scale_colour_brewer(palette = "Set1") +
   facet_wrap( ~ variable ,  nrow=3, scale="free_y", dir = "v") + 
   theme(panel.background = element_rect(fill="white", colour = "black"),
         panel.grid = element_blank(), strip.background = element_blank(), 
         legend.position = "none") + 
-  scale_color_manual(values= col_scenarios)+ 
+  scale_colour_manual(values= col_scenarios)+ 
   labs(x=expression("Timber production (M"*m^3*yr^{-1}*")"), y="",colour="Strategy") 
 ggarrange(g3, legend_strategies, ncol = 2, widths = c(4,1))
 ggsave("graphs/increasingDemand.pdf", height=6, width=8)
@@ -424,10 +426,10 @@ dev.off()
 
 paletteTern = colorRampPalette(c("red","orange", "yellow", "blue"))(100)
 
-costsTot$loss_rel = costsTot$loss - 100
+costsTot$loss_rel
 levels(costsTot$ES) <- c("(a) Timber","(b) Carbon","(c) Biodiversity")
 
-ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss_rel)) + 
+ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss)) + 
   stat_interpolate_tern(geom="polygon", method=lm, colour="black", formula = value~x+y,
                         n=100,aes(fill=..level..),expand=1)  +
   facet_wrap( ~ ES) + scale_fill_gradientn(colours = paletteTern) +

@@ -31,6 +31,6 @@ rel_ES_costs <- function(zone, long, lat, areaLogging, cost) {
   # get initial volume per pixel
   df = merge(df, initial_values, by=c("long","lat"))
   
-  return(df[,(1 - sum(cost_cell*areaLogging)/sum(val0*areaTot))*100])
+  return(df[,(-sum(cost_cell*areaLogging)/sum(val0*areaTot))*100])
   
 }
