@@ -94,7 +94,7 @@ In scenarios (i-v), the area suitable for logging is the same as defined previou
          \midrule
          Timber & Long-term timber production & Timber  & Currently accessible & No & No\\
          Carbon & Climate change mitigation &  Carbon & Currently accessible & No & No\\
-         Biodiversity & Biodiversity conservation &  Biodiversity & Currently accessible & No & No\\
+         Biodiversity & Biodiversity conservation &  Biodiversity & Currently accessible & No & No \\
          Balanced & Multi-functionality & Balanced & Currently accessible & No & No \\
          Current & Only 30-yr cutting cycles & Balanced & Currently accessible & No & Yes \\
          STY & Sustained timber yields & Balanced & Currently accessible & Yes & No \\
@@ -129,7 +129,7 @@ $Rloss_{p,z}$ are vertebrates species loss (mammals and amphibians \cite{Jenkins
 ES losses are standardised by their respective sample mean $\overline{Cemi}$, $\overline{Rloss}$, and $\overline{Prod-Rec}$. 
 A constant $K$ was added to avoid negative costs (when volume or carbon recovery exceed volume or carbon losses). $K$ is set to the minimum cost value across all grid cells and all logging types. 
 
-When a unique ES (timber, carbon or biodiversity) is prioritised in a given strategy, its weight is set to 1 and the other 2 are set to 0. When ES prioritisation is balanced, $\alpha_T = \alpha_C = \alpha_B$.
+When a unique ES (timber, carbon or biodiversity) is prioritised in a given strategy, its weight is set to 1 and the other 2 are set to 0. When ES prioritisation is balanced between production and conservation, $\alpha_T = 0.5$ and $\alpha_C = \alpha_B = 0.25$.
 
 To analyse the effect of ES prioritisation on final ES costs, we ran 66 simulations with all combinations of weights from 0 to 1, with 0.1 steps. Results are analysed in the Supplementary material (Figure~\ref{fig:changeCosts}).  
 
@@ -162,17 +162,16 @@ Finally, an additional constraint  to conserve biodiversity is added to all stra
 
 \subsection{Optimal logging configuration under current timber production target}
 
-Minimising timber loss results in a different pattern: only 5\% of the available area is not logged, 14\% is logged under high-intensity short-cycle logging, and 81\% of the available area is logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging. Low-intensity logging is distributed in almost every region of Amazonia, except in the northeast where high-intensity logging prevails (Figure~\ref{fig:mapsStrateg}a). 
-By contrast, maximising carbon and biodiversity retention results in preserving 80\% of available forests, and logging 20\% of available forests under the highest intensity (30~m$^3$ha$^{-1}$) and shortest cutting cycle (15 yr) allowed (Figure~\ref{fig:mapsStrateg}b-c). Logged areas are distributed in the most external areas of Amazonia: in southeastern Amazonia for both carbon and biodiversity, in northern Amazonia for carbon and in the southwestern border of Amazonia for biodiversity.  
+Minimising timber loss results in a different pattern: only 10\% of the available area is not logged, 12\% is logged under high-intensity short-cycle logging, and 77\% of the available area is logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging. Low-intensity logging is distributed in almost every region of Amazonia, except in the northeast where high-intensity logging prevails (Figure~\ref{fig:mapsStrateg}a). 
+By contrast, maximising carbon and biodiversity retention results in preserving 82\% of available forests, and logging 18\% of available forests under the highest intensity (30~m$^3$ha$^{-1}$) and shortest cutting cycle (15 yr) allowed (Figure~\ref{fig:mapsStrateg}b-c). Logged areas are distributed in the most external areas of Amazonia: in southeastern Amazonia for both carbon and biodiversity, in northern Amazonia for carbon and in the southwestern border of Amazonia for biodiversity.  
 
-Balancing timber, carbon and biodiversity optimisation results in preserving XX\% of available forests, logging XX\% of available forests under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging and only XX\% under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging (Figure~\ref{fig:mapsStrateg}d). The spatial 
-distribution of logging resemble that of "Carbon" and "Biodiversity" strategies (Figure~\ref{fig:mapsStrateg}b-c) with heavily logged areas being concentrated in most external areas, especially in the southeastern border. 
+Balancing timber, carbon and biodiversity optimisation results in preserving 48\% of available forests, logging 15\% of available forests under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging and 36\% under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging (Figure~\ref{fig:mapsStrateg}d). Similar to the "Carbon" and "Biodiversity" strategies, heavily logged areas are concentrated in most external areas, especially in the southeastern border; low-intensity logging is concentrated in the south and northwest; central, western and northeastern Amazonia are mostly not logged. 
 
-Allowing only 30-yr cutting cycles results in preserving a smaller share of available forests (XX\%) while XX\% was logged under high-intensity (30 m$^3$ha$^{-1}$) logging and XX\% under low-intensity (10 m$^3$ha$^{-1}$) logging (Figure~\ref{fig:mapsStrateg}e). 
+Allowing only 30-yr cutting cycles results in preserving a smaller share of available forests (35\%) while 22\% was logged under high-intensity (30 m$^3$ha$^{-1}$) logging and 43\% under low-intensity (10 m$^3$ha$^{-1}$) logging (Figure~\ref{fig:mapsStrateg}e). 
 
-Adding a STY constraint results in preserving XX\% of available forests, logging XX\% of available forests under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging and  XX\% under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging (Figure~\ref{fig:mapsStrateg}f). High-intensity logging is mainly distributed in southeastern Amazon and low-intensity logging in the southern and western fringes of the region. 
+Adding a STY constraint (Figure~\ref{fig:mapsStrateg}f) results in very little change compared to the "Balanced" strategy. A slightly higher share (39\% instead of 36\%) of areas logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging; this results in less areas being preserved (45\% instead of 48\%). 
 
-xxx road building [see depending on balanced costs definition]
+Increasing the total accessible forest area through road building (Figure~\ref{fig:mapsStrateg}g) also results in a spatial configuration similar to the "Balanced" strategy. The total area under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging is slightly lower than in the "Balanced" strategy (13~Mha instead of 15~Mha) and the total area under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging is higher (55~Mha instead of 35~Mha). Adding a STY constrain did not change the final resultst (Figure~\ref{fig:mapsStrateg}h). 
 
 \begin{figure*}
     \centering
@@ -183,7 +182,11 @@ xxx road building [see depending on balanced costs definition]
 
 \subsection{Effect of strategy choice on ES provision}
 
-The "Timber" strategy results in the best final timber stocks (+2.5\% of initial timber stocks, Figure~\ref{fig:scenESProv}a) but the highest carbon emissions (-6.5\% of initial carbon stocks, Figure~\ref{fig:scenESProv}b) and highest biodiversity loss (-10.3\% of initial value, Figure~\ref{fig:scenESProv}c). The "Carbon", "Biodiversity" and "Balanced" strategies result in similar changes in ES provision: approximately -4\%~timber, -3\% carbon, and -4\% biodiversity. 
+The "Timber" strategy results in the best final timber stocks (+1.4\% of initial timber stocks, Figure~\ref{fig:scenESProv}a) but the highest carbon emissions (-3.6\% of initial carbon stocks, Figure~\ref{fig:scenESProv}b) and highest biodiversity loss (-5.8\% of initial value, Figure~\ref{fig:scenESProv}c). The "Carbon" and "Biodiversity" strategies result in similar changes in ES provision: -2.2\% timber; -1.5\% and -1.6\% carbon (respectively); and -2.4\% and -2.2\% biodiversity (respectively). 
+
+The "Balanced" and "STY" strategies result in almost no variation in timber stocks while the "Road building" and "STY + Road building" strategies result in a timber increase of 0.8\% (Figure~\ref{fig:scenESProv}a). Those 4 strategies have similar carbon and biodiversity losses: -2.3\% carbon (Figure~\ref{fig:scenESProv}b) and -3.6\% biodiversity (Figure~\ref{fig:scenESProv}c) in the "Balanced" and "STY" strategies, and -2.2\% carbon and -3.7\% biodiversity in the "Road building" and "STY + Road building" strategies. 
+
+The current strategy performs poorly at providing all ES: it shows the highest loss of timber (-2.3\%) and the second highest losses of carbon (-3.5\%) and biodiversity (-4.9\%), not far behind the "Timber" strategy. 
 
 \subsection{Effect of change in timber production target}
 
