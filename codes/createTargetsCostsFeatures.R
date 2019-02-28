@@ -104,35 +104,20 @@ names(featureMaps) = c("base","sharing","STY","sharingSTY","medium")
 
 ##### Costs ##### 
 
-# cost_vrec2 <- cost_vrec  ## for now: if more volume recovered than needed: no additional benefit [else we have negative costs or if we add a constant then no logging zones do not have a zero value and it's better to choose othing than NL]
-# cost_vrec2[cost_vrec2<0 & !is.na(cost_vrec2),] <- 0
-mu = mean(c(values(cost_diversity[[-10]]*harv),values(cost_carbon[[-10]]*harv),
-            values(cost_vrec[[-10]]*harv  - min(values(cost_vrec*harv)))), na.rm=TRUE)/10
-Bc = sum(values(cost_diversity[[-10]]*harv), na.rm = T)
-Cc = sum(values(cost_carbon[[-10]]*harv), na.rm=TRUE)
-Vc = sum(values(cost_vrec[[-10]]*harv  - min(values(cost_vrec*harv), na.rm=TRUE)), na.rm=TRUE)
-Btot = Bc/(Cc+Bc+Vc)*mu; Ctot = Cc/(Cc+Bc+Vc)*mu; Vtot = Vc/(Cc+Bc+Vc)*mu
+minV <- min(values(cost_vrec), na.rm = TRUE)
+minC <- min(values(cost_carbon), na.rm = TRUE)
+minB <- min(values(cost_diversity), na.rm = TRUE)
 
-muAR = mean(c(values(cost_diversity[[-10]]*harvAR),values(cost_carbon[[-10]]*harvAR),
-              values(cost_vrec[[-10]]*harvAR  - min(values(cost_vrec*harvAR)))), na.rm=TRUE)/10
-BcAR = sum(values(cost_diversity[[-10]]*harvAR), na.rm = T)
-CcAR = sum(values(cost_carbon[[-10]]*harvAR), na.rm=TRUE)
-VcAR = sum(values(cost_vrec[[-10]]*harvAR  - min(values(cost_vrec*harvAR), na.rm=TRUE)), na.rm=TRUE)
-BtotAR = BcAR/(CcAR+BcAR+VcAR)*muAR; CtotAR = CcAR/(CcAR+BcAR+VcAR)*muAR; VtotAR = VcAR/(CcAR+BcAR+VcAR)*muAR
+puV <- (cost_vrec - minV) / mean(values(cost_vrec - minV), na.rm=T)
+puC <- (cost_carbon - minC) / mean(values(cost_carbon - minC), na.rm=T)
+puB <- (cost_diversity - minB) / mean(values(cost_diversity - minB), na.rm=T)
+puBal <- puV * coeffs_balanced[1] + puC * coeffs_balanced[2] + puB * coeffs_balanced[3]
 
-if (!exists("coeffs_balanced")) 
-  coeffs_balanced = c(2,1,1)
-
-puV <- (cost_vrec*harv  - min(values(cost_vrec*harv), na.rm=TRUE))/Vtot
-puC <- cost_carbon/Ctot * harv 
-puB <- cost_diversity/Btot*harv
-pu0 <- puV*coeffs_balanced[1] + puC*coeffs_balanced[2] +  puB*coeffs_balanced[3]
-pu0AR <-  (cost_vrec*harvAR  - min(values(cost_vrec*harvAR), na.rm=TRUE))/VtotAR * coeffs_balanced[1] + 
-  cost_carbon/CtotAR*harvAR * coeffs_balanced[2] + cost_diversity/BtotAR*harvAR * coeffs_balanced[3]
-## maybe recalculate the 'balanced' coefficients for the AR strategies
-
-costMaps = list(pu0, puC, puV, puB, pu0AR)
-names(costMaps) = c("balanced","carbon","timber","biodiversity","sharing")
+costMaps = list(timber = puV * harv, 
+                carbon = puC * harv, 
+                biodiversity = puB * harv, 
+                balanced = puBal * harv, 
+                sharing = puBal * harvAR)
 
 areaIFL = tapply(grd$pIFL*grd$area,grd$region,sum)
 Nfeature = dim(features[[1]])[3]

@@ -133,11 +133,14 @@ areaIFL = tapply(grd$pIFL*grd$area,grd$region,sum)
 
 ##### (1) Combination of ES costs ####
 
-source("codes/solve_problem.R")
-source("codes/createTargetsCostsFeatures.R")
 
 if (solveProblems){
   
+  source("codes/solve_problem.R")
+
+  coeffs_balanced = c(2,1,1)/4
+  source("codes/createTargetsCostsFeatures.R")
+
   cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
   cost_comb = subset(cost_comb, alphaC +alphaB <= 1)
   cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
@@ -190,8 +193,6 @@ costsTot = melt(costs_analysis, id.vars = c("alphaV", "alphaC", "alphaB"), varia
 
 
 ### (2) Scenario comparision ###
-
-# source("codes/createTargetsCostsFeatures.R")
 
 if (solveProblems){
   
@@ -275,13 +276,6 @@ demandFinal <- scenariOptim[,.(areaTot = sum(areaLogged)*1e-4,
                             .(demand, scenario)]
 demandFinal = melt(demandFinal, id.vars = c("demand","scenario"))
 
-# ### ES costs 
-# scenariOptim = scenariOptim[,.(Cemi = raster::extract(cost_carbon[[zone]], cbind(long,lat)), 
-#                                timbLoss = raster::extract(cost_vrec[[zone]], cbind(long,lat)), 
-#                                biodLoss = raster::extract(cost_diversity[[zone]], cbind(long,lat)), 
-#                                vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)), 
-#                                long=long, lat=lat, demand = demand, scenario=scenario, area = area),.(zone)]
-
 
 #### (3) Graphs ####
 
@@ -317,8 +311,8 @@ new_plots <- splitFacet(g1 + theme(legend.position = "none"))
 legend_size <- as_ggplot(get_legend(g1 + theme(legend.position = "bottom")))
 
 zone_legend <- ggplot(df_zones[-10],aes(x=vext,y=as.factor(trot),fill=zname,label=zname)) + 
-  geom_raster() + scale_fill_manual(values = colour_palette)+geom_text(size=15) + 
-  labs(x ="Extracted volume", y = "Cutting cycle (yrs)") + 
+  geom_raster() + scale_fill_manual(values = colour_palette)+geom_text(size=10) + 
+  labs(x =expression("Extracted volume ("*m^3*ha^{-1}*")"), y = "Cutting cycle (yrs)") + 
   theme(legend.position="none", aspect.ratio=1, 
         panel.background = element_blank(), 
         plot.margin = margin(2, 2, 2, 2, "cm"),
@@ -379,8 +373,8 @@ legend_strategies <- as_ggplot(get_legend(g2))
 g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario))+ 
   geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,0), each=3))),
              aes(yintercept = h), lty=2) + 
-  geom_line(lwd=0.8) + scale_colour_brewer(palette = "Set1") +
-  facet_wrap( ~ variable ,  nrow=3, scale="free_y", dir = "v") + 
+  geom_line(lwd=0.7) + scale_colour_brewer(palette = "Set1") +
+  facet_wrap( ~ variable,  nrow=3, scale="free_y", dir = "v") + 
   theme(panel.background = element_rect(fill="white", colour = "black"),
         panel.grid = element_blank(), strip.background = element_blank(), 
         legend.position = "none") + 
@@ -441,7 +435,7 @@ ggsave("graphs/changingESweights.pdf", height=4, width=10)
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
 ggplot(subset(scenariOptim, demand != 35)) +
-  geom_point(aes(x=long,y=lat,colour=zname, size=area/1e3)) +
+  geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e3)) +
   theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
   scale_colour_manual(name = "Zone",values = colour_palette) +
   labs(size = "Area available for logging (1000 km2)", x="", y="") +
