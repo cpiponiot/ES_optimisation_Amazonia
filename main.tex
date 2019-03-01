@@ -8,9 +8,18 @@
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xfp}
 \usepackage[margin=1in]{geometry}
 \usepackage{lineno}
 \linenumbers
+
+\newcommand\SupplementaryMaterials{%
+  \xdef\presupfigures{\arabic{figure}}% save the current figure number
+  \xdef\presupsections{\arabic{section}}% save the current section number
+  \renewcommand\thefigure{S\fpeval{\arabic{figure}-\presupfigures}}
+  \renewcommand\thesection{S\fpeval{\arabic{section}-\presupsections}}
+}
 
 \title{Is there an optimal management strategy for Amazonian production forests?}
 \author{Camille Piponiot, Ervan Rutishauser, Plinio Sist,\\ TmFO author list, Bruno Hérault}
@@ -24,7 +33,7 @@
 
 Tropical forests harbour most terrestrial carbon and diversity on Earth. Despite increased attention in national and international policies, they are still being deforested or degraded at high rates. 
 In Amazonia, the largest tropical forest on Earth, a sixth of the remaining natural forests is dedicated to timber production. Conciliating timber production with the provision of other ecosystem services (ES) remains a major challenge for forest managers and policy-makers. This study applies a spatial optimisation of logging in Amazonian production forests to analyse potential trade-offs between three ecosystem services, namely timber production, carbon storage and biodiversity conservation.  
-Results fail to find any agreement between sustainable timber production and conservation of carbon stocks and biodiversity on the long run. Logging regulations currently applied in the region result in sub-optimal ES-use efficiency. Long-term timber provision would require adoption of a land-sharing strategy at regional scale (i.e. extensive logging with low intensities), whereas retention of carbon and diversity would be favoured in opting for a land-sparing strategy (i.e. intensive logging concentrated in the outer fringes of the Amazon region). Depending on management goals and societal demands, either choices are likely to have deep implications for the future of Amazonian forests. Overall, our results highlight the need for a reevaluation of current logging regulations and for regional cooperation among Amazonian countries to enhance coherent and trans-boundary forest management.
+Logging regulations currently applied in the region result in sub-optimal ES-use efficiency. Long-term timber provision would require adoption of a land-sharing strategy at regional scale (i.e. extensive logging with low intensities), whereas retention of carbon and diversity would be favoured in opting for a land-sparing strategy (i.e. intensive logging concentrated in the outer fringes of the Amazon region). Depending on management goals and societal demands, either choices are likely to have deep implications for the future of Amazonian forests. Overall, our results highlight the need for a reevaluation of current logging regulations and for regional cooperation among Amazonian countries to enhance coherent and trans-boundary forest management.
 
 \twocolumn
 
@@ -84,13 +93,13 @@ The optimal spatial configuration for one given strategy is then found using a m
 
 Different strategies to supply future timber demand in the region (Table~\ref{tab:strategies}) are tested: (i) \textit{Timber}: only timber recovery is optimised in order to ensure long-term timber production, (ii) \textit{Carbon}: only carbon is optimised as a climate change mitigation strategy, (iii) \textit{Balanced}: all 3 ES costs are balanced in the optimisation, as a multifunctionality strategy, (iv) \textit{Current}: all 3 ES costs are balanced under medium (30-yr) cutting cycles, (v) \textit{Sustained}: sustained timber yields (STY), i.e. the volume of timber extracted must be recovered at the end of the first cutting cycle, (vi) \textit{Road building}: all areas, except currently-protected areas, are made available for logging, and (vii) \textit{STY - Road building}: all areas, except currently-protected areas, are made available for STY logging. Both strategies involving the expansion of new roads mirror a land-sharing strategy. For the Timber strategy, total timber harvested can vary between 10-80~Mm$^3$yr$^{-1}$ (Figure~\ref{fig:incDemand}), but 80\% of IFL is maintained. Such an intensification of timber production in current production forests rather reflects a land-sparing approach.
 
-In scenarios (i-v), the area suitable for logging is the same as defined previously (\textit{Currently accessible} in Table~\ref{tab:strategies}). In the "Road building" scenarios (v-vi), we hypothesise that additional roads will be built: the new area suitable for logging (\textit{All unprotected} in Table~\ref{tab:strategies}) corresponds to the total area with forest cover $>$~90\% outside protected areas (independently of their current distance to a road), minus the 42\% corresponding to slopes and areas near rivers (see section~\ref{sec:defPPF}). 
+In scenarios (i-v), the area suitable for logging is the same as defined previously (\textit{Currently accessible} in Table~\ref{tab:strategies}). In the \textit{Road building} scenarios (v-vi), we hypothesise that additional roads will be built: the new area suitable for logging (\textit{All unprotected} in Table~\ref{tab:strategies}) corresponds to the total area with forest cover $>$~90\% outside protected areas (independently of their current distance to a road), minus the 42\% corresponding to slopes and areas near rivers (see section~\ref{sec:defPPF}). 
 
 \begin{table*}
     \centering
     \begin{tabularx}{\textwidth}{p{2cm} p{4.5cm} p{2cm} p{3.5cm} p{0.8cm} p{1cm}}
     \toprule
-         Acronym & Strategy & ES prioritisation & PPF area &  STY & Min. cycle \\
+         Acronym & Strategy & ES prioritisation & PPF area &  STY & 30-yr cycle \\
          \midrule
          Timber & Long-term timber production & Timber  & Currently accessible & No & No\\
          Carbon & Climate change mitigation &  Carbon & Currently accessible & No & No\\
@@ -102,7 +111,7 @@ In scenarios (i-v), the area suitable for logging is the same as defined previou
          STY + Road building & Sustained timber yields with road building & Balanced & All unprotected & Yes & No \\
          \bottomrule
     \end{tabularx}
-    \caption{Strategies tested in this study. PPF (potential production forest) areas are areas that can be logged in a given strategy: "Currently accessible" are areas that have $>$~90\% forest cover, are not protected and are within 25~km of an existing road or track (Figure~\ref{fig:pharv}); "All unprotected" are all areas with $>$~90\% forest cover outside protected areas. ES costs are the costs in terms of ecosystem services that are minimised in a given strategy. STY (Sustained Timber Yields) target }
+    \caption{Strategies tested in this study. ES prioritisation refers to the weights given to ES in the optimisation process: either only one ES (timber, carbon or biodiversity) is optimised, or weights are balanced between timber and conservation (carbon and biodiversity). PPF (potential production forest) areas are areas that can be logged in a given strategy: "Currently accessible" are areas that have $>$~90\% forest cover, are not protected and are within 25~km of an existing road or track (Figure~\ref{fig:pharv}); "All unprotected" are all areas with $>$~90\% forest cover outside protected areas. Two optional constraints can be added: STY (Sustained Timber Yields) requires that the total timber stocks are recovered over all logged grid cells; the 30-yr cycle constraint allows only 30-yr cutting cycles.}
     \label{tab:strategies}
 \end{table*}
 
@@ -143,7 +152,7 @@ The total areas of PPF ("all unprotected" and "currently available") were then c
 
 \subsubsection{Sustainable timber yields}
 
-An optional sustainable timber yields (STY) constraint was added to the "STY" and "STY + Road-building" strategies. In these strategies, timber recovery over all grid cells must be greater or equal to harvested timber volumes: 
+An optional sustainable timber yields (STY) constraint was added to the \textit{STY} and \textit{STY + Road building} strategies. In these strategies, timber recovery over all grid cells must be greater or equal to harvested timber volumes: 
 
 \begin{equation}
     \sum_{p}\sum_{z} (Prod_{p,z} - Rec_{p,z}) \geq 0 
@@ -165,13 +174,13 @@ Finally, an additional constraint  to conserve biodiversity is added to all stra
 Minimising timber loss results in a different pattern: only 10\% of the available area is not logged, 12\% is logged under high-intensity short-cycle logging, and 77\% of the available area is logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging. Low-intensity logging is distributed in almost every region of Amazonia, except in the northeast where high-intensity logging prevails (Figure~\ref{fig:mapsStrateg}a). 
 By contrast, maximising carbon and biodiversity retention results in preserving 82\% of available forests, and logging 18\% of available forests under the highest intensity (30~m$^3$ha$^{-1}$) and shortest cutting cycle (15 yr) allowed (Figure~\ref{fig:mapsStrateg}b-c). Logged areas are distributed in the most external areas of Amazonia: in southeastern Amazonia for both carbon and biodiversity, in northern Amazonia for carbon and in the southwestern border of Amazonia for biodiversity.  
 
-Balancing timber, carbon and biodiversity optimisation results in preserving 48\% of available forests, logging 15\% of available forests under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging and 36\% under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging (Figure~\ref{fig:mapsStrateg}d). Similar to the "Carbon" and "Biodiversity" strategies, heavily logged areas are concentrated in most external areas, especially in the southeastern border; low-intensity logging is concentrated in the south and northwest; central, western and northeastern Amazonia are mostly not logged. 
+Balancing timber, carbon and biodiversity optimisation results in preserving 48\% of available forests, logging 15\% of available forests under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging and 36\% under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging (Figure~\ref{fig:mapsStrateg}d). Similar to the \textit{Carbon} and \textit{Biodiversity} strategies, heavily logged areas are concentrated in most external areas, especially in the southeastern border; low-intensity logging is concentrated in the south and northwest; central, western and northeastern Amazonia are mostly not logged. 
 
 Allowing only 30-yr cutting cycles results in preserving a smaller share of available forests (35\%) while 22\% was logged under high-intensity (30 m$^3$ha$^{-1}$) logging and 43\% under low-intensity (10 m$^3$ha$^{-1}$) logging (Figure~\ref{fig:mapsStrateg}e). 
 
-Adding a STY constraint (Figure~\ref{fig:mapsStrateg}f) results in very little change compared to the "Balanced" strategy. A slightly higher share (39\% instead of 36\%) of areas logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging; this results in less areas being preserved (45\% instead of 48\%). 
+Adding a STY constraint (Figure~\ref{fig:mapsStrateg}f) results in very little change compared to the \textit{Balanced} strategy. A slightly higher share (39\% instead of 36\%) of areas logged under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging; this results in less areas being preserved (45\% instead of 48\%). 
 
-Increasing the total accessible forest area through road building (Figure~\ref{fig:mapsStrateg}g) also results in a spatial configuration similar to the "Balanced" strategy. The total area under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging is slightly lower than in the "Balanced" strategy (13~Mha instead of 15~Mha) and the total area under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging is higher (55~Mha instead of 35~Mha). Adding a STY constrain did not change the final resultst (Figure~\ref{fig:mapsStrateg}h). 
+Increasing the total accessible forest area through road building (Figure~\ref{fig:mapsStrateg}g) also results in a spatial configuration similar to the \textit{Balanced} strategy. The total area under high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging is slightly lower than in the \textit{Balanced} strategy (13~Mha instead of 15~Mha) and the total area under low-intensity (10~m$^3$ha$^{-1}$) long-cycle (65 yr) logging is higher (55~Mha instead of 35~Mha). Adding a STY constrain did not change the final results (Figure~\ref{fig:mapsStrateg}h). 
 
 \begin{figure*}
     \centering
@@ -182,27 +191,27 @@ Increasing the total accessible forest area through road building (Figure~\ref{f
 
 \subsection{Effect of strategy choice on ES provision}
 
-The "Timber" strategy results in the best final timber stocks (+1.4\% of initial timber stocks, Figure~\ref{fig:scenESProv}a) but the highest carbon emissions (-3.6\% of initial carbon stocks, Figure~\ref{fig:scenESProv}b) and highest biodiversity loss (-5.8\% of initial value, Figure~\ref{fig:scenESProv}c). The "Carbon" and "Biodiversity" strategies result in similar changes in ES provision: -2.2\% timber; -1.5\% and -1.6\% carbon (respectively); and -2.4\% and -2.2\% biodiversity (respectively). 
+The \textit{Timber} strategy results in the best final timber stocks (+1.4\% of initial timber stocks, Figure~\ref{fig:scenESProv}a) but the highest carbon emissions (-3.6\% of initial carbon stocks, Figure~\ref{fig:scenESProv}b) and highest biodiversity loss (-5.8\% of initial value, Figure~\ref{fig:scenESProv}c). The \textit{Carbon} and \textit{Biodiversity} strategies result in similar changes in ES provision: -2.2\% timber; -1.5\% and -1.6\% carbon (respectively); and -2.4\% and -2.2\% biodiversity (respectively). 
 
-The "Balanced" and "STY" strategies result in almost no variation in timber stocks while the "Road building" and "STY + Road building" strategies result in a timber increase of 0.8\% (Figure~\ref{fig:scenESProv}a). Those 4 strategies have similar carbon and biodiversity losses: -2.3\% carbon (Figure~\ref{fig:scenESProv}b) and -3.6\% biodiversity (Figure~\ref{fig:scenESProv}c) in the "Balanced" and "STY" strategies, and -2.2\% carbon and -3.7\% biodiversity in the "Road building" and "STY + Road building" strategies. 
+The \textit{Balanced} and \textit{STY} strategies result in almost no variation in timber stocks while the \textit{Road building} and \textit{STY + Road building} strategies result in a timber increase of 0.8\% (Figure~\ref{fig:scenESProv}a). Those 4 strategies have similar carbon and biodiversity losses: -2.3\% carbon (Figure~\ref{fig:scenESProv}b) and -3.6\% biodiversity (Figure~\ref{fig:scenESProv}c) in the \textit{Balanced} and \textit{STY} strategies, and -2.2\% carbon and -3.7\% biodiversity in the \textit{Road building} and \textit{STY + Road building} strategies. 
 
-The current strategy performs poorly at providing all ES: it shows the highest loss of timber (-2.3\%) and the second highest losses of carbon (-3.5\%) and biodiversity (-4.9\%), not far behind the "Timber" strategy. 
+The current strategy performs poorly at providing all ES: it shows the highest loss of timber (-2.3\%) and the second highest losses of carbon (-3.5\%) and biodiversity (-4.9\%), not far behind the \textit{Timber} strategy. 
 
 \subsection{Effect of change in timber production target}
 
-The effect of changing the timber demand (timber production target from 10 to 80 Mm$^3$) was tested on 8 different logging strategies (Table~\ref{tab:strategies}).
+The effect of changing the timber demand (timber production target from 10 to 80 Mm$^3$) was tested on the 8 logging strategies.
 
 For all strategies except one (the \textit{Timber} strategy), the total area harvested increases with the total production target (Figure~\ref{fig:incDemand}a). 
-In the \textit{Timber} strategy however, the total area logged is at its maximum value (around 80 Mha) even for low production targets: the increase in timber production results in an increase in the mean logging intensity and a decrease in the mean cutting cycle length (Figure~\ref{fig:incDemand}b-c). 
+In the \textit{Timber} strategy however, the total area logged is at its maximum value (around 80 Mha) even for low production targets: the increase in timber production results in an increase in the mean logging intensity and in a decrease in the mean cutting cycle length (Figure~\ref{fig:incDemand}b-c). 
 Provision of ESs (carbon, biodiversity, and timber) decreases when production increases (Figure~\ref{fig:incDemand}d-f).
-Three groups of strategies have consistently different behaviours in this analysis: (i) a group of strategies that optimise non-timber ESs (\textit{Carbon}, \textit{Balanced}, \textit{Current} and \textit{Road building}), (ii) the timber-optimising strategy (\textit{Timber}), and (iii) the group of sustainable-production strategies (\textit{STY}, \textit{STY + Road building}). 
 
-In the first group of strategies, most grid cells that are logged have maximum logging intensity (30~m$^3$ha$^{-1}$, Figure~\ref{fig:incDemand}b) and minimum cutting cycle (15 yr, Figure~\ref{fig:incDemand}c), except for the \textit{Current} strategy for which, by definition, only 30-yr cutting cycles are allowed (Table~\ref{tab:strategies}). For low production targets (10-30 Mm$^3$yr$^{-1}$) mean logging intensity is between 20-30 m$^3$ha$^{-1}$ and mean cutting cycle length is between 15-40. When the production target is above 30 Mm$^3$yr$^{-1}$, mean logging intensity and mean cutting cycle length reach their maximum (resp. minimum) value, meaning that almost all logged grid cells are allocated to the High-intensity Short-cycle logging type: these results are similar to those in Figure~\ref{fig:mapsStrateg}. As a consequence, the total area logged increases linearly with the timber production target (Figure~\ref{fig:incDemand}a): producing more timber is mostly done by logging additional areas. All 3 ESs decrease almost linearly with production target (Figure~\ref{fig:incDemand}d-f). The \textit{Carbon}, \textit{Balanced} and \textit{Road building} strategies result in similar ES values: the 3 strategies retain $\geq$~90\% carbon and biodiversity (Figure~\ref{fig:incDemand}e-f), but timber stocks are not recovered  (Figure~\ref{fig:incDemand}d). The \textit{Current} strategy has significantly lower ES values for all 3 ES considered (Figure~\ref{fig:incDemand}d-f).
+The \textit{Carbon} and \textit{Biodiversity} strategies have similar behaviours: they rely almost exclusively on high-intensity (30~m$^3$ha$^{-1}$) short-cycle (15 yr) logging independently of the timber production target (Figure~\ref{fig:incDemand}b-c), and the  additional timber production target is met through an linear increase in logged areas (Figure~\ref{fig:incDemand}a). 
 
-The timber-optimising strategy has a different behaviour when the production target increases. When the production target is low (10~Mm$^3$yr$^{-1}$), logging is exclusively done under low intensities (10~m$^3$ha$^{-1}$, Figure~\ref{fig:incDemand}b) and long cutting cycles (65 yr, Figure~\ref{fig:incDemand}c). When the timber production increases, the proportion of area logged under high-intensity short-cycle logging increases, especially in the northeastern regions of Amazonia (see Supplementary figure~\ref{fig:mapsStrategy} for the spatial distribution of logging types), which in turn increases the mean logging intensity (Figure~\ref{fig:incDemand}b) and decreases the mean cutting cycle length (Figure~\ref{fig:incDemand}c). Almost the entire area available (80 Mha) is logged, independently of the production target (Figure~\ref{fig:incDemand}a). The total timber retained is $>$~100\% (i.e. timber stocks are recovered) when the production target was under 50 Mm$^3$ha$^{-1}$, and $<$~100\% above 50~Mm$^3$ha$^{-1}$. The carbon and diversity retained were the lowest in this strategy (Figure~\ref{fig:incDemand}e-f).  
+When ES prioritisation is balanced (\textit{Balanced} and \textit{Road building} strategies), timber production is mostly done under low-intensity long-cycle logging when the production target is low. The total area logged increases slowly when the timber production target increases (Figure~\ref{fig:incDemand}a): the additional timber is mostly produced by progressively substituting low-intensity long-cycle logging with high-intensity short-cycle logging (Figure~\ref{fig:incDemand}b-c; Figure~\ref{fig:mapsIncDemand}). 
 
-The third group of strategies (sustainable production) retain, by definition, 100\% of timber stocks (Figure~\ref{fig:incDemand}d). Producing more than 50~Mm$^3$yr$^{-1}$ was impossible with the STY strategy. Even when increasing the total area available ("STY + Road building"), the total production could go no further than 70~Mm$^3$yr$^{-1}$. 
-The mean logging intensity and cutting cycle length stay constant with these two strategies: 16~m$^3$ha$^{-1}$ and 50~yr respectively (Figure~\ref{fig:incDemand}b-c). The total area logged increases almost twice faster when the production target increases than for the first group of strategies (Figure~\ref{fig:incDemand}a). As a consequence, the carbon and biodiversity retained also decrease faster (Figure~\ref{fig:incDemand}e-f). 
+Adding the STY constraint to the \textit{Balanced} and \textit{Road building} strategies (\textit{STY} and \textit{STY + Road building} strategies respectively) does not change results until the total timber variation becomes negative (Figure~\ref{fig:incDemand}d), at 35 Mm$^3$yr$^{-1}$ and 50 Mm$^3$yr$^{-1}$ respectively. From that production target on, the mean logging intensity stabilises at approximately 15~m$^3$ha$^{-1}$ and the mean cutting cycle at 50 years, while the additional production target is met through a sharp increase in the total area logged (Figure~\ref{fig:incDemand}a). The STY constraint cannot be satisfied above 50 Mm$^3$yr$^{-1}$ with currently available PPF and 60 Mm$^3$yr$^{-1}$ with all potential PPF (i.e. in the \textit{STY + Road building} strategy). 
+
+Finally, the \textit{Current} strategy (i.e. balanced ES prioritisation with cutting cycles of 30 years) results in low-intensity logging when the production target is under 20 Mm$^3$yr$^{-1}$ (Figure~\ref{fig:incDemand}b); increasing the timber production target results in a sharp increase in the total area logged until 30~Mm$^3$yr$^{-1}$ (Figure~\ref{fig:incDemand}a) and in a sharp increase in the logging intensity from 30~Mm$^3$yr$^{-1}$ to 80~Mm$^3$yr$^{-1}$ (Figure~\ref{fig:incDemand}b). When the timber production target reaches 80~Mm$^3$yr$^{-1}$, the total area logged reaches its maximum value (around 80~Mha; Figure~\ref{fig:incDemand}a) and all areas logged are under high-intensity logging (30~m$^3$ha$^{-1}$; Figure~\ref{fig:incDemand}b). In terms of ES variation, the \textit{Current} strategy performs poorly compared to other strategies, especially when the production target is high: it results in the highest timber loss and carbon emissions when the timber production target reaches 40~Mm$^3$yr$^{-1}$, in the highest biodiversity loss when timber production reaches 50~Mm$^3$yr$^{-1}$, 
 
 \begin{figure*}
     \centering
@@ -215,7 +224,7 @@ The mean logging intensity and cutting cycle length stay constant with these two
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/increasingDemand.pdf}
-    \caption{Characterisation of different strategies for timber production, depending on the value of timber demand. (a) Total area logged (Mkm$^2$). (b) Mean logging intensity in logged areas (m$^3$ha$^{-1}$). (c) Mean cutting cycle length (yr). (d) Proportion of initial timber stocks that remain at the end of the cutting cycle (\%). (e) Proportion of initial carbon stocks that remain at the end of the cutting cycle (\%). (f) Proportion of initial mammals and amphibians richness that remain at the end of the cutting cycle (\%). The 8 strategies' characteristics are summarised in Table~\ref{tab:strategies}. "STY" and "STY + Road building" strategies could not sustainably provide more than 50 and 70 Mm$^3$ of annual timber production respectively. In plots (d-f), values are calculated over all areas outside of protected areas. Additional maps with distribution of logging types (intensity, cutting cycle) are provided in the supplementary materials (Figure~\ref{fig:mapsStrategy}).}
+    \caption{Characterisation of different strategies for timber production, depending on the value of timber demand. (a) Total area logged (Mkm$^2$). (b) Mean logging intensity in logged areas (m$^3$ha$^{-1}$). (c) Mean cutting cycle length (yr). (d) Proportion of initial timber stocks that remain at the end of the cutting cycle (\%). (e) Proportion of initial carbon stocks that remain at the end of the cutting cycle (\%). (f) Proportion of initial mammals and amphibians richness that remain at the end of the cutting cycle (\%). The 8 strategies' characteristics are summarised in Table~\ref{tab:strategies}. \textit{STY} and \textit{STY + Road building} strategies could not sustainably provide more than 50 and 70 Mm$^3$ of annual timber production respectively. In plots (d-f), values are calculated over all areas outside of protected areas. Additional maps with distribution of logging types (intensity, cutting cycle) are provided in the supplementary materials (Figure~\ref{fig:mapsIncDemand}).}
     \label{fig:incDemand}
 \end{figure*}
 
@@ -223,12 +232,14 @@ The mean logging intensity and cutting cycle length stay constant with these two
 
 \subsection{Importance of regional studies for forest management}
 
-The optimisation approach applied in this study can have many implications for forest management. Ecosystem services in selectively logged forests have often been studied but usually, they were analysed separately \cite{Putz2012}: there has been little investigation on the trade-offs that exist between ESs. Among the few studies that exist on the subject, a trade-off between carbon retention and volume recovery has been shown at the local scale, where those trade-offs depend on the logging intensity and silvicultural treatments applied \cite{Roopsind2018}. Trade-offs have also been reported between timber production and species richness \cite{Burivalova2014}.  
+The optimisation approach applied in this study can have many implications for forest management. Ecosystem services in selectively logged forests have often been studied but usually, they were analysed separately \cite{Putz2012}: there has been little investigation on the trade-offs that exist between ESs. Among the few studies that exist on the subject, a trade-off between carbon retention and timber recovery has been shown at the local scale, where those trade-offs depend on the logging intensity and silvicultural treatments applied \cite{Roopsind2018}. Trade-offs have also been reported between timber production and species richness \cite{Burivalova2014}.  
 Local studies can inform forest owners, but the latter will base their decisions on a limited set of locally-relevant objectives. Their goal is usually to maximise financial benefits, may it be through timber or non-timber forest products harvesting, eco-tourism or payments for ecosystem services. 
 
-Climate change mitigation and nature conservation goals are however more relevant at regional to global scales \cite{Hein2006b}: e.g. delimitation of protected areas and forest concessions \cite{Verissimo2002}, definition of logging rules (maximum logging intensities, minimum cutting cycle length, minimum cutting size, protected tree species) \cite{Blaser2011}, road-building \cite{Laurance2014}. Informing these policies with large-scale multicriteria analyses will thus be key if we want to develop evidence-based policies. Today few studies have assessed regional-scale ESs trade-offs in Amazonia (e.g. a recent study analyses tradeoffs between forest conservation and agriculture at the basin scale \cite{OConnell2018}); to our knowledge, none has focused on forests managed for timber production. Our study is thus an important step in the planning of future logging management in Amazonia, that needs to be informed on where and how logging should be done depending on future demand for timber and other ESs. 
+Climate change mitigation and nature conservation goals are however more relevant at regional to global scales \cite{Hein2006b}: e.g. delimitation of protected areas and forest concessions \cite{Verissimo2002}, definition of logging rules (maximum logging intensities, minimum cutting cycle length, minimum cutting size, protected tree species) \cite{Blaser2011}, road building \cite{Laurance2014}. Informing these policies with large-scale multicriteria analyses will thus be key if we want to develop evidence-based policies. Today few studies have assessed regional-scale ESs trade-offs in Amazonia (e.g. a recent study analyses tradeoffs between forest conservation and agriculture at the basin scale \cite{OConnell2018}); to our knowledge, none has focused on forests managed for timber production. Our study is thus an important step in the planning of future logging management in Amazonia, that needs to be informed on where and how logging should be done depending on future demand for timber and other ESs. 
 
 One important point to bear in mind is that results presented here only account for the first cutting cycle: this is particularly important in the sustained-timber-yields strategy because even though yields are sustained during the first cutting cycle they could decrease afterwards. Today there is almost no data on multi-cycle logging in Amazonia: most monitored plots have been logged only once \cite{Sist2015}, although actual logging in Amazonia may comprise multiple illegal reentries \cite{Tritsch2016a}. Gathering more information on the effect of several cutting cycles on forest dynamics will be of utmost importance to understand what future production forests will look like. 
+
+Another point that is absent from our analysis is the benefits of improved logging techniques gather under the name of Reduced-Impact Logging (RIL). A compelling body of evidence shows that RIL practices could provide large improvements in terms of timber recovery, carbon emissions and biodiversity protection \cite{Putz2008c,West2014,Tobler2018,Griscom2019}, and many authors thus argue that they should be essential parts of forest management strategies \cite{Runting2018}. Despite this 30-year interest of academics, only xx\% of selectively logged areas in Amazonia use some degree of RIL techniques today (refxx). We thus decided to base our study on currently dominant logging practices, keeping in mind that ES provision would be improved under a RIL scenario. 
 
 Finally, even though our findings provide an interesting insight on potential trade-offs that future forest managers and decision-makers will face, a large part (20-60\%) of logging is done illegally in the Amazon \cite{Finer2014,Brancalion2018}. Changing logging rules to maintain the environmental value of production forests can be jeopardised by the lack of control over their application. Improving Amazonian forests' governance will be key to maintain ecosystem services through informed management. 
 
@@ -240,7 +251,7 @@ Several studies showed however that current logging rules are not enough to reco
 Moreover, our results show that implementing intermediate logging rules leads to sub-optimal management of production forests: 30-yr cutting cycles and medium intensities (20~m$^3$ha$^{-1}$) are virtually never selected in the optimisation process (Figure~\ref{fig:mapsStrateg}), and a restriction to 30-yr cutting cycles increases the loss of all ESs (cf. the \textit{Current} strategy in Figure~\ref{fig:incDemand}d-f).  
 
 The spatial configuration of optimal logging (Figure~\ref{fig:mapsStrateg}) highlights major regional differences in Amazonian forests. Forests of the Guiana Shield (northeastern Amazonia) are less prone to natural disturbances \cite{Espirito-Santo2014} and have thus adapted to those environmental conditions with low turnover rates and slow-growing species \cite{Johnson2016,Quesada2012}. 
-Because they recover timber slowly, they are not logged when the demand for timber is low (see Supplementary material, Figure~\ref{fig:mapsStrategy}). 
+Because they recover timber slowly, they are not logged when the demand for timber is low (see Supplementary material, Figure~\ref{fig:mapsIncDemand}). 
 When the demand for timber is high, however, Guiana shield forests are allocated to high intensity logging when timber recovery is optimised (Figure~\ref{fig:mapsStrateg}c): in this case the high logging intensity is predicted to decrease the forest maturity, thus making the forest more productive \cite{Piponiot2018,Roedig2018,Perez-Espana1999}.
 
 Nevertheless, Guiana shield forests provide other ESs: they harbour large amounts of carbon \cite{Avitabile2016} and vertebrates diversity \cite{Jenkins2013}, and are thus not selected for logging when biodiversity and carbon are optimised (Figure~\ref{fig:mapsStrateg}a-b). 
@@ -252,14 +263,16 @@ However, because of previous forest degradation in the region through fire event
 
 \subsection{Land-use strategies, trade-offs and implications for policy-making}
 
-Our results reveal that the main trade-off is between a long-term provision of timber and forest conservation for carbon (climate change mitigation) and biodiversity (Figure~\ref{fig:changeCosts}). These results fit into the "land sharing vs land sparing" debate: with a given timber demand, should logging focus on intensely-logged areas and conserve the rest as intact forest, or should it use the entire landscape under low-intensity logging? Edwards and colleagues \cite{Edwards2014} showed that land-sparing logging retained higher levels of biodiversity in a Bornean forest concession. Because land-sparing logging creates heterogeneous landscapes and maintains higher levels of $\beta$-diversity, it has a higher potential for maintaining biodiversity at the landscape scale \cite{DeCastroSolar2015}. Our findings also show that land-sparing logging (e.g. the \textit{Balanced} strategy) not only minimises biodiversity loss (Figure~\ref{fig:mapsStrateg}b, Figure~\ref{fig:incDemand}f), but it can also reduce carbon emissions (Figure~\ref{fig:mapsStrateg}a, Figure~\ref{fig:incDemand}e). 
+Our results reveal that the main trade-off is between a long-term provision of timber and forest conservation for carbon (climate change mitigation) and biodiversity (Figure~\ref{fig:changeCosts}). These results fit into the "land sharing vs land sparing" debate: with a given timber demand, should logging focus on intensely-logged areas and conserve the rest as intact forest, or should it use the entire landscape under low-intensity logging? Edwards and colleagues \cite{Edwards2014} showed that land-sparing logging retained higher levels of biodiversity in a Bornean forest concession. Because land-sparing logging creates heterogeneous landscapes and maintains higher levels of $\beta$-diversity, it has a higher potential for maintaining biodiversity at the landscape scale \cite{DeCastroSolar2015}. 
+In the Indonesian province of East Kalimantan, a recent study shows that optimal forest conservation value was attained with land-sparing timber production (acacia plantations and protected areas) and in association with some land-sharing (reduced-impact low-intensity) logging, with logging concessions acting as buffers \cite{Runting2018}. 
+Our findings also show that land-sparing logging (e.g. the \textit{Balanced} strategy) not only minimises biodiversity loss (Figure~\ref{fig:mapsStrateg}b, Figure~\ref{fig:incDemand}f), but it can also reduce carbon emissions (Figure~\ref{fig:mapsStrateg}a, Figure~\ref{fig:incDemand}e). 
 However the land-sparing strategy performs rather poorly in terms of timber recovery (Figure~\ref{fig:changeCosts}d), compared to a land-sharing strategy (e.g. the \textit{Timber} strategy, Figure~\ref{fig:incDemand}d). 
 
 There seems to be little place for a win-win strategy between timber production and forest conservation: the current strategy of intermediate logging rules leads to increased ES loss (Figure~\ref{fig:incDemand}d-f). The fate of Amazonian production forests should thus depend on political choices and on future societal demand for ESs. If maintaining long-term timber supply from natural forests is thought to be the goal \cite{Zarin2007}, then low-intensity logging should be widely applied in the Amazon, especially in the western part of the basin (Figure~\ref{fig:mapsStrateg}c).
 However, if the societal demand to preserve carbon and biodiversity continues to increase (e.g. carbon-based policies like REDD+ \cite{Stickler2009}, or the 1992 Rio convention on biodiversity \cite{Barton1992}), then policies should focus on conserving intact inland forests while allowing high-intensity logging in the skirts of the Amazon basin. This type of policy will result in a fast depletion of timber stocks in those over-harvested forests. Alternative ways of producing timber, such as active forest restoration with intensive silviculture and mixed-species timber plantations \cite{Lamb2005}, should then be implemented in the meantime, in order to have new productive forests once the over-harvested forests are depleted. 
 
-Interestingly, the "Road building" and the "Balanced" strategies, which only differ in terms of area accessible for logging (Table~\ref{tab:strategies}), give similar results.
-Building new roads (i.e., in the "Road building" strategy) does not increase the total area logged (Figure~\ref{fig:incDemand}a); it gives more options for the choice of logged grid cells, and thus increases ES provision (Figure~\ref{fig:incDemand}d-f), but the difference is small. 
+Interestingly, the \textit{Road building} and the \textit{Balanced} strategies, which only differ in terms of area accessible for logging (Table~\ref{tab:strategies}), give similar results.
+Building new roads (i.e., in the \textit{Road building} strategy) does not increase the total area logged (Figure~\ref{fig:incDemand}a); it gives more options for the choice of logged grid cells, and thus increases ES provision (Figure~\ref{fig:incDemand}d-f), but the difference is small. 
 Yet, logging roads open the forest to other uses, like hunting, wood-fuel harvesting and deforestation, which can increase carbon and biodiversity costs \cite{Laurance2009a}. Depending on the level of governance, forests can undergo long-lasting additional degradation that was not accounted for in this study but could increase the environmental cost of road-building strategies. Overall, building new roads to increase the area of production forests in Amazonia may not be a good strategy for future ESs provision. 
 
 \section{Conclusion}
@@ -272,15 +285,14 @@ This study shows that large-scale trade-offs exist between maintaining timber st
 \bibliography{biblio}
 
 
-\clearpage
+\onecolumn
+\SupplementaryMaterials
+\textbf{Supplementary material}
 
-\section{Supplementary material}
-
-
-\subsection{Quantifying the effect of logging on ESs}
+\section{Quantifying the effect of logging on ESs}
 \label{sec:ESestimation}
 
-\subsubsection{Timber production and recovery}
+\subsection{Timber production and recovery}
 
 From a previously developed volume recovery model calibrated at the Amazonian scale \cite{Piponiotc}, we extracted: (i) the total volume $vtot_p$ (m$^3$ha$^{-1}$) in grid cell $p$, (ii) the proportion of potentially commercial timber $\omega 0_p$ and (iii) the potential timber recovery $vrec_{p,z}$ at the end of a cutting cycle $trot_z$ and after a logging intensity $vext_z$ ($z$ being the logging type). All parameters were set to their maximum likelihood value.
 
@@ -299,7 +311,7 @@ The mean annual timber recovery over the first cutting cycle in grid cell $p$ in
     Rec_{p,z} = \frac{vrec_{p,z}\cdot area_p}{trot_{p,z}}
 \end{equation}
 
-\subsubsection{Carbon emissions}
+\subsection{Carbon emissions}
 
 The effect of logging on carbon emissions is here quantified as the mean difference to the initial carbon stock over the cutting cycle. It was assessed as the difference of two terms: (i) the initial carbon loss caused by logging, (ii) minus the carbon storage from forest regrowth, averaged over the cutting cycle. 
 
@@ -312,7 +324,7 @@ The carbon emissions from extracted logs in grid cell $p$ under logging type $z$
     Cext_{p,z} = Prod_{p,z} \cdot WDext_p \cdot  area_p
 \end{equation}
 
-with $Prod_{p,z}$ the actual logging intensity (in m$^3$ha$^{-1}$), $area_p$ is the area available for logging (ha) in grid cell $p$ and $WDext_p$ is the mean wood density of commercial trees in grid cell $p$ (see supplementary material~\ref{supmat:wdext} for wood density estimation). 
+with $Prod_{p,z}$ the actual logging intensity (in m$^3$ha$^{-1}$), $area_p$ is the area available for logging (ha) in grid cell $p$ and $WDext_p$ is the mean wood density of commercial trees in grid cell $p$ (see supplementary section~\ref{supmat:wdext} for wood density estimation). 
 
 The carbon emissions from road building were estimated as follow: 
 
@@ -330,7 +342,7 @@ Carbon losses from damaged trees were assessed as follows:
     Cdam_{p,z} = \frac{acs_p  - Prod_{p,z} \cdot WDext_p } {1 + \left(\frac{acs_p}{Prod_{p,z} \cdot WDext_p}  -1 \right)^\theta} \cdot area_p
 \end{equation}
 
-with $\theta$ a parameter of the model: the model justification and calibration are presented in the supplementary material~\ref{supmat:cdam}. 
+with $\theta$ a parameter of the model: the model justification and calibration are presented in supplementary section~\ref{supmat:cdam}. 
 
 Post-logging carbon recovery $Crec_{p,z}$ was assessed with the methodology developed by Piponiot et al. \cite{Piponiot2016a}.  
 All parameters were set to their maximum likelihood value. 
@@ -342,8 +354,7 @@ For each grid cell $p$ and each logging type $z$, the mean annual carbon emissio
     Cemi_{p,z} = Cext_{p,z} + Cdefor_{p,z} + Cdam_{p,z} -  \sum_{t=1}^{trot_z} \frac{Crec_{t,p,z}}{trot_z} 
 \end{equation}
 
-
-\subsubsection{Biodiversity}
+\subsection{Biodiversity}
 
 We chose to model the effect of logging on amphibians and mammals richness because they are key animals in forest ecosystems: amphibians are good indicators of global ecosystem health \cite{Welsh1998,Collins2003} and mammals ensure many ecosystem functions, among which pollination \cite{Fleming2009} and seed dispersal \cite{Wright2000,Muscarella2007}. We used global maps of mammals and amphibians richness derived from IUCN species range maps \cite{Jenkins2013,MapBiodiv}, which can fairly represent patterns of conservation priority \cite{Marechaux2017}.
 
@@ -357,7 +368,7 @@ Rloss_{p,z} = \left(Rm_{p} \cdot \beta m + Ra_{p} \cdot \beta a  \right)  \cdot 
 where $Rloss_{p,z}$ is the loss of vertebrate richness (mammals and amphibians) in grid cell $p$ and logging type $z$, $Rm_{p}$ and $Ra_p$ are the pre-logging richness of mammals and amphibians respectively \cite{Jenkins2013}, $\beta m = 1.44$ and $\beta a = 1.53$  are the estimated slopes of post-logging species loss in the Neotropics for mammals and amphibians respectively, according to Burivalova et al.  \cite{Burivalova2014}. $vext_z$ is the logging intensity in logging type $z$.
 We hypothesize that amphibians and mammals richness do not recover after logging (no effect of cutting cycle length). 
 
-\subsection{Carbon damage model}
+\section{Carbon damage model}
 \label{supmat:cdam}
 
 To estimate carbon emissions from logging damage we calibrated a model with data from 115 plots (129.25~ha total) in 11 experimentally logged sites spread in Amazonia \cite{Sist2015}. In all plots the identity of harvested trees was recorded, and at least one pre-logging and 2 post-logging forest inventories were carried out. In each forest inventory the diameter at breast height (DBH) of all stems $>$~20 cm DBH were measured, and trees were identified to the lowest taxonomic level (83\% species, 16\% genus, 2\% not identified). 
@@ -379,13 +390,6 @@ The carbon of damage was estimated as:
 
 where $C0_j$ is the pre-logging above ground carbon of all trees $>$ 20 cm DBH in plot $j$, and $Cmin_j$ is the minimum above ground carbon during the 4 years following logging operations (Figure~\ref{fig:schemaDam}). 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.6\linewidth]{graphs/schemaDam.pdf}
-    \caption{Diagram of carbon pools in the damage model.}
-    \label{fig:schemaDam}
-\end{figure}
-
 We define the following variables: 
 
 \begin{itemize}
@@ -403,17 +407,26 @@ with $\theta$ the slope of the relationship, and $\sigma_D$ the standard deviati
 
 \begin{figure}
     \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{graphs/schemaDam.pdf}
+        \caption{Diagram of carbon pools in the damage model.}\label{fig:schemaDam}
+    \end{subfigure}
+    ~ 
+    \begin{subfigure}[b]{0.55\textwidth}
     \includegraphics[width=\linewidth]{graphs/damModel.pdf}
-    \caption{Carbon damage model. Coloured dots are data from one plot, with each colour representing one site and the size of the dot being proportional to the plot's size. The black line is the maximum likelihood prediction, and the shaded area is the 95\% confidence interval.}
-    \label{fig:damModel}
+    \caption{Carbon damage model. Coloured dots are data from one plot, with each colour representing one site and the size of the dot being proportional to the plot's size. The black line is the maximum likelihood prediction, and the shaded area is the 95\% confidence interval.}\label{fig:damModel}
+    \end{subfigure}
 \end{figure}
 
-\subsection{Mapping permanent forest areas}
+
+\clearpage
+
+\section{Mapping permanent forest areas}
 
 xxxx
 
 
-\subsection{Wood density estimation}
+\section{Wood density estimation}
 \label{supmat:wdext}
 
 We used 2646 1-ha forest inventory plots spanned over the Brazilian Amazon from the RadamBrasil project \cite{Radam2017}, in which all trees $\geq$33 cm diameter at breast height (DBH) were measured, identified to the species level and had their volume estimated. 
@@ -428,7 +441,7 @@ Values were then interpolated with the R package \textit{automap} \cite{gstat} o
     \label{sfig:wdext}
 \end{figure*}
 
-\subsection{Analysing the effect of changing ES prioritisation}
+\section{Analysing the effect of changing ES prioritisation}
 
 When optimising biodiversity (i.e. when biodiversity weight is 100\%), carbon emissions are 0\% higher than the optimal value (when optimising only carbon emissions, i.e. when carbon weight is 100\%: Figure~\ref{fig:changeCosts}) and timber loss is 34\% higher than the optimal value (Figure~\ref{fig:changeCosts}). When optimising carbon, biodiversity loss is 40\% higher than the optimal value (Figure~\ref{fig:changeCosts}) and timber loss is 37\% higher than the optimal value (Figure~\ref{fig:changeCosts}). When optimising timber, carbon emissions are 158\% higher than the optimal value (Figure~\ref{fig:changeCosts}) and biodiversity loss is 228\% higher than the optimal value (Figure~\ref{fig:changeCosts}).  When costs are balanced (carbon weight = biodiversity weight = timber weight), carbon emissions are 17\% higher than the optimal value (Figure~\ref{fig:changeCosts}), biodiversity loss is 11\% higher than the optimal value (Figure~\ref{fig:changeCosts}) and timber loss is 35\% higher than the optimal value (Figure~\ref{fig:changeCosts}). 
 
@@ -441,13 +454,14 @@ From this sensitivity analysis, one major trade-off axis emerges between carbon 
     \label{fig:changeCosts}
 \end{figure*}
 
-\subsection{Increasing timber demand - maps} 
+
+\clearpage
 
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/mapsChangeDemand.pdf}
     \caption{Results of spatial optimisation with varying demand for timber (from 10 to 50 Mm$^3$/yr), and under different scenarios. }
-    \label{fig:mapsStrategy}
+    \label{fig:mapsIncDemand}
 \end{figure*}
 
 \end{document}
