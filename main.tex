@@ -8,18 +8,18 @@
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{xfp}
 \usepackage[margin=1in]{geometry}
 \usepackage{lineno}
 \linenumbers
 
-\newcommand\SupplementaryMaterials{%
-  \xdef\presupfigures{\arabic{figure}}% save the current figure number
-  \xdef\presupsections{\arabic{section}}% save the current section number
-  \renewcommand\thefigure{S\fpeval{\arabic{figure}-\presupfigures}}
-  \renewcommand\thesection{S\fpeval{\arabic{section}-\presupsections}}
-}
+\newcommand{\beginsupplement}{%
+        \setcounter{table}{0}
+        \renewcommand{\thetable}{S\arabic{table}}%
+        \setcounter{figure}{0}
+        \renewcommand{\thefigure}{S\arabic{figure}}%
+        \setcounter{section}{0}
+        \renewcommand{\thefigure}{S\arabic{section}}%
+     }
 
 \title{Is there an optimal management strategy for Amazonian production forests?}
 \author{Camille Piponiot, Ervan Rutishauser, Plinio Sist,\\ TmFO author list, Bruno Hérault}
@@ -239,7 +239,7 @@ Climate change mitigation and nature conservation goals are however more relevan
 
 One important point to bear in mind is that results presented here only account for the first cutting cycle: this is particularly important in the sustained-timber-yields strategy because even though yields are sustained during the first cutting cycle they could decrease afterwards. Today there is almost no data on multi-cycle logging in Amazonia: most monitored plots have been logged only once \cite{Sist2015}, although actual logging in Amazonia may comprise multiple illegal reentries \cite{Tritsch2016a}. Gathering more information on the effect of several cutting cycles on forest dynamics will be of utmost importance to understand what future production forests will look like. 
 
-Another point that is absent from our analysis is the benefits of improved logging techniques gather under the name of Reduced-Impact Logging (RIL). A compelling body of evidence shows that RIL practices could provide large improvements in terms of timber recovery, carbon emissions and biodiversity protection \cite{Putz2008c,West2014,Tobler2018,Griscom2019}, and many authors thus argue that they should be essential parts of forest management strategies \cite{Runting2018}. Despite this 30-year interest of academics, only xx\% of selectively logged areas in Amazonia use some degree of RIL techniques today (refxx). We thus decided to base our study on currently dominant logging practices, keeping in mind that ES provision would be improved under a RIL scenario. 
+We also did not include in the analysis potential benefits of the set of improved logging techniques gathered under the name of Reduced Impact Logging (RIL). A compelling body of evidence shows that RIL practices could provide large improvements in terms of timber recovery, carbon emissions and biodiversity protection \cite{Putz2008c,West2014,Tobler2018,Griscom2019}, and many authors thus argue that they should be an essential point in forest management strategies \cite{Runting2018}. Despite this 30-year interest of academics, RIL techniques are seldom implemented in Amazonian production forests \cite{Blaser2011}. We thus decided to base our study on currently dominant logging practices, keeping in mind that ES provision would be improved if RIL was more widely implemented. 
 
 Finally, even though our findings provide an interesting insight on potential trade-offs that future forest managers and decision-makers will face, a large part (20-60\%) of logging is done illegally in the Amazon \cite{Finer2014,Brancalion2018}. Changing logging rules to maintain the environmental value of production forests can be jeopardised by the lack of control over their application. Improving Amazonian forests' governance will be key to maintain ecosystem services through informed management. 
 
@@ -286,7 +286,7 @@ This study shows that large-scale trade-offs exist between maintaining timber st
 
 
 \onecolumn
-\SupplementaryMaterials
+\beginsupplement
 \textbf{Supplementary material}
 
 \section{Quantifying the effect of logging on ESs}
