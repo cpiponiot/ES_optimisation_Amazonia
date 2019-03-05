@@ -8,7 +8,7 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- TRUE
+solveProblems <- FALSE
 
 #### study region & maps ####
 
@@ -329,11 +329,12 @@ ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 
 ## proportion of area per zone per strategy ##
 dfAreaZone = scenariOptim[demand == 35, .(area = sum(areaLogging)), .(zname, scenario)]
+dfAreaZone = subset(dfAreaZone, area > 1e4)  ## keep only zones that represent over 1% of the total area
 dfAreaZone = merge(dfAreaZone, dfAreaZone[,.(areaTot = sum(area)), .(scenario)], by = "scenario")
 dfAreaZone[, pArea := area/areaTot*100]
 
 ggplot(dfAreaZone, aes(zname, weight = pArea, fill = zname)) + geom_bar() + facet_wrap( ~ scenario, ncol = 4) + 
-  scale_fill_manual(name = "Zone", values = colour_palette) +
+  scale_fill_manual(name = "Zone", values = colour_palette) + theme(legend.position = "none") +
   geom_text(aes(label=round(pArea, digits = 1), y = pArea), vjust=-0.2)
 ggsave("graphs/proportionAreaZone.pdf", height = 6, width = 12)
 
@@ -362,19 +363,19 @@ ggsave("graphs/costsScenario.pdf", height=4, width=7)
 ### ES = f(timber demand, scenario) ###
 
 levels(demandFinal$variable) <- c("(a) Total area logged (Mha)",
-                                  "(b) Mean logging intensity (m3/ha)", 
+                                  "(b) Mean logging intensity (m3/ha)",
                                   "(c) Mean cutting cycle length (yr)",
                                   "(d) Timber variation (%)",
                                   "(e) Carbon variation (%)", 
-                                  "(f) Biodiversity variation (%)" ) 
+                                  "(f) Biodiversity variation (%)") 
 
 legend_strategies <- as_ggplot(get_legend(g2))
 
-g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario))+ 
+g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario)) + 
   geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,0), each=3))),
              aes(yintercept = h), lty=2) + 
   geom_line(lwd=0.7) + scale_colour_brewer(palette = "Set1") +
-  facet_wrap( ~ variable,  nrow=3, scale="free_y", dir = "v") + 
+  facet_wrap( ~ variable, scale="free_y", nrow=3, dir = "v") + 
   theme(panel.background = element_rect(fill="white", colour = "black"),
         panel.grid = element_blank(), strip.background = element_blank(), 
         legend.position = "none") + 
@@ -426,6 +427,7 @@ levels(costsTot$ES) <- c("(a) Timber","(b) Carbon","(c) Biodiversity")
 ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss)) + 
   stat_interpolate_tern(geom="polygon", method=lm, colour="black", formula = value~x+y,
                         n=100,aes(fill=..level..),expand=1)  +
+  geom_point(size = 1) + 
   facet_wrap( ~ ES) + scale_fill_gradientn(colours = paletteTern) +
   labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="ES\nvariation (%)") +
   theme(strip.background = element_blank(), legend.position = "bottom",
