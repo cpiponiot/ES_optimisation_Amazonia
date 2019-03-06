@@ -123,7 +123,7 @@ The total cost of allocating logging type $z$ to grid cell $p$ is estimated as:
 
 \begin{equation}
 \begin{split}
-    Cost_{p,z} = \alpha _T \cdot \frac{Prod_{p,z} - Rec_{p,z} - K}{\overline{Prod - Rec - K}} + \alpha _C \cdot \frac{Cemi_{p,z}}{\overline{Cemi} } \\ + \alpha _B \cdot \frac{Rloss_{p,z}}{\overline{Rloss}} 
+    Cost_{p,z} = \alpha _T \cdot \frac{Prod_{p,z} - Rec_{p,z} - K}{\overline{Prod - Rec - K}} \\+ \alpha _C \cdot \frac{Cemi_{p,z}}{\overline{Cemi} }  + \alpha _B \cdot \frac{Rloss_{p,z}}{\overline{Rloss}} 
 \end{split}
 \end{equation}
 
@@ -132,7 +132,6 @@ $Prod_{p,z}$ is the timber extracted in a grid cell $p$ when allocated to loggin
 $Cemi_{p,z}$ are the total carbon emissions caused by logging operations (log extraction, road opening and incidental damage) minus the carbon recovered after logging \cite{Piponiot2016a}, integrated over the first cutting cycle period.
 $Rloss_{p,z}$ are vertebrates species loss (mammals and amphibians \cite{Jenkins2013}) at the end of the first cutting cycle in a grid cell $p$ when allocated to logging type $z$. 
 ES losses are standardised by their respective sample mean $\overline{Cemi}$, $\overline{Rloss}$, and $\overline{Prod-Rec-K}$. 
-
 
 When a unique ES (timber, carbon or biodiversity) is prioritised in a given strategy, its weight is set to 1 and the other 2 are set to 0. When ES prioritisation is balanced between production and conservation, $\alpha_T = 0.5$ and $\alpha_C = \alpha_B = 0.25$.
 
@@ -273,7 +272,7 @@ Yet, logging roads open the forest to other uses, like hunting, wood-fuel harves
 
 \section{Conclusion}
 
-This study shows that large-scale trade-offs exist between maintaining timber stocks and maximising biodiversity and climate change mitigation in Amazonian production forests. Land-sharing strategies that promote low-intensity logging in entire regions of the Amazon basin will result in sub-optimal biodiversity and high carbon emissions at the regional level, but land-sparing strategies that maximise global forest conservation will result in timber depletion of highly logged areas, and will thus require finding alternative timber sources in the future. Applying intermediate logging rules, like 30-yr minimum cutting cycles, only results in sub-optimal ES provision. Our results stress the need for a concerted reevaluation of current logging rules in Amazonia, and the importance of management choices for future production forests depending on societal demand for ecosystem services. 
+This study shows that large-scale trade-offs exist between maintaining timber stocks and maximising biodiversity and climate change mitigation in Amazonian production forests. Land-sharing strategies that promote low-intensity logging in entire regions of the Amazon basin will result in sub-optimal biodiversity and high carbon emissions at the regional level, but land-sparing strategies that maximise global forest conservation will result in timber depletion of highly logged areas, and will thus require finding alternative timber sources in the future. Applying intermediate logging rules, e.g. 30-yr minimum cutting cycles, only results in sub-optimal ES provision. Our results stress the need for a concerted reevaluation of current logging rules in Amazonia, and the importance of management choices for future production forests depending on societal demand for ecosystem services. 
 
 \clearpage
 
@@ -367,8 +366,37 @@ Rloss_{p,z} = \left(Rm_{p} \cdot \beta m + Ra_{p} \cdot \beta a  \right)  \cdot 
 where $Rloss_{p,z}$ is the loss of vertebrate richness (mammals and amphibians) in grid cell $p$ and logging type $z$, $Rm_{p}$ and $Ra_p$ are the pre-logging richness of mammals and amphibians respectively \cite{Jenkins2013}, $\beta m = 1.44$ and $\beta a = 1.53$  are the estimated slopes of post-logging species loss in the Neotropics for mammals and amphibians respectively, according to Burivalova et al.  \cite{Burivalova2014}. $vext_z$ is the logging intensity in logging type $z$.
 We hypothesize that amphibians and mammals richness do not recover after logging (no effect of cutting cycle length). 
 
-\section{Carbon damage model}
+\subsection{Wood density estimation}
+\label{supmat:wdext}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.7\linewidth]{graphs/map_WDext.pdf}
+    \caption{Map of predicted wood density from interpolation of RadamBrasil data}
+    \label{sfig:wdext}
+\end{figure*}
+
+We used 2646 1-ha forest inventory plots spanned over the Brazilian Amazon from the RadamBrasil project \cite{Radam2017}, in which all trees $\geq$33 cm diameter at breast height (DBH) were measured, identified to the species level and had their volume estimated. 
+
+In every plot we estimated the mean wood density of all commercial stems (as defined in a previous study \cite{Piponiotc}) with the R package BIOMASS \cite{Rejou-Mechain2017}.
+Values were then interpolated with the R package \textit{automap} \cite{gstat} on a 1$^{\circ}$ resolution grid (Supplementary figure~\ref{sfig:wdext}).
+
+
+\subsection{Carbon damage model}
 \label{supmat:cdam}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\linewidth]{graphs/schemaDam.pdf}
+        \caption{Diagram of carbon pools in the damage model.}\label{fig:schemaDam}
+    \end{subfigure}
+    ~ 
+    \begin{subfigure}[b]{0.55\textwidth}
+    \includegraphics[width=\linewidth]{graphs/damModel.pdf}
+    \caption{Carbon damage model. Coloured dots are data from one plot, with each colour representing one site and the size of the dot being proportional to the plot's size. The black line is the maximum likelihood prediction, and the shaded area is the 95\% confidence interval.}\label{fig:damModel}
+    \end{subfigure}
+\end{figure}
 
 To estimate carbon emissions from logging damage we calibrated a model with data from 115 plots (129.25~ha total) in 11 experimentally logged sites spread in Amazonia \cite{Sist2015}. In all plots the identity of harvested trees was recorded, and at least one pre-logging and 2 post-logging forest inventories were carried out. In each forest inventory the diameter at breast height (DBH) of all stems $>$~20 cm DBH were measured, and trees were identified to the lowest taxonomic level (83\% species, 16\% genus, 2\% not identified). 
 From forest inventories the above ground carbon and wood density of all trees $>$ 20 cm DBH  were estimated with the R package BIOMASS \cite{Rejou-Mechain2017}. 
@@ -404,19 +432,6 @@ logit(RatioDam_j) \sim \mathcal{N}(\theta \cdot logit(RatioExt_j), \sigma_D^2)
 
 with $\theta$ the slope of the relationship, and $\sigma_D$ the standard deviation. 
 
-\begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.3\textwidth}
-        \includegraphics[width=\linewidth]{graphs/schemaDam.pdf}
-        \caption{Diagram of carbon pools in the damage model.}\label{fig:schemaDam}
-    \end{subfigure}
-    ~ 
-    \begin{subfigure}[b]{0.55\textwidth}
-    \includegraphics[width=\linewidth]{graphs/damModel.pdf}
-    \caption{Carbon damage model. Coloured dots are data from one plot, with each colour representing one site and the size of the dot being proportional to the plot's size. The black line is the maximum likelihood prediction, and the shaded area is the 95\% confidence interval.}\label{fig:damModel}
-    \end{subfigure}
-\end{figure}
-
 
 \clearpage
 
@@ -426,21 +441,14 @@ with $\theta$ the slope of the relationship, and $\sigma_D$ the standard deviati
 
 xxxx
 
-
-\section{Wood density estimation}
-\label{supmat:wdext}
-
-We used 2646 1-ha forest inventory plots spanned over the Brazilian Amazon from the RadamBrasil project \cite{Radam2017}, in which all trees $\geq$33 cm diameter at breast height (DBH) were measured, identified to the species level and had their volume estimated. 
-
-In every plot we estimated the mean wood density of all commercial stems (as defined in a previous study \cite{Piponiotc}) with the R package BIOMASS \cite{Rejou-Mechain2017}.
-Values were then interpolated with the R package \textit{automap} \cite{gstat} on a 1$^{\circ}$ resolution grid (Supplementary figure~\ref{sfig:wdext}).
-
-\begin{figure*}
+\begin{figure}
     \centering
-    \includegraphics[width=0.7\linewidth]{graphs/map_WDext.pdf}
-    \caption{Map of predicted wood density from interpolation of RadamBrasil data}
-    \label{sfig:wdext}
-\end{figure*}
+    \includegraphics{graphs/pp}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\clearpage
 
 \section{Analysing the effect of changing ES prioritisation}
 \label{supsec:changeCost}
@@ -462,7 +470,7 @@ From this sensitivity analysis, one major trade-off axis emerges between carbon 
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/mapsChangeDemand.pdf}
-    \caption{Results of spatial optimisation with varying demand for timber (from 10 to 50 Mm$^3$/yr), and under different scenarios. }
+    \caption{Results of spatial optimisation with varying demand for timber (from 10 to 80 Mm$^3$/yr), and under different scenarios.}
     \label{fig:mapsIncDemand}
 \end{figure*}
 
