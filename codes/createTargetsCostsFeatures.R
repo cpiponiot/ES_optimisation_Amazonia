@@ -1,20 +1,21 @@
 
 ##### Features ##### 
-harv <- crop(raster(grd,"pHarv")*raster(grd,"area"), extent(cost_carbon[[1]]))*100 ## km^2 -> ha 
-harvAR <- crop(raster(grd,"pHarvAR")*raster(grd,"area"), extent(cost_carbon[[1]]))*100 ## km^2 -> ha 
+## PPF area: harv = currently available, harvAR = all unprotected areas
+harv <- crop(raster(grd,"pAreaAvail")*raster(grd,"area"), extent(cost_carbon[[1]]))
+harvAR <- crop(raster(grd,"pAreaUnprotect")*raster(grd,"area"), extent(cost_carbon[[1]])) 
 
 
 # Intact forest landscape #
 feature_ifl = sapply(1:nrow(df_zones), function(i) {
   sapply(unique(grd$region), function(reg) {
-    grd$ifl_zr = (grd$area*grd$pIFL)*(grd$region==reg)*(1-grd$pHarv*(df_zones$zname[i]!="NL"))
+    grd$ifl_zr = (grd$area*grd$pIFL)*(grd$region==reg)*(1-grd$pAreaAvail*(df_zones$zname[i]!="NL"))
     crop(raster(grd,"ifl_zr"), extent(cost_carbon))
   })
 })
 
 feature_iflAR = sapply(1:nrow(df_zones), function(i) {
   sapply(unique(grd$region), function(reg) {
-    grd$ifl_zr = (grd$area*grd$pIFL)*(grd$region==reg)*(1-grd$pHarvAR*(df_zones$zname[i]!="NL"))
+    grd$ifl_zr = (grd$area*grd$pIFL)*(grd$region==reg)*(1-grd$pAreaUnprotect*(df_zones$zname[i]!="NL"))
     crop(raster(grd,"ifl_zr"), extent(cost_carbon))
   })
 })

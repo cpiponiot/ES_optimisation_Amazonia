@@ -1,6 +1,6 @@
 
-dt = data.table(expand.grid(pu=grd$pu, zone = df_zones$zone))
-dt = merge(dt,data.table(pu=grd$pu, coordinates(grd)), by="pu")
+dt = data.table(expand.grid(id=grd$id, zone = df_zones$zone))
+dt = merge(dt,data.table(id=grd$id, coordinates(grd)), by="id")
 dt = merge(dt, df_zones, by = "zone")
 pred = merge(dt, pars, by=c("long","lat"))
 
@@ -9,7 +9,7 @@ pred$Vcom0 = pred$V0*pred$om0
 pred$vextReal = apply(pred[,c("vext","Vcom0")],1,min)
 # add actual extracted volume to DTinput (we'll need it for carbon emissions estimation)
 if (is.null(DTinput$vextReal)) 
-  DTinput = merge(DTinput, pred[,c("pu","zone","vextReal")], by=c("pu","zone"))
+  DTinput = merge(DTinput, pred[,c("id","zone","vextReal")], by=c("id","zone"))
 # deltaV: total volume loss
 pred$deltaV = apply(cbind(pred$vext/(pred$om0^(1-pred$rho)),pred$V0), 1, min)
 dt0 = pred[,.(t1=t0Prediction(t0, deltaV, aG,aM,bG,bM,theta,0.2)), .(long,lat,vext,trot)]

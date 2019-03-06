@@ -1,9 +1,9 @@
-solve_problem <- function(pu, zn, targ, name, timeLim=300){
+solve_problem <- function(costs, zn, targ, name, timeLim=300){
   
   # zonePenalty = diag(10)
   # for (i in 1:9) for (j in c(1:9)[-i])  zonePenalty[i,j] = 0.8
   
-  prob <- problem(pu, zn) %>%
+  prob <- problem(costs, zn) %>%
     add_min_set_objective() %>%
     add_manual_targets(targ) %>%
     add_binary_decisions() 

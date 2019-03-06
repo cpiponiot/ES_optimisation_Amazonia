@@ -13,14 +13,15 @@ solveProblems <- FALSE
 #### study region & maps ####
 
 load("data/maps.Rdata")
+load("data/grd.Rdata")
 source("codes/proportion_areas.R")
 
 pdf("graphs/harv_areas.pdf", height=5, width=7)
 par(mar=c(1,1,1,1))
 plot(borders, col = "#F5F5F5", axes=FALSE)
-plot(mask_FC, add=TRUE, legend = FALSE, col="#006400")
-plot(wdpa_am_forest,legend=FALSE, col="#FF8C00", add=TRUE)
-plot(harvestableAreas,legend=FALSE, col="#7FFF00", add=TRUE)
+plot(forest_cover_90, add=TRUE, legend = FALSE, col="#006400")
+plot(protected_forest,legend=FALSE, col="#FF8C00", add=TRUE)
+plot(area_avail,legend=FALSE, col="#7FFF00", add=TRUE)
 legend(x="bottomright", fill=c("#FF8C00","#006400","#7FFF00"),
        legend = paste(c("Protected forest","Inaccessible forest","Available forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
        bg = "white",box.col = "white")
@@ -31,7 +32,6 @@ dev.off()
 
 ### (1) Timber ###
 
-load("data/grd.Rdata")
 load("data/parametersTimber.Rdata")
 
 df_zones <- data.table(zone = 1:10, 
@@ -39,8 +39,8 @@ df_zones <- data.table(zone = 1:10,
                        vext = c(rep(10*1:3, each=3),0), 
                        trot = c(rep(c(15,30,65), 3),1))
 
-DTinput <- data.table(expand.grid(pu = grd$pu, zone = 1:9))
-DTinput <- merge(DTinput, data.frame(grd), by="pu")
+DTinput <- data.table(expand.grid(id = grd$id, zone = 1:9))
+DTinput <- merge(DTinput, data.frame(grd), by="id")
 DTinput <- merge(DTinput, df_zones, by="zone")
 
 source("codes/modelPredictions.R")
@@ -75,9 +75,9 @@ Carbon <- DTinput[,.(Carbon = mean(acs*pdefor_maxL + dam + vext*WDext -
                                              aSg = SurvC$aSg, aRr = RecrC$aRr, aRg = RecrC$aRg, 
                                              bSg = bSg, bSm = bSm, bRr = bRr, bRg = bRg, bRm = bRm, 
                                              eta = RecrC$eta))),
-                  .(trot,vext,pu)]
-DTinput = merge(DTinput, Carbon, by = c("trot","vext","pu"))
-DTinput = DTinput[,c("trot","vext","pu","zone","zname","pHarv","area","acs","long","lat", "Carbon","Crecov")]
+                  .(trot,vext,id)]
+DTinput = merge(DTinput, Carbon, by = c("trot","vext","id"))
+DTinput = DTinput[,c("trot","vext","id","zone","zname","pAreaAvail","area","acs","long","lat", "Carbon","Crecov")]
 
 ## carbon cost rasters
 DTinput$Carbon <- apply(cbind(0, DTinput$Carbon), 1, max)
@@ -115,19 +115,6 @@ cost_diversity <- stack(sapply(df_zones$vext, function(x) {
   return(crop(raster(grd, 'rich_mamm') + raster(grd, 'rich_amph'),extent(cost_carbon)))
 }))
 
-### (4) Intact forest landscape ###
-
-feature_ifl = sapply(1:nrow(df_zones), function(i) {
-  sapply(unique(grd$region), function(reg) {
-    grd$ifl_zr = (grd$area*grd$pIFL)*(grd$region==reg)*(1-grd$pHarv*(df_zones$zname[i]!="NL"))
-    crop(raster(grd,"ifl_zr"), extent(cost_carbon))
-  })
-})
-## protect 80% of remaining IFL per region 
-## total IFL area per ecoregion
-areaIFL = tapply(grd$pIFL*grd$area,grd$region,sum)
-
-
 
 ##### Solving optimisation problems #####
 
@@ -142,7 +129,7 @@ if (solveProblems){
   source("codes/createTargetsCostsFeatures.R")
 
   cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
-  cost_comb = subset(cost_comb, alphaC +alphaB <= 1)
+  cost_comb = subset(cost_comb, alphaC + alphaB <= 1)
   cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
   
   # Calculate the number of cores
@@ -179,8 +166,8 @@ if (solveProblems){
   
 } else {load("outputs/changeCost.Rdata")}
 
-changeCost <- merge(changeCost, data.frame(grd)[,c("long","lat","area","pHarv")], by=c("long","lat"))
-changeCost[, areaLogging := area * pHarv]
+changeCost <- merge(changeCost, data.frame(grd)[,c("long","lat","area","pAreaAvail")], by=c("long","lat"))
+changeCost[, areaLogging := area * pAreaAvail]
 
 source("codes/rel_ES_costs.R")
 
@@ -248,9 +235,9 @@ if (solveProblems){
 
 ### pixel area
 scenariOptim = merge(scenariOptim, data.table(coordinates(grd), 
-                                              areaLogging = grd$area*grd$pHarv, 
-                                              areaAR = grd$area*grd$pHarvAR), by=c("long","lat"))
-scenariOptim$areaLogging[grep("sharing",scenariOptim$scenario)] <- scenariOptim$areaAR[grep("sharing",scenariOptim$scenario)]
+                                              areaLogging = grd$area*grd$pAreaAvail, 
+                                              areaUnprotec = grd$area*grd$pAreaUnprotect), by=c("long","lat"))
+scenariOptim$areaLogging[grep("sharing", scenariOptim$scenario)] <- scenariOptim$areaUnprotec[grep("sharing",scenariOptim$scenario)]
 scenariOptim = merge(scenariOptim, df_zones, by="zone")
 scenariOptim = subset(scenariOptim, areaLogging > 0)
 
@@ -267,7 +254,7 @@ scenariOptim = merge(scenariOptim, scenariOptim[,.(vextReal = raster::extract(fe
 ## get costs
 scenariOptim$areaLogged = scenariOptim$areaLogging
 scenariOptim$areaLogged[scenariOptim$zname=="NL"] <- 0
-demandFinal <- scenariOptim[,.(areaTot = sum(areaLogged)*1e-4,
+demandFinal <- scenariOptim[,.(areaTot = sum(areaLogged)*1e-6,
                                logIntens = weighted.mean(x = vextReal*trot, w = areaLogged),
                                cutCycle = weighted.mean(x = trot, w = areaLogged),
                                timber = rel_ES_costs(zone, long, lat, areaLogged, "timber"), 
@@ -290,10 +277,10 @@ colour_palette <- c("LS"= colours[1], "LM"=colours[2], "LL"=colours[3],
                     "HS"=colours[7], "HM"=colours[8], "HL"=colours[9], "NL"=colours[10])
 
 g1 <- ggplot(subset(scenariOptim, demand == 35)) +
-  geom_point(aes(x=long,y=lat,colour=zname, size=areaLogging/1e3)) +
+  geom_point(aes(x=long,y=lat,colour=zname, size=areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_wrap( ~ scenario, nrow = 3) +
   scale_colour_manual(name = "Zone", values = colour_palette) +
-  labs(size = expression("Area available for logging ("*1000*" k"*m^2*")"), 
+  labs(size = "Area available for logging (Mha)", 
        x="",y="") +
   theme(text = element_text(size = 30), 
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
@@ -437,10 +424,10 @@ ggsave("graphs/changingESweights.pdf", height=4, width=10)
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
 ggplot(subset(scenariOptim, demand != 35)) +
-  geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e3)) +
+  geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
   scale_colour_manual(name = "Zone",values = colour_palette) +
-  labs(size = "Area available for logging (1000 km2)", x="", y="") +
+  labs(size = "Area available for logging (^Mha)", x="", y="") +
   theme(legend.position = "top", text = element_text(size=50),
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
         axis.text.y=element_blank()) +
