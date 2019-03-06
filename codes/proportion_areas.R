@@ -38,3 +38,27 @@ unprotected_forest = forest_cover_90
 unprotected_forest[is.na(forest_cover_90),] = 0
 unprotected_forest[!is.na(protected),] = 0
 grd$pAreaUnprotect = extract(aggregate(unprotected_forest, fact = 1/res(unprotected_forest)), grd)
+
+
+### diagram 
+png("graphs/map_PPF1.png", height=350)
+par(mar=c(0,0,0,0), oma = c(0,0,0,0))
+plot(forest_cover_90, legend = FALSE, axes=FALSE, box=FALSE, col="black")
+dev.off()
+png("graphs/map_PPF2.png", height=350)
+par(mar=c(0,0,0,0), oma = c(0,0,0,0))
+unprotected_forest[unprotected_forest==0,] = NA
+plot(unprotected_forest, legend = FALSE, axes=FALSE, box=FALSE, col="black")
+dev.off()
+png("graphs/map_PPF3.png", height=350)
+par(mar=c(0,0,0,0), oma = c(0,0,0,0))
+plot(current_available, legend = FALSE, axes=FALSE, box=FALSE, col="black")
+dev.off()
+png("graphs/map_PPF4.png", height=350)
+par(mar=c(0,0,0,0), oma = c(0,0,0,0))
+plot(raster(grd, "pAreaUnprotect")*raster(grd, "area")*1e-6, axes=FALSE, box=FALSE)
+dev.off()
+png("graphs/map_PPF5.png", height=350)
+par(mar=c(0,0,0,0), oma = c(0,0,0,0))
+plot(raster(grd, "pAreaAvail")*raster(grd, "area")*1e-6, axes=FALSE, box=FALSE)
+dev.off() 
