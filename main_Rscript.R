@@ -8,7 +8,7 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- FALSE
+solveProblems <- TRUE
 
 #### study region & maps ####
 
@@ -124,10 +124,10 @@ cost_diversity <- stack(sapply(df_zones$vext, function(x) {
 if (solveProblems){
   
   source("codes/solve_problem.R")
-
+  
   coeffs_balanced = c(2,1,1)/4
   source("codes/createTargetsCostsFeatures.R")
-
+  
   cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
   cost_comb = subset(cost_comb, alphaC + alphaB <= 1)
   cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
@@ -214,11 +214,14 @@ if (solveProblems){
                       solve_problem(costMaps$sharing, featureMaps$sharing, targetsList$base, "sharing", timeLim = 1000), 
                       solve_problem(costMaps$sharing, featureMaps$sharingSTY, targetsList$STY, "sharingSTY", timeLim = TLim))
     solZones$demand = TD/1e6
+    save(solZones, file = paste0("interm_results/solZones_",TD/1e6,".Rdata"))
     return(solZones)
     
   })
   stopCluster(cl)
-  
+  # scenariOptim=lapply(c(10,20,30,35,40,50), function(TD) {
+  #   load(paste0("interm_results/solZones_",TD,".Rdata"))
+  #   return(solZones)}) 
   scenariOptim = lapply(1:dim(scenariOptim)[2], function(i) { 
     data.table(do.call(cbind, scenariOptim[,i])) })
   

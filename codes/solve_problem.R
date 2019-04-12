@@ -33,12 +33,12 @@ solve_problem <- function(costs, zn, targ, name, timeLim=300){
         
       } else {
         ## the time limit was still too short: return NAs
-        fin_zones <- rep(NA, length(grd$pHarv))
+        fin_zones <- rep(NA, nrow(grd))
       }
     }
   } else {
     ## when the problem is infeasible: solver returns error
-    fin_zones <- rep(NA, length(grd$pHarv))
+    fin_zones <- rep(NA, nrow(grd))
   }
   
   return(data.table(coordinates(grd), zone = fin_zones, scenario = name))
