@@ -8,7 +8,7 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- TRUE
+solveProblems <- FALSE
 
 #### study region & maps ####
 
@@ -22,6 +22,7 @@ plot(borders, col = "#F5F5F5", axes=FALSE)
 plot(forest_cover_90, add=TRUE, legend = FALSE, col="#006400")
 plot(protected_forest,legend=FALSE, col="#FF8C00", add=TRUE)
 plot(area_avail,legend=FALSE, col="#7FFF00", add=TRUE)
+plot(borders, col = NA, add=TRUE)
 legend(x="bottomright", fill=c("#FF8C00","#006400","#7FFF00"),
        legend = paste(c("Protected forest","Inaccessible forest","Available forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
        bg = "white",box.col = "white")
@@ -196,7 +197,7 @@ if (solveProblems){
   
   clusterExport(cl, varlist = c("costMaps","featureMaps","areaIFL","targetsList","solve_problem","grd"))
   
-  scenariOptim <- parSapply(cl, c(35e6, seq(10,80,10)*1e6), function(TD){
+  scenariOptim <- parSapply(cl, c(35, seq(10,80,10))*1e6, function(TD){
     
     for (y in 1:length(targetsList)) 
       targetsList[[y]]$target[1] <- TD
@@ -214,14 +215,9 @@ if (solveProblems){
                       solve_problem(costMaps$sharing, featureMaps$sharing, targetsList$base, "sharing", timeLim = 1000), 
                       solve_problem(costMaps$sharing, featureMaps$sharingSTY, targetsList$STY, "sharingSTY", timeLim = TLim))
     solZones$demand = TD/1e6
-    save(solZones, file = paste0("interm_results/solZones_",TD/1e6,".Rdata"))
     return(solZones)
-    
   })
   stopCluster(cl)
-  # scenariOptim=lapply(c(10,20,30,35,40,50), function(TD) {
-  #   load(paste0("interm_results/solZones_",TD,".Rdata"))
-  #   return(solZones)}) 
   scenariOptim = lapply(1:dim(scenariOptim)[2], function(i) { 
     data.table(do.call(cbind, scenariOptim[,i])) })
   
@@ -349,6 +345,8 @@ g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) +
 g2
 ggsave("graphs/costsScenario.pdf", height=4, width=7)
 
+g2 + geom_text(aes(label = round(value, 1)))
+ggsave("graphs/costsScenario_annotated.pdf", height=4, width=7)
 
 ### ES = f(timber demand, scenario) ###
 
