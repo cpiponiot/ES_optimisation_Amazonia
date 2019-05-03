@@ -1,7 +1,7 @@
 ### long, lat : coordinates of all cells of zone "zone" 
 ### area: PPF area of each cell 
 
-rel_ES_costs <- function(zone, long, lat, areaLogging, cost) {
+rel_ES_costs <- function (zone, long, lat, areaLogging, cost) {
   
   if (length(areaLogging) != length(long) | length(lat) != length(long) )
     stop("long, lat and areaLogging must be of the same length")

@@ -1,0 +1,952 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.1.8)  10 APR 2019 16:52
+entering extended mode
+**./main.tex
+(main.tex
+LaTeX2e <2015/10/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 69 languages loaded.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size10.clo"
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\inputenc.sty"
+Package: inputenc 2015/03/17 v1.2c Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ucs\utf8x.def"
+File: utf8x.def 2004/10/17 UCS: Input encoding UTF-8
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ucs\ucs.sty"
+Package: ucs 2013/05/11 v2.2 UCS: Unicode input support
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ucs\uni-global.def"
+File: uni-global.def 2013/05/13 UCS: Unicode global data
+)
+\uc@secondtry=\count87
+\uc@combtoks=\toks16
+\uc@combtoksb=\toks17
+\uc@temptokena=\toks18
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
+Package: amsmath 2017/09/02 v2.17a AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amstext.sty"
+Package: amstext 2000/06/29 v2.01 AMS text
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen103
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen104
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty"
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 213.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 375.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 472.
+LaTeX Info: Redefining \dots on input line 475.
+LaTeX Info: Redefining \cdots on input line 596.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen105
+LaTeX Font Info:    Redeclaring font encoding OML on input line 712.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks20
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks21
+\eqnshift@=\dimen106
+\alignsep@=\dimen107
+\tagshift@=\dimen108
+\tagwidth@=\dimen109
+\totwidth@=\dimen110
+\lineht@=\dimen111
+\@envbody=\toks22
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks23
+LaTeX Info: Redefining \[ on input line 2817.
+LaTeX Info: Redefining \] on input line 2818.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\lineno\lineno.sty"
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+\linenopenalty=\count100
+\output=\toks24
+\linenoprevgraf=\count101
+\linenumbersep=\dimen112
+\linenumberwidth=\dimen113
+\c@linenumber=\count102
+\c@pagewiselinenumber=\count103
+\c@LN@truepage=\count104
+\c@internallinenumber=\count105
+\c@internallinenumbers=\count106
+\quotelinenumbersep=\dimen114
+\bframerule=\dimen115
+\bframesep=\dimen116
+\bframebox=\box28
+LaTeX Info: Redefining \\ on input line 3056.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks25
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 94.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count107
+))
+\Gin@req@height=\dimen117
+\Gin@req@width=\dimen118
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
+Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 142.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\url\url.sty"
+\Urlmuskip=\muskip11
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\subcaption.sty"
+Package: subcaption 2015/09/15 v1.1-100 Sub-captions (AR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption.sty"
+Package: caption 2015/09/17 v3.3-111 Customizing captions (AR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption3.sty"
+Package: caption3 2015/09/20 v1.7-115 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen119
+\captionmargin@=\dimen120
+\captionwidth=\dimen121
+\caption@tempdima=\dimen122
+\caption@indent=\dimen123
+\caption@parindent=\dimen124
+\caption@hangindent=\dimen125
+)
+\c@ContinuedFloat=\count108
+)
+\c@subfigure=\count109
+\c@subtable=\count110
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\tabularx.sty"
+Package: tabularx 2014/10/28 v2.10 `tabularx' package (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\array.sty"
+Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen126
+\extrarowheight=\dimen127
+\NC@list=\toks26
+\extratabsurround=\skip46
+\backup@length=\skip47
+)
+\TX@col@width=\dimen128
+\TX@old@table=\dimen129
+\TX@old@col=\dimen130
+\TX@target=\dimen131
+\TX@delta=\dimen132
+\TX@cols=\count111
+\TX@ftn=\toks27
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\booktabs\booktabs.sty"
+Package: booktabs 2005/04/14 v1.61803 publication quality tables
+\heavyrulewidth=\dimen133
+\lightrulewidth=\dimen134
+\cmidrulewidth=\dimen135
+\belowrulesep=\dimen136
+\belowbottomsep=\dimen137
+\aboverulesep=\dimen138
+\abovetopsep=\dimen139
+\cmidrulesep=\dimen140
+\cmidrulekern=\dimen141
+\defaultaddspace=\dimen142
+\@cmidla=\count112
+\@cmidlb=\count113
+\@aboverulesep=\dimen143
+\@belowrulesep=\dimen144
+\@thisruleclass=\count114
+\@lastruleclass=\count115
+\@thisrulewidth=\dimen145
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count116
+\Gm@cntv=\count117
+\c@Gm@tempcnt=\count118
+\Gm@bindingoffset=\dimen146
+\Gm@wd@mp=\dimen147
+\Gm@odd@mp=\dimen148
+\Gm@even@mp=\dimen149
+\Gm@layoutwidth=\dimen150
+\Gm@layoutheight=\dimen151
+\Gm@layouthoffset=\dimen152
+\Gm@layoutvoffset=\dimen153
+\Gm@dimlist=\toks28
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
+(main.aux)
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ucs\ucsencs.def"
+File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count119
+\scratchdimen=\dimen154
+\scratchbox=\box29
+\nofMPsegments=\count120
+\nofMParguments=\count121
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count122
+\MPscratchDim=\dimen155
+\MPnumerator=\count123
+\makeMPintoPDFobject=\count124
+\everyMPtoPDFconversion=\toks30
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ucs\uni-0.def"
+File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
+) [1
+
+{C:/Users/camille.piponiot/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map
+
+pdfTeX warning: pdflatex (file C:/Users/camille.piponiot/AppData/Local/MiKTeX/2
+.9/pdftex/config/pdftex.map): invalid entry for `\def\filedate{2015/12/30}': bo
+th ps_name and font file missing
+
+
+pdfTeX warning: pdflatex (file C:/Users/camille.piponiot/AppData/Local/MiKTeX/2
+.9/pdftex/config/pdftex.map): invalid entry for `\def\fileversion{1.2}': both p
+s_name and font file missing
+}]
+
+LaTeX Warning: Citation `Pan2013' on page 2 undefined on input line 40.
+
+
+LaTeX Warning: Citation `Pimm2014' on page 2 undefined on input line 40.
+
+
+LaTeX Warning: Citation `Fisher2009a' on page 2 undefined on input line 40.
+
+
+LaTeX Warning: Citation `Hansen2013' on page 2 undefined on input line 41.
+
+
+LaTeX Warning: Citation `Lewis2015' on page 2 undefined on input line 41.
+
+
+LaTeX Warning: Citation `Gibson2011' on page 2 undefined on input line 42.
+
+
+LaTeX Warning: Citation `DeCastroSolar2015' on page 2 undefined on input line 4
+2.
+
+
+LaTeX Warning: Citation `Payn2015' on page 2 undefined on input line 44.
+
+
+LaTeX Warning: Citation `Blaser2011' on page 2 undefined on input line 44.
+
+
+LaTeX Warning: Citation `Putz2012' on page 2 undefined on input line 45.
+
+
+LaTeX Warning: Citation `Edwards2014a' on page 2 undefined on input line 46.
+
+
+Overfull \hbox (3.06732pt too wide) in paragraph at lines 44--47
+\OT1/cmr/m/n/10 logged forests into trop-i-cal for-est con-ser-va-tion schemes
+ []
+
+
+LaTeX Warning: Citation `Laing2016' on page 2 undefined on input line 48.
+
+
+LaTeX Warning: Citation `VanderPlas2017' on page 2 undefined on input line 48.
+
+
+LaTeX Warning: Citation `Roopsind2018' on page 2 undefined on input line 49.
+
+
+Overfull \hbox (2.95628pt too wide) in paragraph at lines 48--50
+\OT1/cmr/m/n/10 recog-nised, most con-ser-va-tion pro-grams and pay-ments
+ []
+
+
+Overfull \hbox (1.87758pt too wide) in paragraph at lines 48--50
+\OT1/cmr/m/n/10 for forests multi-functionality and com-plex-ity [[]]. Few
+ []
+
+
+LaTeX Warning: Citation `Hein2006b' on page 2 undefined on input line 51.
+
+
+LaTeX Warning: Citation `Avitabile2016' on page 2 undefined on input line 51.
+
+
+LaTeX Warning: Citation `Jenkins2013' on page 2 undefined on input line 51.
+
+
+LaTeX Warning: Citation `Gibson2000' on page 2 undefined on input line 51.
+
+
+LaTeX Warning: Citation `Blaser2011' on page 2 undefined on input line 51.
+
+
+LaTeX Warning: Citation `Lentini2005' on page 2 undefined on input line 55.
+
+
+LaTeX Warning: Citation `Avitabile2016' on page 2 undefined on input line 62.
+
+
+LaTeX Warning: Citation `Pimm2014' on page 2 undefined on input line 62.
+
+
+LaTeX Warning: Citation `Potapov2017' on page 2 undefined on input line 62.
+
+
+LaTeX Warning: Citation `WDPA2016' on page 2 undefined on input line 62.
+
+
+LaTeX Warning: Citation `Fearnside2017' on page 2 undefined on input line 62.
+
+
+Overfull \hbox (2.47485pt too wide) in paragraph at lines 62--63
+\OT1/cmr/m/n/10 trop-i-cal South Amer-ica, mostly in Brazil (60%). Ama-
+ []
+
+[2
+
+]
+
+LaTeX Warning: Citation `Blaser2011' on page 3 undefined on input line 66.
+
+
+LaTeX Warning: Citation `FAO2011' on page 3 undefined on input line 66.
+
+
+LaTeX Warning: Citation `Putz2012' on page 3 undefined on input line 66.
+
+
+LaTeX Warning: Citation `Rutishauser2015' on page 3 undefined on input line 66.
+
+
+
+LaTeX Warning: Citation `Piponiot2018' on page 3 undefined on input line 66.
+
+
+LaTeX Warning: Citation `Asner2005' on page 3 undefined on input line 66.
+
+
+LaTeX Warning: Citation `Fredericksen2003' on page 3 undefined on input line 66
+.
+
+
+LaTeX Warning: Citation `Blaser2011' on page 3 undefined on input line 66.
+
+<graphs/harv_areas.pdf, id=16, 505.89pt x 361.35pt>
+File: graphs/harv_areas.pdf Graphic file (type pdf)
+
+<use graphs/harv_areas.pdf>
+Package pdftex.def Info: graphs/harv_areas.pdf used on input line 70.
+(pdftex.def)             Requested size: 229.8775pt x 164.19946pt.
+
+
+LaTeX Warning: Citation `Watts2009' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `Hanson2018' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `RCoreTeam2017' on page 3 undefined on input line 82.
+
+<graphs/diagramSpatOptim.pdf, id=17, 233.87375pt x 334.24875pt>
+File: graphs/diagramSpatOptim.pdf Graphic file (type pdf)
+
+<use graphs/diagramSpatOptim.pdf>
+Package pdftex.def Info: graphs/diagramSpatOptim.pdf used on input line 86.
+(pdftex.def)             Requested size: 137.9279pt x 197.13364pt.
+ [3 <./graphs/harv_areas.pdf> <./graphs/diagramSpatOptim.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 112--112
+[]|\OT1/cmr/m/n/10 ES pri-ori-ti-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 112--112
+[]|\OT1/cmr/m/n/10 30-yr
+ []
+
+
+Underfull \hbox (badness 2856) in paragraph at lines 112--112
+[]|\OT1/cmr/m/n/10 Road build-
+ []
+
+
+Underfull \hbox (badness 10000) in alignment at lines 112--112
+[][][][][][] 
+ []
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ucs\uni-34.def"
+File: uni-34.def 2013/05/13 UCS: Unicode data U+2200..U+22FF
+)
+
+LaTeX Warning: Citation `Piponiotc' on page 4 undefined on input line 132.
+
+
+LaTeX Warning: Citation `Piponiot2016a' on page 4 undefined on input line 133.
+
+
+LaTeX Warning: Citation `Jenkins2013' on page 4 undefined on input line 134.
+
+
+LaTeX Warning: Citation `Hansen2013' on page 4 undefined on input line 144.
+
+
+LaTeX Warning: Citation `WDPA2016' on page 4 undefined on input line 144.
+
+
+LaTeX Warning: Citation `OSM2018' on page 4 undefined on input line 144.
+
+
+LaTeX Warning: Citation `Verissimo2006' on page 4 undefined on input line 146.
+
+
+LaTeX Warning: Citation `Piponiotc' on page 4 undefined on input line 146.
+
+[4]
+Overfull \hbox (5.9552pt too wide) in paragraph at lines 152--153
+\OT1/cmr/m/n/10 An op-tional sus-tain-able tim-ber yields (STY) con-straint
+ []
+
+
+Overfull \hbox (10.81741pt too wide) in paragraph at lines 161--162
+\OT1/cmr/m/n/10 to only 4 log-ging types: 30-year cut-ting cy-cles (Medium)
+ []
+
+
+LaTeX Warning: Citation `Gibson2011' on page 5 undefined on input line 165.
+
+
+LaTeX Warning: Citation `TerSteege2013' on page 5 undefined on input line 165.
+
+
+LaTeX Warning: Citation `Potapov2017' on page 5 undefined on input line 165.
+
+
+Overfull \hbox (0.81732pt too wide) in paragraph at lines 165--166
+\OT1/cmr/m/n/10 east-ern Ama-zon, cen-tral Ama-zon, south-west-ern Ama-
+ []
+
+
+Overfull \hbox (0.74754pt too wide) in paragraph at lines 169--169
+\OT1/cmr/bx/n/12 der cur-rent tim-ber pro-duc-tion tar-
+ []
+
+[5]
+Overfull \hbox (0.78957pt too wide) in paragraph at lines 176--177
+\OT1/cmr/m/n/10 serv-ing a smaller share of avail-able forests (35%) while
+ []
+
+<graphs/mapsScenarios.pdf, id=63, 1300.86pt x 1300.86pt>
+File: graphs/mapsScenarios.pdf Graphic file (type pdf)
+
+<use graphs/mapsScenarios.pdf>
+Package pdftex.def Info: graphs/mapsScenarios.pdf used on input line 184.
+(pdftex.def)             Requested size: 375.80544pt x 375.79073pt.
+
+Overfull \hbox (2.48769pt too wide) in paragraph at lines 189--189
+[]\OT1/cmr/bx/n/12 Effect of strat-egy choice on ES pro-
+ []
+
+
+Overfull \hbox (2.25912pt too wide) in paragraph at lines 191--192
+\OT1/cmr/m/n/10 Fig-ure 4[]c) losses. The \OT1/cmr/m/it/10 Car-bon \OT1/cmr/m/n
+/10 and \OT1/cmr/m/it/10 Bio-di-ver-sity \OT1/cmr/m/n/10 strate-
+ []
+
+
+Overfull \hbox (19.15085pt too wide) in paragraph at lines 204--205
+\OT1/cmr/m/n/10 lar be-haviours: both rely upon high-intensity (30 m$[]$ha$[]$)
+
+ []
+
+
+Overfull \hbox (0.79607pt too wide) in paragraph at lines 206--207
+\OT1/cmr/m/it/10 Road build-ing \OT1/cmr/m/n/10 strate-gies), tim-ber pro-duc-t
+ion is mostly
+ []
+
+
+Overfull \hbox (5.20625pt too wide) in paragraph at lines 206--207
+\OT1/cmr/m/n/10 achieved through low-intensity long-cycle log-ging when
+ []
+
+[6] [7 <./graphs/mapsScenarios.pdf>]
+<graphs/costsScenario.pdf, id=79, 505.89pt x 289.08pt>
+File: graphs/costsScenario.pdf Graphic file (type pdf)
+
+<use graphs/costsScenario.pdf>
+Package pdftex.def Info: graphs/costsScenario.pdf used on input line 214.
+(pdftex.def)             Requested size: 469.75502pt x 268.43579pt.
+
+<graphs/increasingDemand.pdf, id=80, 578.16pt x 433.62pt>
+File: graphs/increasingDemand.pdf Graphic file (type pdf)
+
+<use graphs/increasingDemand.pdf>
+Package pdftex.def Info: graphs/increasingDemand.pdf used on input line 221.
+(pdftex.def)             Requested size: 469.75502pt x 352.31538pt.
+
+
+LaTeX Warning: Citation `Roopsind2018' on page 8 undefined on input line 230.
+
+
+LaTeX Warning: Citation `Burivalova2014' on page 8 undefined on input line 230.
+
+
+
+LaTeX Warning: Citation `Griscom2018' on page 8 undefined on input line 230.
+
+
+LaTeX Warning: Citation `Hein2006b' on page 8 undefined on input line 233.
+
+
+LaTeX Warning: Citation `OConnell2018' on page 8 undefined on input line 233.
+
+
+LaTeX Warning: Citation `Sist2015' on page 8 undefined on input line 237.
+
+
+LaTeX Warning: Citation `Tritsch2016a' on page 8 undefined on input line 237.
+
+
+LaTeX Warning: Citation `Putz2008c' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `West2014' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `Tobler2018' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `Griscom2019' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `Griscom2018' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `Runting2018' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `Blaser2011' on page 8 undefined on input line 239.
+
+
+LaTeX Warning: Citation `Finer2014' on page 8 undefined on input line 241.
+
+
+LaTeX Warning: Citation `Brancalion2018' on page 8 undefined on input line 241.
+
+
+[8] [9 <./graphs/costsScenario.pdf>] [10 <./graphs/increasingDemand.pdf>]
+
+LaTeX Warning: Citation `Seydack2012' on page 11 undefined on input line 246.
+
+
+LaTeX Warning: Citation `Zimmerman2012' on page 11 undefined on input line 247.
+
+
+
+LaTeX Warning: Citation `Espirito-Santo2014' on page 11 undefined on input line
+ 250.
+
+
+LaTeX Warning: Citation `Johnson2016' on page 11 undefined on input line 250.
+
+
+LaTeX Warning: Citation `Quesada2012' on page 11 undefined on input line 250.
+
+
+LaTeX Warning: Citation `Piponiot2018' on page 11 undefined on input line 252.
+
+
+LaTeX Warning: Citation `Roedig2018' on page 11 undefined on input line 252.
+
+
+LaTeX Warning: Citation `Perez-Espana1999' on page 11 undefined on input line 2
+52.
+
+
+LaTeX Warning: Citation `Avitabile2016' on page 11 undefined on input line 254.
+
+
+
+LaTeX Warning: Citation `Jenkins2013' on page 11 undefined on input line 254.
+
+
+LaTeX Warning: Citation `Staal2018' on page 11 undefined on input line 255.
+
+
+LaTeX Warning: Citation `Bovolo2018' on page 11 undefined on input line 255.
+
+
+LaTeX Warning: Citation `Jenkins2013' on page 11 undefined on input line 256.
+
+
+LaTeX Warning: Citation `Avitabile2016' on page 11 undefined on input line 256.
+
+
+
+LaTeX Warning: Citation `Hansen2007' on page 11 undefined on input line 256.
+
+
+LaTeX Warning: Citation `Foley2007' on page 11 undefined on input line 259.
+
+
+LaTeX Warning: Citation `Davidson2012' on page 11 undefined on input line 259.
+
+
+LaTeX Warning: Citation `Asner2004' on page 11 undefined on input line 259.
+
+
+Overfull \hbox (0.12532pt too wide) in paragraph at lines 261--261
+[]\OT1/cmr/bx/n/12 Land-use strate-gies, trade-offs and
+ []
+
+
+LaTeX Warning: Citation `DeCastroSolar2015' on page 11 undefined on input line 
+264.
+
+
+LaTeX Warning: Citation `Edwards2014' on page 11 undefined on input line 264.
+
+
+LaTeX Warning: Citation `Griscom2018' on page 11 undefined on input line 265.
+
+
+LaTeX Warning: Citation `Runting2018' on page 11 undefined on input line 266.
+
+
+LaTeX Warning: Citation `Zarin2007' on page 11 undefined on input line 270.
+
+
+LaTeX Warning: Citation `Stickler2009' on page 11 undefined on input line 271.
+
+
+LaTeX Warning: Citation `Barton1992' on page 11 undefined on input line 271.
+
+
+LaTeX Warning: Citation `Lamb2005' on page 11 undefined on input line 271.
+
+
+LaTeX Warning: Citation `Salzman2018' on page 11 undefined on input line 271.
+
+[11]
+
+LaTeX Warning: Citation `Laurance2009a' on page 12 undefined on input line 275.
+
+
+
+Overfull \hbox (7.53966pt too wide) in paragraph at lines 279--280
+\OT1/cmr/m/n/10 log-ging con-fig-u-ra-tions range from timber-oriented land-
+ []
+
+[12
+
+]
+No file main.bbl.
+
+LaTeX Warning: Citation `Piponiotc' on page 13 undefined on input line 299.
+
+
+LaTeX Warning: Citation `Piponiot2016' on page 13 undefined on input line 320.
+
+
+LaTeX Warning: Citation `Piponiot2016' on page 13 undefined on input line 338.
+
+
+LaTeX Warning: Citation `Avitabile2016' on page 13 undefined on input line 338.
+
+
+
+LaTeX Warning: Citation `Piponiot2016a' on page 13 undefined on input line 349.
+
+
+[13
+
+
+]
+
+LaTeX Warning: Citation `Welsh1998' on page 14 undefined on input line 361.
+
+
+LaTeX Warning: Citation `Collins2003' on page 14 undefined on input line 361.
+
+
+LaTeX Warning: Citation `Fleming2009' on page 14 undefined on input line 361.
+
+
+LaTeX Warning: Citation `Wright2000' on page 14 undefined on input line 361.
+
+
+LaTeX Warning: Citation `Muscarella2007' on page 14 undefined on input line 361
+.
+
+
+LaTeX Warning: Citation `Jenkins2013' on page 14 undefined on input line 361.
+
+
+LaTeX Warning: Citation `MapBiodiv' on page 14 undefined on input line 361.
+
+
+LaTeX Warning: Citation `Marechaux2017' on page 14 undefined on input line 361.
+
+
+
+LaTeX Warning: Citation `Jenkins2013' on page 14 undefined on input line 370.
+
+
+LaTeX Warning: Citation `Burivalova2014' on page 14 undefined on input line 370
+.
+
+<graphs/map_WDext.pdf, id=112, 361.35pt x 289.08pt>
+File: graphs/map_WDext.pdf Graphic file (type pdf)
+ <use graphs/map_WDext.pdf>
+Package pdftex.def Info: graphs/map_WDext.pdf used on input line 378.
+(pdftex.def)             Requested size: 328.82707pt x 263.0632pt.
+
+
+LaTeX Warning: Citation `Radam2017' on page 14 undefined on input line 383.
+
+
+LaTeX Warning: Citation `Piponiotc' on page 14 undefined on input line 385.
+
+
+LaTeX Warning: Citation `Rejou-Mechain2017' on page 14 undefined on input line 
+385.
+
+
+LaTeX Warning: Citation `gstat' on page 14 undefined on input line 386.
+
+[14 <./graphs/map_WDext.pdf>]
+<graphs/schemaDam.pdf, id=125, 216.81pt x 144.54pt>
+File: graphs/schemaDam.pdf Graphic file (type pdf)
+ <use graphs/schemaDam.pdf>
+Package pdftex.def Info: graphs/schemaDam.pdf used on input line 395.
+(pdftex.def)             Requested size: 140.92793pt x 93.95648pt.
+
+<graphs/damModel.pdf, id=126, 433.62pt x 361.35pt>
+File: graphs/damModel.pdf Graphic file (type pdf)
+ <use graphs/damModel.pdf>
+Package pdftex.def Info: graphs/damModel.pdf used on input line 400.
+(pdftex.def)             Requested size: 258.36668pt x 215.31744pt.
+
+
+LaTeX Warning: Citation `Sist2015' on page 15 undefined on input line 405.
+
+
+LaTeX Warning: Citation `Rejou-Mechain2017' on page 15 undefined on input line 
+406.
+
+
+LaTeX Warning: Citation `Piponiotc' on page 15 undefined on input line 414.
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 427.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 427.
+ [15 <./graphs/schemaDam.pdf> <./graphs/damModel.pdf>] [16]
+<graphs/PPFareaDiagram.pdf, id=149, 1707.37875pt x 1300.86pt>
+File: graphs/PPFareaDiagram.pdf Graphic file (type pdf)
+
+<use graphs/PPFareaDiagram.pdf>
+Package pdftex.def Info: graphs/PPFareaDiagram.pdf used on input line 450.
+(pdftex.def)             Requested size: 469.75502pt x 357.90633pt.
+
+
+LaTeX Warning: Citation `Hansen2013' on page 17 undefined on input line 451.
+
+
+LaTeX Warning: Citation `WDPA2016' on page 17 undefined on input line 451.
+
+
+LaTeX Warning: Citation `OSM2018' on page 17 undefined on input line 451.
+
+
+LaTeX Warning: Citation `Hansen2013' on page 17 undefined on input line 451.
+
+
+LaTeX Warning: Citation `WDPA2016' on page 17 undefined on input line 451.
+
+
+LaTeX Warning: Citation `OSM2018' on page 17 undefined on input line 451.
+
+[17
+
+ <./graphs/PPFareaDiagram.pdf>]
+<graphs/changingESweights.pdf, id=178, 722.7pt x 289.08pt>
+File: graphs/changingESweights.pdf Graphic file (type pdf)
+
+<use graphs/changingESweights.pdf>
+Package pdftex.def Info: graphs/changingESweights.pdf used on input line 466.
+(pdftex.def)             Requested size: 469.75502pt x 187.90417pt.
+ [18
+
+ <./graphs/changingESweights.pdf>]
+<graphs/mapsChangeDemand.pdf, id=190, 2890.8pt x 2890.8pt>
+File: graphs/mapsChangeDemand.pdf Graphic file (type pdf)
+
+<use graphs/mapsChangeDemand.pdf>
+Package pdftex.def Info: graphs/mapsChangeDemand.pdf used on input line 476.
+(pdftex.def)             Requested size: 469.75502pt x 469.72739pt.
+ [19 <./graphs/mapsChangeDemand.pdf>]
+(main.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 5437 strings out of 493634
+ 76342 string characters out of 3141282
+ 160182 words of memory out of 3000000
+ 8756 multiletter control sequences out of 15000+200000
+ 10742 words of font info for 39 fonts, out of 3000000 for 9000
+ 1025 hyphenation exceptions out of 8191
+ 42i,16n,40p,1391b,653s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/
+Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Fil
+es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files 
+(x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files (x8
+6)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Program Files (x86)/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on main.pdf (19 pages, 1172754 bytes).
+PDF statistics:
+ 251 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -104,17 +104,14 @@ featureMaps = list(z0,zAR,zSTY,zAR_STY,zMed)
 names(featureMaps) = c("base","sharing","STY","sharingSTY","medium")
 
 ##### Costs ##### 
-# 
-# minV <- min(values(cost_vrec), na.rm = TRUE)
-# minC <- min(values(cost_carbon), na.rm = TRUE)
-# minB <- min(values(cost_diversity), na.rm = TRUE)
 
-# puV <- (cost_vrec - minV) / mean(values(cost_vrec - minV), na.rm=T)
-# puC <- (cost_carbon - minC) / mean(values(cost_carbon - minC), na.rm=T)
-# puB <- (cost_diversity - minB) / mean(values(cost_diversity - minB), na.rm=T)
-puV <- (cost_vrec - mean(values(cost_vrec), na.rm=T)) / sd(values(cost_vrec), na.rm=T)
-puC <- (cost_carbon - mean(values(cost_carbon), na.rm=T)) / sd(values(cost_carbon), na.rm=T)
-puB <- (cost_diversity - mean(values(cost_diversity), na.rm=T)) / sd(values(cost_diversity), na.rm=T)
+V0 <- mean(Mvcom0$Vcom0)
+C0 <- mean(grd$acs)
+B0 <- mean(grd$mammals+grd$amphi)
+
+puV <- cost_vrec/ V0
+puC <- cost_carbon / C0
+puB <- cost_diversity / B0
 puBal <- puV * coeffs_balanced[1] + puC * coeffs_balanced[2] + puB * coeffs_balanced[3]
 
 costMaps = list(timber = puV * harv, 
