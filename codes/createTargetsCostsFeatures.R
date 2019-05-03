@@ -104,14 +104,16 @@ featureMaps = list(z0,zAR,zSTY,zAR_STY,zMed)
 names(featureMaps) = c("base","sharing","STY","sharingSTY","medium")
 
 ##### Costs ##### 
+## initial ES values
+df_val0 = data.table(merge(as.data.frame(grd, xy = T), 
+                Mvcom0, by = c("long","lat")))
+df_val0[, V0 := Vcom0 * pAreaForest * area ]
+df_val0[, C0 := acs * pAreaForest * area ]
+df_val0[, B0 := (mammals+ amphi) * pAreaForest * area ]
 
-V0 <- mean(Mvcom0$Vcom0)
-C0 <- mean(grd$acs)
-B0 <- mean(grd$mammals+grd$amphi)
-
-puV <- cost_vrec/ V0
-puC <- cost_carbon / C0
-puB <- cost_diversity / B0
+puV <- cost_vrec / mean(df_val0$V0)
+puC <- cost_carbon / mean(df_val0$C0)
+puB <- cost_diversity / mean(df_val0$B0)
 puBal <- puV * coeffs_balanced[1] + puC * coeffs_balanced[2] + puB * coeffs_balanced[3]
 
 costMaps = list(timber = puV * harv, 
