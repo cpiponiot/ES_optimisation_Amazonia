@@ -8,7 +8,8 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- FALSE
+solveProblems <- TRUE
+current_demand <- 35 ## in Mm3
 
 #### study region & maps ####
 
@@ -85,7 +86,7 @@ DTinput$Carbon <- apply(cbind(0, DTinput$Carbon), 1, max)
 cost_carbon <- dcast(DTinput, long + lat ~ zone, value.var = "Carbon")
 colnames(cost_carbon) <- c("long","lat","LS","LM","LL","MS","MM","ML","HS","HM","HL")
 cost_carbon$NL = 0
-coordinates(cost_carbon) <- ~ long+lat
+coordinates(cost_carbon) <- ~ long +lat
 gridded(cost_carbon) <- TRUE
 proj4string(cost_carbon) <- proj4string(grd)
 cost_carbon <- stack(cost_carbon)
@@ -197,7 +198,7 @@ if (solveProblems){
   
   clusterExport(cl, varlist = c("costMaps","featureMaps","areaIFL","targetsList","solve_problem","grd"))
   
-  scenariOptim <- parSapply(cl, c(35, seq(10,80,10))*1e6, function(TD){
+  scenariOptim <- parSapply(cl, c(current_demand, seq(10,80,10))*1e6, function(TD){
     
     for (y in 1:length(targetsList)) 
       targetsList[[y]]$target[1] <- TD
@@ -275,7 +276,7 @@ colour_palette <- c("LS"= colours[1], "LM"=colours[2], "LL"=colours[3],
                     "MS"=colours[4], "MM"=colours[5], "ML"=colours[6],
                     "HS"=colours[7], "HM"=colours[8], "HL"=colours[9], "NL"=colours[10])
 
-g1 <- ggplot(subset(scenariOptim, demand == 35)) +
+g1 <- ggplot(subset(scenariOptim, demand == current_demand)) +
   geom_point(aes(x=long,y=lat,colour=zname, size=areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_wrap( ~ scenario, nrow = 3) +
   scale_colour_manual(name = "Zone", values = colour_palette) +
@@ -314,7 +315,7 @@ ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
 ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
 
 ## proportion of area per zone per strategy ##
-dfAreaZone = scenariOptim[demand == 35, .(area = sum(areaLogging)), .(zname, scenario)]
+dfAreaZone = scenariOptim[demand == current_demand, .(area = sum(areaLogging)), .(zname, scenario)]
 dfAreaZone = subset(dfAreaZone, area > 1e4)  ## keep only zones that represent over 1% of the total area
 dfAreaZone = merge(dfAreaZone, dfAreaZone[,.(areaTot = sum(area)), .(scenario)], by = "scenario")
 dfAreaZone[, pArea := area/areaTot*100]
@@ -329,7 +330,7 @@ ggsave("graphs/proportionAreaZone.pdf", height = 6, width = 12)
 
 col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B", "#D33B44", "#8B008B")
 
-scenCost = subset(demandFinal, demand == 35 & variable %in% c("timber", "carbon", "biodiv"))
+scenCost = subset(demandFinal, demand == current_demand & variable %in% c("timber", "carbon", "biodiv"))
 scenCost$ES = factor(scenCost$variable)
 levels(scenCost$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
 
@@ -430,7 +431,7 @@ ggsave("graphs/changingESweights.pdf", height=4, width=10)
 
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
-ggplot(subset(scenariOptim, demand != 35)) +
+ggplot(subset(scenariOptim, demand != current_demand)) +
   geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
   scale_colour_manual(name = "Zone",values = colour_palette) +
