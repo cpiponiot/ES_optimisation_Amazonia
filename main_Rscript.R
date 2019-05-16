@@ -8,8 +8,8 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- TRUE
-current_demand <- 35 ## in Mm3
+solveProblems <- FALSE
+current_demand <- 30 ## in Mm3
 
 #### study region & maps ####
 
@@ -243,7 +243,7 @@ scenariOptim = subset(scenariOptim, areaLogging > 0)
 
 ### scenarios names
 scenariOptim$scenario <- as.factor(scenariOptim$scenario)
-levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","Current","Road building","STY + Road building","STY","Timber") 
+levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","Current","Road building","STY + Road building","STY","Timber")
 scenariOptim$scenario <- factor(scenariOptim$scenario, levels = c("Timber","Carbon","Biodiversity","Balanced","Current","STY","Road building","STY + Road building") )
 
 ## get vextreal 
@@ -276,9 +276,12 @@ colour_palette <- c("LS"= colours[1], "LM"=colours[2], "LL"=colours[3],
                     "MS"=colours[4], "MM"=colours[5], "ML"=colours[6],
                     "HS"=colours[7], "HM"=colours[8], "HL"=colours[9], "NL"=colours[10])
 
+scenariOptim$scenario_label = scenariOptim$scenario
+levels(scenariOptim$scenario_label) = paste(levels(scenariOptim$scenario), "strategy")
+
 g1 <- ggplot(subset(scenariOptim, demand == current_demand)) +
   geom_point(aes(x=long,y=lat,colour=zname, size=areaLogging/1e6)) +
-  theme_bw() + coord_fixed() + facet_wrap( ~ scenario, nrow = 3) +
+  theme_bw() + coord_fixed() + facet_wrap( ~ scenario_label, nrow = 3) +
   scale_colour_manual(name = "Zone", values = colour_palette) +
   labs(size = "Area available for logging (Mha)", 
        x="",y="") +
@@ -289,7 +292,7 @@ g1 <- ggplot(subset(scenariOptim, demand == current_demand)) +
         panel.grid = element_blank(),
         strip.text = element_text(colour = 'black'), 
         strip.background = element_blank(), 
-        plot.title = element_text(hjust = 0.5, size = 35)) +
+        plot.title = element_text(hjust = 0.5, size = 30)) +
   guides(colour=FALSE)
 
 source("codes/splitFacet.R")
@@ -332,7 +335,7 @@ col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B
 
 scenCost = subset(demandFinal, demand == current_demand & variable %in% c("timber", "carbon", "biodiv"))
 scenCost$ES = factor(scenCost$variable)
-levels(scenCost$ES) = c("(a) Timber","(b) Carbon","(c) Biodiversity")
+levels(scenCost$ES) = c("(a) Timber variation","(b) Carbon variation","(c) Biodiversity variation")
 
 g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
   geom_histogram(stat="identity") + 
