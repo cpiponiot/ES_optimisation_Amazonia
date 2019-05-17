@@ -198,7 +198,7 @@ if (solveProblems){
   
   clusterExport(cl, varlist = c("costMaps","featureMaps","areaIFL","targetsList","solve_problem","grd"))
   
-  scenariOptim <- parSapply(cl, c(current_demand, seq(10,80,10))*1e6, function(TD){
+  scenariOptim <- parSapply(cl, unique(c(current_demand, seq(10,80,10)))*1e6, function(TD){
     
     for (y in 1:length(targetsList)) 
       targetsList[[y]]$target[1] <- TD
@@ -434,7 +434,7 @@ ggsave("graphs/changingESweights.pdf", height=4, width=10)
 
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
-ggplot(subset(scenariOptim, demand != current_demand)) +
+ggplot(subset(scenariOptim, demand != 35)) +
   geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
   scale_colour_manual(name = "Zone",values = colour_palette) +
