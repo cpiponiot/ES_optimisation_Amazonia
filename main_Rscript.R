@@ -29,6 +29,18 @@ legend(x="bottomright", fill=c("#FF8C00","#006400","#7FFF00"),
        bg = "white",box.col = "white")
 dev.off()
 
+pdf("graphs/harv_areas_grey.pdf", height=5, width=7)
+par(mar=c(1,1,1,1))
+plot(borders, axes=FALSE)
+plot(forest_cover_90, add=TRUE, legend = FALSE, col="grey45")
+plot(protected_forest,legend=FALSE, col="grey90", add=TRUE)
+plot(area_avail,legend=FALSE, col="grey17", add=TRUE)
+plot(borders, col = NA, add=TRUE)
+legend(x="bottomright", fill=c("grey90","grey45","grey17"),
+       legend = paste(c("Protected forest","Inaccessible forest","Available forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
+       bg = "white",box.col = "white")
+dev.off()
+
 
 #### ES costs & prioritisation ####
 
@@ -348,6 +360,18 @@ g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) +
         panel.grid = element_blank())
 g2
 ggsave("graphs/costsScenario.pdf", height=4, width=7)
+
+g2gr <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
+  geom_histogram(stat="identity") + 
+  facet_grid(~ ES) + scale_fill_grey() + 
+  labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.background = element_rect(fill="white",colour="white"), 
+        panel.background = element_rect(fill="white", colour = "black"),
+        strip.background = element_blank(),
+        panel.grid = element_blank()) 
+g2gr
+ggsave("graphs/costsScenario_grey.pdf", height=4, width=7)
 
 g2 + geom_text(aes(label = round(value, 1)))
 ggsave("graphs/costsScenario_annotated.pdf", height=4, width=7)
