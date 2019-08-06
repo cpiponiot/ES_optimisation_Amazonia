@@ -256,8 +256,8 @@ scenariOptim = subset(scenariOptim, areaLogging > 0)
 
 ### scenarios names
 scenariOptim$scenario <- as.factor(scenariOptim$scenario)
-levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","Current","Road building","STY + Road building","STY","Timber")
-scenariOptim$scenario <- factor(scenariOptim$scenario, levels = c("Timber","Carbon","Biodiversity","Balanced","Current","STY","Road building","STY + Road building") )
+levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","MCC","Increased access.","STY + Increased acc.","STY","Timber")
+scenariOptim$scenario <- factor(scenariOptim$scenario, levels = c("Timber","Carbon","Biodiversity","Balanced","MCC","STY","Increased access.","STY + Increased acc.") )
 
 ## get vextreal 
 scenariOptim = merge(scenariOptim, scenariOptim[,.(vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)),
@@ -348,12 +348,12 @@ col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B
 
 scenCost = subset(demandFinal, demand == current_demand & variable %in% c("timber", "carbon", "biodiv"))
 scenCost$ES = factor(scenCost$variable)
-levels(scenCost$ES) = c("(a) Timber variation","(b) Carbon variation","(c) Biodiversity variation")
+levels(scenCost$ES) = c("(a) Timber change","(b) Carbon change","(c) Biodiversity change")
 
 g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
   geom_histogram(stat="identity") + 
   facet_grid(~ ES) + scale_fill_manual(values= col_scenarios) +
-  labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
+  labs(y="Change (% initial value)", fill="Strategy", x="Strategy") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         legend.background = element_rect(fill="white",colour="white"), 
         panel.background = element_rect(fill="white", colour = "black"),
@@ -365,7 +365,7 @@ ggsave("graphs/costsScenario.pdf", height=4, width=7)
 g2gr <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
   geom_histogram(stat="identity") + 
   facet_grid(~ ES) + scale_fill_grey() + 
-  labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
+  labs(y="Change (% initial value)", fill="Strategy", x="Strategy") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         legend.background = element_rect(fill="white",colour="white"), 
         panel.background = element_rect(fill="white", colour = "black"),
@@ -382,9 +382,9 @@ ggsave("graphs/costsScenario_annotated.pdf", height=4, width=7)
 levels(demandFinal$variable) <- c("Total area logged (Mha)",
                                   "Mean logging intensity (m3/ha)",
                                   "Mean cutting cycle length (yr)",
-                                  "Timber variation (%)",
-                                  "Carbon variation (%)", 
-                                  "Biodiversity variation (%)") 
+                                  "Timber change (%)",
+                                  "Carbon change (%)", 
+                                  "Biodiversity change (%)") 
 df_annotate = data.frame(variable = levels(demandFinal$variable), 
                          lttr = paste0("(", letters[1:6], ")"), 
                          side = c(rep(-Inf,3), rep(Inf,3)), 
@@ -393,10 +393,16 @@ df_annotate = data.frame(variable = levels(demandFinal$variable),
 
 legend_strategies <- as_ggplot(get_legend(g2)) 
 
+## line type = dashed line for biodiveristy in (a) and (d), to see carbon underneath (similar values)
+demandFinal$ltype = "solid"
+demandFinal$ltype[(demandFinal$variable %in% c("Total area logged (Mha)", "Timber change (%)") &
+                  demandFinal$scenario == "Biodiversity") ] <- "dashed"
+
 g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario)) + 
   geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,0), each=3))),
              aes(yintercept = h), lty=2) + 
-  geom_line(lwd=0.7) + #scale_colour_brewer(palette = "Set1") +
+  geom_line(data = subset(demandFinal, ltype == "solid"), lwd=0.7, lty = 1) + #scale_colour_brewer(palette = "Set1") +
+  geom_line(data = subset(demandFinal, ltype == "dashed"), lwd=0.7, lty = 2) + #scale_colour_brewer(palette = "Set1") +
   facet_wrap( ~ variable, scale="free_y", nrow=3, dir = "v", strip.position = "left") + 
   theme(panel.background = element_rect(fill="white", colour = "black"),
         panel.grid = element_blank(), strip.background = element_blank(), 
@@ -452,7 +458,7 @@ ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss)) +
                         n=100,aes(fill=..level..),expand=1)  +
   geom_point(size = 1) + 
   facet_wrap( ~ ES) + scale_fill_gradientn(colours = paletteTern) +
-  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="ES\nvariation (%)") +
+  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="ES\nchange (%)") +
   theme(strip.background = element_blank(), legend.position = "bottom",
         strip.text = element_text(hjust = 0, size = 15))
 ggsave("graphs/changingESweights.pdf", height=4, width=10)
