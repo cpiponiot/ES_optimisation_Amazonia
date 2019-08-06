@@ -30,7 +30,8 @@ features <- sapply(1:nrow(df_zones), function(i) stack(feat_prod[[i]]*harv,
                                                        feature_ifl[,i]$GS,
                                                        feature_ifl[,i]$NWA,
                                                        feature_ifl[,i]$SEA,
-                                                       feature_ifl[,i]$SWA, ones))
+                                                       feature_ifl[,i]$SWA, 
+                                                       ones))
 z0 <- zones("LS" = features[[1]], "LM" = features[[2]], "LL" = features[[3]], 
             "MS" = features[[4]], "MM" = features[[5]], "ML" = features[[6]],
             "HS" = features[[7]], "HM" = features[[8]], "HL" = features[[9]], 
@@ -131,13 +132,13 @@ NfeatureSTY = dim(featuresSTY[[1]])[3]
 ### base scenario
 t0 <- tibble::tibble(feature = c("timber_extr", paste("IFL",names(areaIFL), sep="_"),"allIncluded"), 
                      zone = list(df_zones$zname)[rep(1,Nfeature)],
-                     target = c(35e6, 0.8*areaIFL,nrow(grd)), 
+                     target = c(35e6, IFLconservation * areaIFL, nrow(grd)), 
                      type=rep("absolute", Nfeature))
 ### sty scenario
 tSTY <- tibble::tibble(feature = c("timber_extr", "timber_rec", 
                                    paste("IFL",names(areaIFL), sep="_"),"allIncluded"), 
                        zone = list(df_zones$zname)[rep(1,NfeatureSTY)],
-                       target = c(35e6, zero_vcost, 0.8*areaIFL,nrow(grd)), 
+                       target = c(35e6, zero_vcost, IFLconservation * areaIFL, nrow(grd)), 
                        type=rep("absolute", NfeatureSTY))
 
 targetsList = list(t0,tSTY)
