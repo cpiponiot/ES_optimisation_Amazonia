@@ -57,7 +57,7 @@
 
 \section*{Abstract}
 
-Although tropical forests harbour most of the terrestrial carbon and biological diversity on Earth they continue to be deforested or degraded at high rates. In Amazonia, the largest tropical forest on Earth, a sixth of the remaining natural forests is formally dedicated to timber extraction through selective logging. Reconciling timber extraction with the provision of other ecosystem services (ES) remains a major challenge for forest managers and policy-makers. This study applies a spatial optimisation of logging in Amazonian production forests to analyse potential trade-offs between timber extraction and recovery, carbon storage, and biodiversity conservation. Current logging regulations result in sub-optimal ES-use efficiency. Long-term timber provision would require the adoption of a land-sharing strategy that involves extensive low-intensity logging. By contrast, retention of carbon and biodiversity would be enhanced by a land-sparing strategy restricting high-intensive logging to designated areas such as the outer fringes of the region. Depending on management goals and societal demands, either choice will substantially influence the future of Amazonian forests. Overall, our results highlight the need for reevaluation of current logging regulations and regional cooperation among Amazonian countries to enhance coherent and trans-boundary forest management.
+Although tropical forests harbour most of the terrestrial carbon and biological diversity on Earth they continue to be deforested or degraded at high rates. In Amazonia, the largest tropical forest on Earth, a sixth of the remaining natural forests is formally dedicated to timber extraction through selective logging. Reconciling timber extraction with the provision of other ecosystem services (ES) remains a major challenge for forest managers and policy-makers. This study applies a spatial optimisation of logging in Amazonian production forests to analyse potential trade-offs between timber extraction and recovery, carbon storage, and biodiversity conservation. Current logging regulations with unique cutting cycles result in sub-optimal ES-use efficiency. Long-term timber provision would require the adoption of a land-sharing strategy that involves extensive low-intensity logging. By contrast, retention of carbon and biodiversity would be enhanced by a land-sparing strategy restricting high-intensive logging to designated areas such as the outer fringes of the region. Depending on management goals and societal demands, either choice will substantially influence the future of Amazonian forests. Overall, our results highlight the need for reevaluation of current logging regulations and regional cooperation among Amazonian countries to enhance coherent and trans-boundary forest management.
 
 \vspace{1cm}
 \textbf{Keywords} Amazonia; selective logging; multicriteria optimisation; ecosystem services; timber production; carbon; biodiversity
@@ -178,7 +178,7 @@ The impact of logging on mammals and amphibians was assessed with the equation:
 \end{equation}
 
 where $\Delta B_{p,z}$ is the net change of vertebrate richness (mammals and amphibians) in grid cell $p$ and logging type $z$, $Rm_{p}$ and $Ra_p$ are the pre-logging richness of mammals and amphibians respectively \cite{Jenkins2013}, $\beta m = - 1.44$ and $\beta a = - 1.53$  are the estimated slopes of post-logging species loss in the Neotropics for mammals and amphibians respectively, according to Burivalova et al. \cite{Burivalova2014}. $vext_z$ is the logging intensity in logging type $z$.
-We hypothesize that amphibians and mammals richness do not recover after logging (no effect of cutting cycle length), mainly because of lack of data on vertebrate's richness recovery in selectively logged forests. This hypothesis is debatable, and we analyse its consequences on our results using a sensitivity analysis (supplementary section xxx). 
+We hypothesize that amphibians and mammals richness do not recover after logging (no effect of cutting cycle length), because of lack of data on vertebrate's richness recovery in selectively logged forests. Moreover, logging roads make forests more accessible for other human activities (e.g. hunting \cite{Poulsen2009}), thus having a potential long-term effect on sensitive taxa such as mammals and amphibians. This hypothesis is debatable \cite{Clarke2005}, and we analyse the consequences of different biodiversity recovery rates on optimal logging configuration in the supplementary section~\ref{sec:biodivRec}. 
 
 \subsection*{Potential Production Forest area}
 \label{sec:ppf}
@@ -468,8 +468,32 @@ We finally assessed the area of unprotected forests close to ("Currently accessi
 \begin{figure*}
     \centering
     \includegraphics[width=\linewidth]{graphs/mapsChangeDemand.pdf}
-    \caption{Results of spatial optimisation with varying demand for timber (from 10 to 80 Mm$^3$/yr), and under different scenarios.}
+    \caption{Results of spatial optimisation with varying demand for timber (from 10 to 80 Mm$^3$/yr, rows), and under 8 different strategies (columns; strategy description in Table~\ref{tab:strategies}). Green areas are not logged, white areas are not in PPF. The size of each dot is proportional to the PPF area (total area available for logging). Logging type colour (blue - purple - red) represent the logging intensity (Light: 10, Medium: 20 and High: 30~m$^3$ha$^{-1}$). The logging type transparency represents the cutting cycle length (Short: 15, Medium: 30, Long: 65 years): light colours correspond to longer cycles.}
     \label{fig:mapsIncDemand}
 \end{figure*}
+
+
+\section{Testing the effect of biodiversity recovery}
+\label{sec:biodivRec}
+
+In our models we hypothesised that mammals and amphibians richness did not recover from logging impacts. In this section we explore how changing the biodiversity recovery rate can change our results. 
+Because there is little data on vertebrates richness recovery after logging, we chose to model recovery with a simple linear model:
+
+\begin{equation}
+\Delta B_{p,z} = \left(Rm_{p} \cdot \beta m + Ra_{p} \cdot \beta a  \right)  \cdot vext_z \cdot max(1 - r \cdot trot_z, 0)
+\end{equation}
+ 
+where $\Delta B_{p,z}$ is the net change of vertebrate richness (mammals and amphibians) in grid cell $p$ and logging type $z$, $Rm_{p}$ and $Ra_p$ are the pre-logging richness of mammals and amphibians respectively \cite{Jenkins2013}, $\beta m = - 1.44$ and $\beta a = - 1.53$  are the estimated slopes of post-logging species loss in the Neotropics for mammals and amphibians respectively, according to Burivalova et al. \cite{Burivalova2014}. $vext_z$ and $trot_z$ are respectively the logging intensity and cutting cycle length in logging type $z$. $r$ is the recovery rate (in yr$^{-1}$). When $r=0$, there is no vertebrates richness recovery (as was hypothesised in this study); when $r>0$, vertebrates richness recovers until it reaches its pre-logging value (after $\frac{1}{r}$ years). In Figure~\ref{fig:mapsBioDRec}, we tested different recovery rates from 0 to 5\% of recovery per year (i.e. full recovery after 20 years), for two different strategies: the \textit{Biodiversity} strategy, for which only vertebrate richness is optimised, and the \textit{Balanced} strategy, for which timber, carbon and vertebrate richness (as a biodiversity measure) are optimised together. 
+
+For the \textit{Biodiversity} strategy, increasing the biodiversity recovery rate does not alter results when recovery rates are low. Above a threshold value at which cutting cycles are long enough to have a full biodiversity recovery, long-cycle logging dominates the optimal logging configuration (Figure~\ref{fig:mapsBioDRec}). For the \textit{Balanced} strategy, increasing the biodiversity recovery rate results in a higher proportion of land-sharing (i.e. low-intensity long-cycle) logging (Figure~\ref{fig:mapsBioDRec}). These results suggest that in the context of reduced-impact logging with no human re-entry between logging operations \cite{Bicknell2015,Brodie2015} (which is still rarely the case in most tropical forests \cite{Lewis2015}), land-sharing logging could maintain high levels of vertebrate richness.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\linewidth]{graphs/mapsBiodRec.pdf}
+    \caption{Effect of increasing post-logging biodiversity recovery rates on the optimal logging configuration for two strategies: \textit{Biodiversity} (first row) and \textit{Balanced} (second row). Green areas are not logged, white areas are not in PPF. The size of each dot is proportional to the PPF area (total area available for logging). Logging type colour (blue - purple - red) represent the logging intensity (Light: 10, Medium: 20 and High: 30~m$^3$ha$^{-1}$). The logging type transparency represents the cutting cycle length (Short: 15, Medium: 30, Long: 65 years): light colours correspond to longer cycles.}
+    \label{fig:mapsBioDRec}
+\end{figure*}
+
+
 
 \end{document}

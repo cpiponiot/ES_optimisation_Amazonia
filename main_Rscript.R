@@ -10,7 +10,8 @@ library(ggtern)
 
 solveProblems <- FALSE
 current_demand <- 30 ## in Mm3
-IFLconservation <- 0 ## proportion of intact forest landscapes to preserve per ecoregion
+IFLconservation <- 0.8 ## proportion of intact forest landscapes to preserve per ecoregion
+biodivRecov <- 0 ## slope of biodiversity recovery (yr^-1)
 
 #### study region & maps ####
 
@@ -122,11 +123,13 @@ if (solveProblems) {
 } else (load("data/effect_biodiv_stan.Rdata"))
 
 ## per ha 
-cost_diversity <- stack(sapply(df_zones$vext, function(x) {
-  grd$rich_mamm = grd$mammals*(0.0144*x)
-  grd$rich_mamm[grd$rich_mamm<0] <- 0
-  grd$rich_amph = grd$amphi*(0.0153*x)
-  grd$rich_amph[grd$rich_amph<0] <- 0
+cost_diversity <- stack(sapply(1:nrow(df_zones), function(i) {
+  grd$rich_mamm = grd$mammals * ( 0.0144 * df_zones$vext[i])  ## species loss, according to Burivalova et al (2014)
+  grd$rich_mamm = grd$rich_mamm * (1 - biodivRecov * df_zones$trot[i] )  ## recovery, relative to initial value & loss
+  grd$rich_mamm [ grd$rich_mamm < 0 ] <- 0
+  grd$rich_amph = grd$amphi * ( 0.0153 * df_zones$vext[i])  ## species loss, according to Burivalova et al (2014)
+  grd$rich_amph = grd$rich_amph * (1 - biodivRecov * df_zones$trot[i] )  ## recovery, relative to initial value & loss
+  grd$rich_amph[grd$rich_amph < 0] <- 0
   return(crop(raster(grd, 'rich_mamm') + raster(grd, 'rich_amph'),extent(cost_carbon)))
 }))
 
@@ -409,7 +412,7 @@ g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario)) +
         legend.position = "none", strip.placement = "outside") +
   geom_text(data = df_annotate, aes(x = side, y = Inf, label = lttr, hjust = hl, vjust = vl), colour = "black") +
   scale_colour_manual(values= col_scenarios) + 
-  labs(x=expression("Timber production (M"*m^3*yr^{-1}*")"), y="",colour="Strategy") 
+  labs(x=expression("Timber extraction (M"*m^3*yr^{-1}*")"), y="",colour="Strategy") 
 ggarrange(g3, legend_strategies, ncol = 2, widths =  c(4,1))
 ggsave("graphs/increasingDemand.pdf", height=6, width=8)
 
@@ -465,7 +468,7 @@ ggsave("graphs/changingESweights.pdf", height=4, width=10)
 
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
-ggplot(subset(scenariOptim, demand != 35)) +
+g1 = ggplot(scenariOptim) +
   geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
   scale_colour_manual(name = "Zone",values = colour_palette) +
@@ -474,5 +477,6 @@ ggplot(subset(scenariOptim, demand != 35)) +
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
         axis.text.y=element_blank()) +
   guides(colour=FALSE)
+ggarrange(g1, zone_legend, ncol = 1, nrow = 2, heights = c(8, 1))
 ggsave("graphs/mapsChangeDemand.pdf", height=40, width=40)
 

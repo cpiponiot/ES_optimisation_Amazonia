@@ -132,13 +132,13 @@ NfeatureSTY = dim(featuresSTY[[1]])[3]
 ### base scenario
 t0 <- tibble::tibble(feature = c("timber_extr", paste("IFL",names(areaIFL), sep="_"),"allIncluded"), 
                      zone = list(df_zones$zname)[rep(1,Nfeature)],
-                     target = c(35e6, IFLconservation * areaIFL, nrow(grd)), 
+                     target = c(30e6, IFLconservation * areaIFL, nrow(grd)), 
                      type=rep("absolute", Nfeature))
 ### sty scenario
 tSTY <- tibble::tibble(feature = c("timber_extr", "timber_rec", 
                                    paste("IFL",names(areaIFL), sep="_"),"allIncluded"), 
                        zone = list(df_zones$zname)[rep(1,NfeatureSTY)],
-                       target = c(35e6, zero_vcost, IFLconservation * areaIFL, nrow(grd)), 
+                       target = c(30e6, zero_vcost, IFLconservation * areaIFL, nrow(grd)), 
                        type=rep("absolute", NfeatureSTY))
 
 targetsList = list(t0,tSTY)
