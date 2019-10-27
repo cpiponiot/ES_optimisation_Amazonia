@@ -27,7 +27,7 @@ plot(protected_forest,legend=FALSE, col="#FF8C00", add=TRUE)
 plot(area_avail,legend=FALSE, col="#7FFF00", add=TRUE)
 plot(borders, col = NA, add=TRUE)
 legend(x="bottomright", fill=c("#FF8C00","#006400","#7FFF00"),
-       legend = paste(c("Protected forest","Inaccessible forest","Available forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
+       legend = paste(c("Strictly protected forest","Remote unprot. forest","Access. unprot. forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
        bg = "white",box.col = "white")
 dev.off()
 
@@ -39,7 +39,7 @@ plot(protected_forest,legend=FALSE, col="grey90", add=TRUE)
 plot(area_avail,legend=FALSE, col="grey17", add=TRUE)
 plot(borders, col = NA, add=TRUE)
 legend(x="bottomright", fill=c("grey90","grey45","grey17"),
-       legend = paste(c("Protected forest","Inaccessible forest","Available forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
+       legend = paste(c("Strictly protected forest","Remote unprot. forest","Access. unprot. forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
        bg = "white",box.col = "white")
 dev.off()
 
@@ -106,7 +106,6 @@ proj4string(cost_carbon) <- proj4string(grd)
 cost_carbon <- stack(cost_carbon)
 names(cost_carbon) <- df_zones$zname
 
-
 ### (3) Biodiversity ###
 
 ### new burivalova coefficients
@@ -117,7 +116,8 @@ richLoss = read.csv("data/Burivalova2014DataNeotropics.csv")
 if (solveProblems) {
   y = 1-richLoss$pRichLoss; N = nrow(richLoss)
   x = richLoss$vext; Groups = as.numeric(richLoss$taxo); K = nlevels(richLoss$taxo)
-  stan_biodiv = data.table(do.call(cbind, rstan::extract(stan("codes/linear_reg.stan", chains=1))))
+  stan_params = rstan::extract(stan("codes/linear_reg.stan", chains=1))
+  stan_biodiv = data.table(do.call(cbind, stan_params))
   colnames(stan_biodiv) = c(paste(rep(c("slope","sd"), each=2), rep(c("Amp","Mam"),2), sep=""), "lp__")
   save(stan_biodiv, file="data/effect_biodiv_stan.Rdata")
 } else (load("data/effect_biodiv_stan.Rdata"))
@@ -177,10 +177,9 @@ if (solveProblems){
   changeCost = lapply(1:dim(changeCost)[2], function(i) { 
     data.table(do.call(cbind, changeCost[,i])) })
   
-  changeCost = do.call(rbind, changeCost)
+  changeCost = rbindlist(changeCost)
   
   save(changeCost, file="outputs/changeCost.Rdata")
-  
   
 } else {load("outputs/changeCost.Rdata")}
 
