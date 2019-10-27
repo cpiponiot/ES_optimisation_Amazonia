@@ -8,18 +8,15 @@ library(ggpubr)
 library(parallel)
 library(ggtern)
 
-solveProblems <- FALSE
 current_demand <- 30 ## in Mm3
-IFLconservation <- 0.8 ## proportion of intact forest landscapes to preserve per ecoregion
-biodivRecov <- 0 ## slope of biodiversity recovery (yr^-1)
 
 #### study region & maps ####
 
-load("data/maps.Rdata")
-load("data/grd.Rdata")
-source("codes/proportion_areas.R")
+load("maps.Rdata")
+load("grd.Rdata")
+source("proportion_areas.R")
 
-pdf("graphs/harv_areas.pdf", height=5, width=7)
+pdf("harv_areas.pdf", height=5, width=7)
 par(mar=c(1,1,1,1))
 plot(borders, col = "#F5F5F5", axes=FALSE)
 plot(forest_cover_90, add=TRUE, legend = FALSE, col="#006400")
@@ -31,24 +28,12 @@ legend(x="bottomright", fill=c("#FF8C00","#006400","#7FFF00"),
        bg = "white",box.col = "white")
 dev.off()
 
-pdf("graphs/harv_areas_grey.pdf", height=5, width=7)
-par(mar=c(1,1,1,1))
-plot(borders, axes=FALSE)
-plot(forest_cover_90, add=TRUE, legend = FALSE, col="grey45")
-plot(protected_forest,legend=FALSE, col="grey90", add=TRUE)
-plot(area_avail,legend=FALSE, col="grey17", add=TRUE)
-plot(borders, col = NA, add=TRUE)
-legend(x="bottomright", fill=c("grey90","grey45","grey17"),
-       legend = paste(c("Protected forest","Inaccessible forest","Available forest"), " (",c(Pwdpa,Punacc,Pharv),"%)",sep=""), 
-       bg = "white",box.col = "white")
-dev.off()
-
 
 #### ES costs & prioritisation ####
 
 ### (1) Timber ###
 
-load("data/parametersTimber.Rdata")
+load("parametersTimber.Rdata")
 
 df_zones <- data.table(zone = 1:10, 
                        zname = c("LS","LM","LL","MS","MM","ML","HS","HM","HL","NL"),
@@ -59,8 +44,8 @@ DTinput <- data.table(expand.grid(id = grd$id, zone = 1:9))
 DTinput <- merge(DTinput, data.frame(grd), by="id")
 DTinput <- merge(DTinput, df_zones, by="zone")
 
-source("codes/modelPredictions.R")
-source("codes/pred_volume_recovery.R")
+source("modelPredictions.R")
+source("pred_volume_recovery.R")
 
 ## per ha
 feat_prod <- sapply(1:nrow(df_zones), function(i) {
@@ -76,9 +61,9 @@ cost_vrec <- stack(sapply(1:nrow(df_zones), function(i) {
 
 ## damage - graph ##
 
-source("codes/new_damage_model.R")
-source("codes/params_carbon_recov.R")
-source("codes/functions_carbon.R")
+source("new_damage_model.R")
+source("params_carbon_recov.R")
+source("functions_carbon.R")
 
 ## per ha
 pdefor_maxL = (0.12+0.25)/2/17.95 + exp(-6.12) + (0.04 + 0.1)/2*15.10/(15.10+15.32)
@@ -110,26 +95,22 @@ names(cost_carbon) <- df_zones$zname
 ### (3) Biodiversity ###
 
 ### new burivalova coefficients
-richLoss = read.csv("data/Burivalova2014DataNeotropics.csv")
+richLoss = read.csv("Burivalova2014DataNeotropics.csv")
 # fit log-log model (vext>0 and pRich > 0 but not always < 1)
 # and intercept must be 1 
 
-if (solveProblems) {
-  y = 1-richLoss$pRichLoss; N = nrow(richLoss)
-  x = richLoss$vext; Groups = as.numeric(richLoss$taxo); K = nlevels(richLoss$taxo)
-  stan_biodiv = data.table(do.call(cbind, rstan::extract(stan("codes/linear_reg.stan", chains=1))))
-  colnames(stan_biodiv) = c(paste(rep(c("slope","sd"), each=2), rep(c("Amp","Mam"),2), sep=""), "lp__")
-  save(stan_biodiv, file="data/effect_biodiv_stan.Rdata")
-} else (load("data/effect_biodiv_stan.Rdata"))
+
+y = 1-richLoss$pRichLoss; N = nrow(richLoss)
+x = richLoss$vext; Groups = as.numeric(richLoss$taxo); K = nlevels(richLoss$taxo)
+stan_biodiv = data.table(do.call(cbind, rstan::extract(stan("/linear_reg.stan", chains=1))))
+colnames(stan_biodiv) = c(paste(rep(c("slope","sd"), each=2), rep(c("Amp","Mam"),2), sep=""), "lp__")
 
 ## per ha 
-cost_diversity <- stack(sapply(1:nrow(df_zones), function(i) {
-  grd$rich_mamm = grd$mammals * ( 0.0144 * df_zones$vext[i])  ## species loss, according to Burivalova et al (2014)
-  grd$rich_mamm = grd$rich_mamm * (1 - biodivRecov * df_zones$trot[i] )  ## recovery, relative to initial value & loss
-  grd$rich_mamm [ grd$rich_mamm < 0 ] <- 0
-  grd$rich_amph = grd$amphi * ( 0.0153 * df_zones$vext[i])  ## species loss, according to Burivalova et al (2014)
-  grd$rich_amph = grd$rich_amph * (1 - biodivRecov * df_zones$trot[i] )  ## recovery, relative to initial value & loss
-  grd$rich_amph[grd$rich_amph < 0] <- 0
+cost_diversity <- stack(sapply(df_zones$vext, function(x) {
+  grd$rich_mamm = grd$mammals*(0.0144*x)
+  grd$rich_mamm[grd$rich_mamm<0] <- 0
+  grd$rich_amph = grd$amphi*(0.0153*x)
+  grd$rich_amph[grd$rich_amph<0] <- 0
   return(crop(raster(grd, 'rich_mamm') + raster(grd, 'rich_amph'),extent(cost_carbon)))
 }))
 
@@ -139,55 +120,49 @@ cost_diversity <- stack(sapply(1:nrow(df_zones), function(i) {
 ##### (1) Combination of ES costs ####
 
 
-if (solveProblems){
+source("solve_problem.R")
+
+coeffs_balanced = c(1,1,1)/3
+source("createTargetsCostsFeatures.R")
+
+cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
+cost_comb = subset(cost_comb, alphaC + alphaB <= 1)
+cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
+
+# Calculate the number of cores
+no_cores <- detectCores() - 1
+
+# Initiate cluster
+cl <- makeCluster(no_cores)
+
+clusterEvalQ(cl, library(prioritizr))
+clusterEvalQ(cl, library(data.table))
+
+clusterExport(cl, varlist = c("costMaps","featureMaps","areaIFL","targetsList","solve_problem","grd","cost_comb"))
+
+changeCost <- parSapply(cl, 1:nrow(cost_comb), function(i){
   
-  source("codes/solve_problem.R")
+  costsWeighted <- cost_comb[i,1] * costMaps$carbon + cost_comb[i,2] * costMaps$biodiversity + cost_comb[i,3] * costMaps$timber 
   
-  coeffs_balanced = c(1,1,1)/3
-  source("codes/createTargetsCostsFeatures.R")
+  ##  optimization
+  solZones <- solve_problem(costsWeighted, featureMaps$base, targetsList$base, i, timeLim = 600)
+  solZones = data.table(solZones, alphaC = cost_comb$alphaC[i], 
+                        alphaB = cost_comb$alphaB[i], alphaV = cost_comb$alphaV[i])
+  return(solZones)
   
-  cost_comb = expand.grid(alphaC = seq(0,1,0.1), alphaB = seq(0,1,0.1))
-  cost_comb = subset(cost_comb, alphaC + alphaB <= 1)
-  cost_comb$alphaV = round(1 - cost_comb$alphaC - cost_comb$alphaB, digits=1)
-  
-  # Calculate the number of cores
-  no_cores <- detectCores() - 1
-  
-  # Initiate cluster
-  cl <- makeCluster(no_cores)
-  
-  clusterEvalQ(cl, library(prioritizr))
-  clusterEvalQ(cl, library(data.table))
-  
-  clusterExport(cl, varlist = c("costMaps","featureMaps","areaIFL","targetsList","solve_problem","grd","cost_comb"))
-  
-  changeCost <- parSapply(cl, 1:nrow(cost_comb), function(i){
-    
-    costsWeighted <- cost_comb[i,1] * costMaps$carbon + cost_comb[i,2] * costMaps$biodiversity + cost_comb[i,3] * costMaps$timber 
-    
-    ##  optimization
-    solZones <- solve_problem(costsWeighted, featureMaps$base, targetsList$base, i, timeLim = 600)
-    solZones = data.table(solZones, alphaC = cost_comb$alphaC[i], 
-                          alphaB = cost_comb$alphaB[i], alphaV = cost_comb$alphaV[i])
-    return(solZones)
-    
-  })
-  stopCluster(cl)
-  
-  changeCost = lapply(1:dim(changeCost)[2], function(i) { 
-    data.table(do.call(cbind, changeCost[,i])) })
-  
-  changeCost = do.call(rbind, changeCost)
-  
-  save(changeCost, file="outputs/changeCost.Rdata")
-  
-  
-} else {load("outputs/changeCost.Rdata")}
+})
+stopCluster(cl)
+
+changeCost = lapply(1:dim(changeCost)[2], function(i) { 
+  data.table(do.call(cbind, changeCost[,i])) })
+
+changeCost = do.call(rbind, changeCost)
+
 
 changeCost <- merge(changeCost, data.frame(grd)[,c("long","lat","area","pAreaAvail")], by=c("long","lat"))
 changeCost[, areaLogging := area * pAreaAvail]
 
-source("codes/rel_ES_costs.R")
+source("rel_ES_costs.R")
 
 costs_analysis <- changeCost[,.(timber = rel_ES_costs(zone, long, lat, areaLogging, "timber"), 
                                 carbon = rel_ES_costs(zone, long, lat, areaLogging, "carbon"), 
@@ -199,9 +174,7 @@ costsTot = melt(costs_analysis, id.vars = c("alphaV", "alphaC", "alphaB"), varia
 
 ### (2) Scenario comparision ###
 
-if (solveProblems){
-  
-  library(parallel)
+library(parallel)
   
   # Calculate the number of cores
   no_cores <- detectCores() - 1
@@ -245,10 +218,7 @@ if (solveProblems){
   scenariOptim$long = as.numeric(scenariOptim$long)
   scenariOptim$lat = as.numeric(scenariOptim$lat)
   
-  save(scenariOptim, file="outputs/scenariOptim.Rdata")
   
-} else {load("outputs/scenariOptim.Rdata")}
-
 ### pixel area
 scenariOptim = merge(scenariOptim, data.table(coordinates(grd), 
                                               areaLogging = grd$area*grd$pAreaAvail, 
@@ -259,8 +229,8 @@ scenariOptim = subset(scenariOptim, areaLogging > 0)
 
 ### scenarios names
 scenariOptim$scenario <- as.factor(scenariOptim$scenario)
-levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","MCC","Increased access.","STY + Increased acc.","STY","Timber")
-scenariOptim$scenario <- factor(scenariOptim$scenario, levels = c("Timber","Carbon","Biodiversity","Balanced","MCC","STY","Increased access.","STY + Increased acc.") )
+levels(scenariOptim$scenario) <- c("Balanced","Biodiversity","Carbon","Current","Road building","STY + Road building","STY","Timber")
+scenariOptim$scenario <- factor(scenariOptim$scenario, levels = c("Timber","Carbon","Biodiversity","Balanced","Current","STY","Road building","STY + Road building") )
 
 ## get vextreal 
 scenariOptim = merge(scenariOptim, scenariOptim[,.(vextReal = raster::extract(feat_prod[[zone]], cbind(long,lat)),
@@ -311,7 +281,7 @@ g1 <- ggplot(subset(scenariOptim, demand == current_demand)) +
         plot.title = element_text(hjust = 0.5, size = 30)) +
   guides(colour=FALSE)
 
-source("codes/splitFacet.R")
+source("splitFacet.R")
 new_plots <- splitFacet(g1 + theme(legend.position = "none"))
 
 legend_size <- as_ggplot(get_legend(g1 + theme(legend.position = "bottom")))
@@ -331,7 +301,7 @@ g_all <- ggarrange(new_plots[[1]], new_plots[[2]], new_plots[[3]],
                    new_plots[[7]], new_plots[[8]], zone_legend, 
                    ncol=3, nrow = 3)
 ggarrange(g_all, legend_size, nrow = 2, heights = c(10,1))
-ggsave("graphs/mapsScenarios.pdf", height=18, width=18)
+ggsave("mapsScenarios.pdf", height=18, width=18)
 
 ## proportion of area per zone per strategy ##
 dfAreaZone = scenariOptim[demand == current_demand, .(area = sum(areaLogging)), .(zname, scenario)]
@@ -342,7 +312,7 @@ dfAreaZone[, pArea := area/areaTot*100]
 ggplot(dfAreaZone, aes(zname, weight = pArea, fill = zname)) + geom_bar() + facet_wrap( ~ scenario, ncol = 4) + 
   scale_fill_manual(name = "Zone", values = colour_palette) + theme(legend.position = "none") +
   geom_text(aes(label=round(pArea, digits = 1), y = pArea), vjust=-0.2)
-ggsave("graphs/proportionAreaZone.pdf", height = 6, width = 12)
+ggsave("proportionAreaZone.pdf", height = 6, width = 12)
 
 
 ### associated ES costs 
@@ -351,43 +321,31 @@ col_scenarios <- c("#6495ED","#458B00", "#E5C616", "#CD6600", "#E9967A","#483D8B
 
 scenCost = subset(demandFinal, demand == current_demand & variable %in% c("timber", "carbon", "biodiv"))
 scenCost$ES = factor(scenCost$variable)
-levels(scenCost$ES) = c("(a) Timber change","(b) Carbon change","(c) Biodiversity change")
+levels(scenCost$ES) = c("(a) Timber variation","(b) Carbon variation","(c) Biodiversity variation")
 
 g2 <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
   geom_histogram(stat="identity") + 
   facet_grid(~ ES) + scale_fill_manual(values= col_scenarios) +
-  labs(y="Change (% initial value)", fill="Strategy", x="Strategy") + 
+  labs(y="Variation (% initial value)", fill="Strategy", x="Strategy") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
         legend.background = element_rect(fill="white",colour="white"), 
         panel.background = element_rect(fill="white", colour = "black"),
         strip.background = element_blank(),
         panel.grid = element_blank())
 g2
-ggsave("graphs/costsScenario.pdf", height=4, width=7)
-
-g2gr <- ggplot(scenCost, aes(x=scenario, fill=scenario, y=value)) + 
-  geom_histogram(stat="identity") + 
-  facet_grid(~ ES) + scale_fill_grey() + 
-  labs(y="Change (% initial value)", fill="Strategy", x="Strategy") + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
-        legend.background = element_rect(fill="white",colour="white"), 
-        panel.background = element_rect(fill="white", colour = "black"),
-        strip.background = element_blank(),
-        panel.grid = element_blank()) 
-g2gr
-ggsave("graphs/costsScenario_grey.pdf", height=4, width=7)
+ggsave("costsScenario.pdf", height=4, width=7)
 
 g2 + geom_text(aes(label = round(value, 1)))
-ggsave("graphs/costsScenario_annotated.pdf", height=4, width=7)
+ggsave("costsScenario_annotated.pdf", height=4, width=7)
 
 ### ES = f(timber demand, scenario) ###
 
 levels(demandFinal$variable) <- c("Total area logged (Mha)",
                                   "Mean logging intensity (m3/ha)",
                                   "Mean cutting cycle length (yr)",
-                                  "Timber change (%)",
-                                  "Carbon change (%)", 
-                                  "Biodiversity change (%)") 
+                                  "Timber variation (%)",
+                                  "Carbon variation (%)", 
+                                  "Biodiversity variation (%)") 
 df_annotate = data.frame(variable = levels(demandFinal$variable), 
                          lttr = paste0("(", letters[1:6], ")"), 
                          side = c(rep(-Inf,3), rep(Inf,3)), 
@@ -396,32 +354,26 @@ df_annotate = data.frame(variable = levels(demandFinal$variable),
 
 legend_strategies <- as_ggplot(get_legend(g2)) 
 
-## line type = dashed line for biodiveristy in (a) and (d), to see carbon underneath (similar values)
-demandFinal$ltype = "solid"
-demandFinal$ltype[(demandFinal$variable %in% c("Total area logged (Mha)", "Timber change (%)") &
-                  demandFinal$scenario == "Biodiversity") ] <- "dashed"
-
 g3 <- ggplot(demandFinal, aes(x=demand, y= value, colour=scenario)) + 
   geom_hline(data = data.frame(variable = levels(demandFinal$variable), h = c(rep(c(NA,0), each=3))),
              aes(yintercept = h), lty=2) + 
-  geom_line(data = subset(demandFinal, ltype == "solid"), lwd=0.7, lty = 1) + #scale_colour_brewer(palette = "Set1") +
-  geom_line(data = subset(demandFinal, ltype == "dashed"), lwd=0.7, lty = 2) + #scale_colour_brewer(palette = "Set1") +
+  geom_line(lwd=0.7) + #scale_colour_brewer(palette = "Set1") +
   facet_wrap( ~ variable, scale="free_y", nrow=3, dir = "v", strip.position = "left") + 
   theme(panel.background = element_rect(fill="white", colour = "black"),
         panel.grid = element_blank(), strip.background = element_blank(), 
         legend.position = "none", strip.placement = "outside") +
   geom_text(data = df_annotate, aes(x = side, y = Inf, label = lttr, hjust = hl, vjust = vl), colour = "black") +
   scale_colour_manual(values= col_scenarios) + 
-  labs(x=expression("Timber extraction (M"*m^3*yr^{-1}*")"), y="",colour="Strategy") 
+  labs(x=expression("Timber production (M"*m^3*yr^{-1}*")"), y="",colour="Strategy") 
 ggarrange(g3, legend_strategies, ncol = 2, widths =  c(4,1))
-ggsave("graphs/increasingDemand.pdf", height=6, width=8)
+ggsave("increasingDemand.pdf", height=6, width=8)
 
 
 
 ##### Supplementary graphs #####
 
 ### damage - explanation diagram ###
-pdf("graphs/schemaDam.pdf", height=2, width=3)
+pdf("schemaDam.pdf", height=2, width=3)
 par(mar=c(0,0,0,0), oma=c(0,0,0,0))
 plot(c(0,1), c(0,1.1), col="white", bty="n",yaxt="n",xaxt="n",xlab="",ylab="")
 rect(xleft = 0,ybottom = 0,xright = 1,ytop = 1,lwd=2)
@@ -441,11 +393,11 @@ ggplot(CIpred, aes(x=RatioExt)) +
   geom_ribbon(aes(ymin=inf_err, ymax=sup_err), alpha=0.1) +
   theme_bw() + theme(legend.position = "none") +
   labs(x="Proportion of carbon extracted", y="Proportion of carbon damaged")
-ggsave("graphs/damModel.pdf", height=5, width=6)
+ggsave("damModel.pdf", height=5, width=6)
 
 
 ## WDext 
-pdf("graphs/map_WDext.pdf", height=4, width=5)
+pdf("map_WDext.pdf", height=4, width=5)
 plot(raster(grd, "WDext"), col=rev(heat.colors(20))[-c(1,2)])
 dev.off()
 
@@ -461,14 +413,14 @@ ggtern(data=costsTot,aes(x=alphaV,y=alphaC,z=alphaB, value=loss)) +
                         n=100,aes(fill=..level..),expand=1)  +
   geom_point(size = 1) + 
   facet_wrap( ~ ES) + scale_fill_gradientn(colours = paletteTern) +
-  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="ES\nchange (%)") +
+  labs(x=expression(alpha[T]), y=expression(alpha[C]), z=expression(alpha[B]), fill="ES\nvariation (%)") +
   theme(strip.background = element_blank(), legend.position = "bottom",
         strip.text = element_text(hjust = 0, size = 15))
-ggsave("graphs/changingESweights.pdf", height=4, width=10)
+ggsave("changingESweights.pdf", height=4, width=10)
 
 ## maps with changing demand 
 scenariOptim$demand2 = paste(scenariOptim$demand, "Mm3/yr")
-g1 = ggplot(scenariOptim) +
+ggplot(subset(scenariOptim, demand != 35)) +
   geom_point(aes( x = long, y = lat, colour = zname, size = areaLogging/1e6)) +
   theme_bw() + coord_fixed() + facet_grid(demand2 ~ scenario) +
   scale_colour_manual(name = "Zone",values = colour_palette) +
@@ -477,6 +429,5 @@ g1 = ggplot(scenariOptim) +
         axis.ticks=element_blank(), axis.text.x=element_blank(), 
         axis.text.y=element_blank()) +
   guides(colour=FALSE)
-ggarrange(g1, zone_legend, ncol = 1, nrow = 2, heights = c(8, 1))
-ggsave("graphs/mapsChangeDemand.pdf", height=40, width=40)
+ggsave("mapsChangeDemand.pdf", height=40, width=40)
 
