@@ -1,12 +1,13 @@
-library(prioritizr)
-library(sp)
-library(rgdal)
-library(raster)
-library(data.table)
-library(rstan)
-library(ggpubr)
-library(parallel)
-library(ggtern)
+## install and load packages ##
+packages_needed = c("prioritizr", "Rsymphony", "parallel",
+                    "sp", "rgdal", "raster", 
+                    "data.table", "rstan",  
+                    "ggplot2", "ggpubr","ggtern")
+packages_to_install = packages_needed[!( packages_needed %in% rownames(installed.packages()))]
+if (length(packages_to_install) > 0)
+  install.packages(packages_to_install)
+lapply(packages_needed, require, character.only = TRUE)
+
 
 current_demand <- 30 ## in Mm3
 

@@ -48,10 +48,10 @@ for(i in which(!(df_zones$trot %in% c(1,30))))
 ## avoid negative features for timber recovery:
 offset_vrec <- max(values(cost_vrec*harvAR), na.rm=TRUE)
 ## the total recovery when there is no logging (ie target for STY):
-zero_vcost <- offset_vrec*nrow(grd)
+zero_vcost <- offset_vrec*nrow(grd)/1e6
 
 featuresSTY <- sapply(1:nrow(df_zones), function(i) stack(feat_prod[[i]]*harv,
-                                                          -1*cost_vrec[[i]]*harv + offset_vrec,
+                                                          (-1*cost_vrec[[i]]*harv + offset_vrec)/1e6,
                                                           feature_ifl[,i]$CA,
                                                           feature_ifl[,i]$EA,
                                                           feature_ifl[,i]$GS,
@@ -85,7 +85,7 @@ zAR <- zones("LS" = featuresAR[[1]], "LM" = featuresAR[[2]], "LL" = featuresAR[[
 ## STY and land sharing
 
 features_AR_STY <- sapply(1:nrow(df_zones), function(i) stack(feat_prod[[i]]*harvAR,
-                                                              -1*cost_vrec[[i]]*harvAR + offset_vrec,
+                                                              (-1*cost_vrec[[i]]*harvAR + offset_vrec)/1e6,
                                                               feature_iflAR[,i]$CA,
                                                               feature_iflAR[,i]$EA,
                                                               feature_iflAR[,i]$GS,
